@@ -103,6 +103,20 @@
 				</picUrl>
 			</properties>
 		</developer>
+		<developer>
+			<id>marmarsol4</id>
+			<name>Maria Marquez</name>
+			<email>marmarsol4@alum.us.es</email>
+			<url>http://www.tmht.com/leo</url>
+			<roles>
+				<role>collaborator</role>
+			</roles>
+			<properties>
+				<picUrl>
+					https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg
+				</picUrl>
+			</properties>
+		</developer>
 	</developers>
 	    <dependencies>
         <!-- Spring and Spring Boot dependencies -->
