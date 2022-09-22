@@ -15,6 +15,9 @@ INSERT INTO authorities(id,username,authority) VALUES (11,'olemornav','owner');
 INSERT INTO users(username,password,enabled) VALUES ('ursgarsan','ursgarsan',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (12,'ursgarsan','owner');
 
+INSERT INTO users(username,password,enabled) VALUES ('marmarsol4','marmarsol4',TRUE);
+INSERT INTO authorities(id,username,authority) VALUES (13,'marmarsol4','owner');
+
 INSERT INTO users(username,password,enabled) VALUES ('migrolgar2','migrolgar2',TRUE);
 INSERT INTO authorities(id,username,authority) VALUES (14,'migrolgar2','owner');
 
@@ -55,7 +58,7 @@ INSERT INTO owners VALUES (9, 'David', 'Schroeder', '2749 Blackhawk Trail', 'Mad
 INSERT INTO owners VALUES (10, 'Carlos', 'Estaban', '2335 Independence La.', 'Waunakee', '6085555487', 'owner1');
 INSERT INTO owners VALUES (11, 'Olegario', 'Morato', '2335 Independence La.', 'Waunakee', '6085555487', 'olemornav');
 INSERT INTO owners VALUES (12, 'Úrsula', 'Garrucho', '2335 Independence La.', 'Waunakee', '666999888', 'ursgarsan');
-INSERT INTO owners VALUES (13, 'Maria', 'Marquez', '2515 Inazuma La.', 'Madison', '6555685487', 'marmarsol4');
+INSERT INTO owners VALUES (13, 'Maria', 'Marquez', '2515 Inazuma La.', 'Madison', '655685487', 'marmarsol4');
 INSERT INTO owners VALUES (14, 'Miguel', 'Roldan', '27 Hopes and Dreams', 'Narnia', '694202496', 'migrolgar2');
 
 
