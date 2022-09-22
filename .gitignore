@@ -1,0 +1,14 @@
+.classpath
+.project
+.settings/
+target/
+.gradle
+build/
+#*
+.#*
+*~
+_site
+.idea
+*.sw[op]
+.project
+sample-pages
