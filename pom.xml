@@ -31,7 +31,37 @@
         <spring-format.version>0.0.19</spring-format.version>
 
     </properties>
-
+<developers>
+ <developer>
+ <id>juamornav3</id>
+ <name>Juan Carlos</name>
+ <email>juamornav3@alum.us.es</email>
+ <url>http://www.tmht.com/leo</url>
+ <roles>
+ <role>collaborator</role>
+ </roles>
+ <properties>
+ <picUrl>
+ https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name=large
+</picUrl>
+ </properties>
+ </developer>
+<developer>
+ <id>Donnie</id>
+ <name>Donatello</name>
+ <email>donnie@tmht.com</email>
+ <url>http://www.tmht.com/donnie</url>
+ <roles>
+ <role>tech master</role>
+ </roles>
+ <properties>
+ <picUrl>
+https://pbs.twimg.com/media/Eh4n9GgUYAAan80?format=jpg&name
+=large
+</picUrl>
+ </properties>
+ </developer>
+</developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
         <dependency>
