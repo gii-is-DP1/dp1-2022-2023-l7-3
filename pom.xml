@@ -62,6 +62,21 @@ https://pbs.twimg.com/media/Eh4n9GgUYAAan80?format=jpg&name
 </picUrl>
  </properties>
  </developer>
+ <developer>
+ <id>alvurqmar</id>
+ <name>Alvaro</name>
+ <email>alvurqmar@alum.us.es</email>
+ <url>http://www.tmht.com/leo</url>
+ <roles>
+ <role>collaborator</role>
+ </roles>
+ <properties>
+ <picUrl>
+ https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name
+ =large
+</picUrl>
+ </properties>
+ </developer>
 </developers>
     <dependencies>
         <!-- Spring and Spring Boot dependencies -->
