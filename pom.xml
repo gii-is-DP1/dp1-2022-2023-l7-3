@@ -42,17 +42,18 @@
  </roles>
  <properties>
  <picUrl>
- https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name=large
+ https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name
+ =large
 </picUrl>
  </properties>
  </developer>
 <developer>
- <id>Donnie</id>
- <name>Donatello</name>
- <email>donnie@tmht.com</email>
+ <id>ursgarsan</id>
+ <name>Úrsula Garrucho</name>
+ <email>ursgarsan@alum.us.es</email>
  <url>http://www.tmht.com/donnie</url>
  <roles>
- <role>tech master</role>
+ <role>collaborator</role>
  </roles>
  <properties>
  <picUrl>
