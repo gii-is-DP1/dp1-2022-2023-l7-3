@@ -8,7 +8,7 @@
 <petclinic:layout pageName="home">
     <h2><fmt:message key="welcome"/></h2>
     <div class="row">
-    <h2> Project ${tittle}</h2>
+    <h2> Project: ${title}</h2>
     <p><h2>Group ${group}</h2></p>
     <p><ul>
     <c:forEach items= "${persons}" var = "person"> 
