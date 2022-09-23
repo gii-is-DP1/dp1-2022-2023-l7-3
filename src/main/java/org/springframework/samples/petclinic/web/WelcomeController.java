@@ -36,7 +36,7 @@ public class WelcomeController {
 		  person5.setLastName(" Roldan");
 		  persons.add(person5);
 		  person6.setFirstName("Álvaro");
-		  person6.setLastName(" Urijo");
+		  person6.setLastName(" Urquijo");
 		  persons.add(person6);
 		  model.put("persons", persons);
 		  model.put("title", "Monopoly");
