@@ -3,8 +3,6 @@
 En este proyecto se realiza un sistema para jugar al clásico juego de mesa ‘Monopoly’. 
 En este juego el objetivo es conseguir más dinero e influencia en el tablero que el resto de la mesa hasta el punto en el que el resto de los jugadores acaben en bancarrota, momento en el que dejarán de jugar, esto se hará por medio de la compra y venta de propiedades por turnos las cuales obligarán al resto a pagar al propietario por caer en las mismas. 
 
-* Vídeo explicando las reglas: https://youtu.be/rW9G2acyIFU
-
 ## Vídeo para comprender el funcionamiento del juego
 Para ver el vídeo clicke <a href="https://youtu.be/rW9G2acyIFU">aquí</a>
 
