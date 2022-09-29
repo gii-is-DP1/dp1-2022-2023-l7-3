@@ -1,24 +1,25 @@
-# Spring PetClinic Sample Application 
+# Monopoly Application 
 
-This is a fork of https://github.com/spring-projects/spring-petclinic to be used for the DP1 course. The main changes that have been performed were:
-- Trimming several parts of the application to keep the example low
-- Reorganize some parts of the code according to best practices introduced in the course
+En este proyecto se realiza un sistema para jugar al clásico juego de mesa ‘Monopoly’. 
+En este juego el objetivo es conseguir más dinero e influencia en el tablero que el resto de la mesa hasta el punto en el que el resto de los jugadores acaben en bancarrota, momento en el que dejarán de jugar, esto se hará por medio de la compra y venta de propiedades por turnos las cuales obligarán al resto a pagar al propietario por caer en las mismas. 
 
-## Understanding the Spring Petclinic application with a few diagrams
-<a href="https://speakerdeck.com/michaelisvy/spring-petclinic-sample-application">See the presentation here</a>
+* Vídeo explicando las reglas: https://youtu.be/rW9G2acyIFU
+
+## Vídeo para comprender el funcionamiento del juego
+Para ver el vídeo clicke <a href="https://youtu.be/rW9G2acyIFU">aquí</a>
 
 ## Running petclinic locally
-Petclinic is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Maven](https://spring.io/guides/gs/maven/). You can build a jar file and run it from the command line:
+Monopoly is a [Spring Boot](https://spring.io/guides/gs/spring-boot) application built using [Maven](https://spring.io/guides/gs/maven/). You can build a jar file and run it from the command line:
 
 
 ```
-git clone https://github.com/gii-is-DP1/spring-petclinic.git
-cd spring-petclinic
+git clone https://github.com/gii-is-DP1/dp1-2022-2023-l7-3.git
+cd spring-monopoly
 ./mvnw package
 java -jar target/*.jar
 ```
 
-You can then access petclinic here: http://localhost:8080/
+You can then access monopoly here: http://localhost:8080/
 
 <img width="1042" alt="petclinic-screenshot" src="https://cloud.githubusercontent.com/assets/838318/19727082/2aee6d6c-9b8e-11e6-81fe-e889a5ddfded.png">
 
