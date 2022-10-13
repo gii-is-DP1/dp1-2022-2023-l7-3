@@ -13,37 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.samples.petclinic.model;
+package org.springframework.monopoly.model;
 
-import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.Size;
 
 /**
- * Simple JavaBean domain object adds a name property to <code>BaseEntity</code>. Used as
- * a base class for objects needing these properties.
+ * Simple JavaBean domain object with an id property. Used as a base class for objects
+ * needing this property.
  *
  * @author Ken Krebs
  * @author Juergen Hoeller
  */
 @MappedSuperclass
-public class NamedEntity extends BaseEntity {
+public class BaseEntity {
 
-    @Size(min = 3, max = 50)
-	@Column(name = "name")
-	private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected Integer id;
 
-	public String getName() {
-		return this.name;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	@Override
-	public String toString() {
-		return this.getName();
+	public boolean isNew() {
+		return this.id == null;
 	}
 
 }
