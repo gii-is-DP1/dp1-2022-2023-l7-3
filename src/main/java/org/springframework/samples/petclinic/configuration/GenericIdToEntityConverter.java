@@ -15,7 +15,7 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.core.convert.support.DefaultConversionService;
-import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.stereotype.Component;
 
 @Component()
