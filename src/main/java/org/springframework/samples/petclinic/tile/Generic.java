@@ -1,4 +1,4 @@
-package org.springframework.monopoly.tile;
+package org.springframework.samples.petclinic.tile;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

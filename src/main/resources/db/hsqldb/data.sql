@@ -93,3 +93,10 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (1, 7, '2013-01-01',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (2, 8, '2013-01-02', 'rabies shot');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03', 'neutered');
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
+
+INSERT INTO card_types VALUES (1, 'luck');
+INSERT INTO card_types VALUES (2, 'community_card');
+
+INSERT INTO actions VALUES (1, 'pay');
+
+INSERT INTO cards(id, card_type_id, action_id, quantity) VALUES (1,1,1,100);
