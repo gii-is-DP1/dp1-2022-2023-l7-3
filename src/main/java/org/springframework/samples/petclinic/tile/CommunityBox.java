@@ -1,4 +1,4 @@
-package org.springframework.monopoly.tile;
+package org.springframework.samples.petclinic.tile;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "luck")
-public class Luck extends Tile{
+@Table(name = "community_box")
+public class CommunityBox extends Tile{
 
 }

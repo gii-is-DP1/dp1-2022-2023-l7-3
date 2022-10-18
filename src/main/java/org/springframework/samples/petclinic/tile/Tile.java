@@ -1,4 +1,4 @@
-package org.springframework.monopoly.tile;
+package org.springframework.samples.petclinic.tile;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,10 +12,8 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@EqualsAndHashCode(of = { "id" })
 @Table(name = "tiles")
 public class Tile extends BaseEntity {
-	
-	private Integer id = this.getId();
+
 
 }
