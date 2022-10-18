@@ -5,7 +5,6 @@ import javax.persistence.Table;
 
 import org.springframework.monopoly.model.BaseEntity;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
