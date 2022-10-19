@@ -10,7 +10,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+
 @Table(name = "generics")
+
 public class Generic extends Tile {
 	
 	@Column(name = "generic_type")
