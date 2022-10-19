@@ -8,9 +8,6 @@ import org.springframework.monopoly.model.BaseEntity;
 
 
 
-
-@Getter
-@Setter
 @MappedSuperclass
 public class Tile extends BaseEntity {
 
