@@ -7,9 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.springframework.monopoly.model.BaseEntity;
-import org.springframework.samples.petclinic.tile.Tile;
 
-import lombok.EqualsAndHashCode;
+
 import lombok.Getter;
 import lombok.Setter;
 
