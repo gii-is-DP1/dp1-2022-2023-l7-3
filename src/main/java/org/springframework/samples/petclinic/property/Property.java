@@ -7,6 +7,10 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.monopoly.model.NamedEntity;
 
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 @MappedSuperclass
 public class Property extends NamedEntity{
 	
