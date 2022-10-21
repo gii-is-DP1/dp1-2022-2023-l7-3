@@ -101,3 +101,5 @@ INSERT INTO actions VALUES (1, 'pay');
 
 INSERT INTO cards(id, card_type_id, action_id, quantity) VALUES (1,1,1,100);
 
+
+
