@@ -6,8 +6,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -23,12 +21,8 @@ public class Turn extends BaseEntity{
 	
 	@Column(name= "action")
 	@Enumerated(EnumType.STRING)
-	private actionCard action;
-	
-	public enum actionCard {
-		PAY, PAY_PLAYERS, CHARGE, CHARGE_PLAYERS, MOVE 
-	}
-	
+	private Action action;
+		
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer turnNumber;

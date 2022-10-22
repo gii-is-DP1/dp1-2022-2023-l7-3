@@ -5,14 +5,18 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.monopoly.model.NamedEntity;
+import org.springframework.monopoly.tile.Tile;
 
 import lombok.Getter;
 import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class Property extends NamedEntity{
+public class Property extends Tile {
+	
+	@Column(name = "name")
+	@NotBlank
+	private String name;
 	
 	@Column(name = "price")
 	@NotBlank

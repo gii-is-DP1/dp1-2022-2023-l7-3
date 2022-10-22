@@ -95,12 +95,7 @@ INSERT INTO visits(id,pet_id,visit_date,description) VALUES (3, 8, '2013-01-03',
 INSERT INTO visits(id,pet_id,visit_date,description) VALUES (4, 7, '2013-01-04', 'spayed');
 
 /* COMMUNITY BOX, LUCK AND TILES */
-INSERT INTO card_types VALUES (1, 'luck');
-INSERT INTO card_types VALUES (2, 'community_card');
 
-INSERT INTO actions VALUES (1, 'pay');
-
-INSERT INTO cards(id, card_type_id, action_id, quantity) VALUES (1,1,1,100);
 
 
 /* STREETS COMPANIES AND STATIONS */
