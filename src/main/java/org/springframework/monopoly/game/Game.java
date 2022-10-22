@@ -5,16 +5,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.user.User;
 
 @Entity
 public class Game extends BaseEntity {
-
-	@Column(name = "winner")
-	protected Player winner;
+	@ManyToOne
+	@JoinColumn(name = "winner")
+	protected User winner;
 
 	@Column(name = "date")
 	@NotEmpty
@@ -23,11 +26,11 @@ public class Game extends BaseEntity {
 	@Column(name = "duration")
 	protected Duration duration;
 
-	public Player getWinner() {
+	public User getWinner() {
 		return winner;
 	}
 
-	public void setWinner(Player winner) {
+	public void setWinner(User winner) {
 		this.winner = winner;
 	}
 
