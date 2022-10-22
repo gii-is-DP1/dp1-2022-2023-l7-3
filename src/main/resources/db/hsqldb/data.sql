@@ -130,4 +130,19 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (27, 'Estación del Norte', 200, 25, 100, false, '/resources/images/26.png');
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (28, 'Estación del Mediodía', 200, 25, 100, false, '/resources/images/27.png');
 
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (1, 'xXPaco02Xx', 'sdhwrth', 0);
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (2, 'CryptoBro64', 'sdhwasfdrth', 1);
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (3, 'TuAndreita98', 'asfsdafsdhwrth', 0);
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (4, 'AnimeEnjoyer', 'sdhwrvldsfnglth', 0);
 
+INSERT INTO game (id, date, duration, num_casas) VALUES (0, TO_DATE('11/10/2022', 'DD/MM/YYYY'), '1:47', 0);
+
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, monopoly_user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 1, 1);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, monopoly_user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 0, 2);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, monopoly_user_id) VALUES (2,  420, 'RED', 2, 0, 0, 0, 3);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, monopoly_user_id) VALUES (3,  0, 'YELLOW', 31, 0, 0, 0, 4);
+
+INSERT INTO game_players VALUES (0 , 0);
+INSERT INTO game_players VALUES (0 , 1);
+INSERT INTO game_players VALUES (0 , 2);
+INSERT INTO game_players VALUES (0 , 3);
