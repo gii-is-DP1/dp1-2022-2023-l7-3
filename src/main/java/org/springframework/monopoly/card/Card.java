@@ -4,9 +4,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.tile.CommunityBox;
+import org.springframework.monopoly.tile.Luck;
 import org.springframework.monopoly.turn.Action;
 
 import lombok.Getter;
@@ -26,5 +30,15 @@ public class Card extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private Action action;
 	
-	private Integer quantity;	
+	private Integer quantity;
+	
+	// Relations
+	
+	@OneToMany
+	@JoinColumn(name = "luck_id")
+	private Luck luck;
+	
+	@OneToMany
+	@JoinColumn(name = "community_box_id")
+	private CommunityBox communityBox;
 }
