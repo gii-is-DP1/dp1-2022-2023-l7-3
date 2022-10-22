@@ -19,7 +19,6 @@ import org.springframework.monopoly.tile.CommunityBox;
 import org.springframework.monopoly.tile.Generic;
 import org.springframework.monopoly.tile.Luck;
 import org.springframework.monopoly.tile.Taxes;
-import org.springframework.monopoly.tile.Tile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -43,13 +42,11 @@ public class Turn extends BaseEntity{
 	
 	// Relations
 	
-	@ManyToOne
-	@JoinColumn(name = "initial_tile_id")
-	private Tile initial_tile;
+	@Column(name = "initial_tile_id")
+	private Integer initial_tile;
 
-	@ManyToOne(optional= false)
-	@JoinColumn(name = "final_tile_id")
-	private Tile final_tile;
+	@Column(name = "final_tile_id")
+	private Integer final_tile;
 	
 	@ManyToOne
 	@JoinColumn(name = "community_box_id")

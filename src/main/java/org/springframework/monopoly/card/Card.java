@@ -1,5 +1,7 @@
 package org.springframework.monopoly.card;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -36,9 +38,9 @@ public class Card extends BaseEntity{
 	
 	@OneToMany
 	@JoinColumn(name = "luck_id")
-	private Luck luck;
+	private Collection<Luck> luck;
 	
 	@OneToMany
 	@JoinColumn(name = "community_box_id")
-	private CommunityBox communityBox;
+	private Collection<CommunityBox> communityBox;
 }
