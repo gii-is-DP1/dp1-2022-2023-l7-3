@@ -102,4 +102,36 @@ INSERT INTO actions VALUES (1, 'pay');
 INSERT INTO cards(id, card_type_id, action_id, quantity) VALUES (1,1,1,100);
 
 
+/* STREETS COMPANIES AND STATIONS */
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (0, 'Ronda de Valencia', 60, 2, 30, false, 'url', 'BROWN', 50, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (1, 'Plaza Lavapiés', 60, 4, 30, false, '', 'BROWN', 50, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (2, 'Glorieta Cuatro Caminos', 100, 6, 50, false, '', 'LIGHTBLUE', 50, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (3, 'Avenida Reina Victoria', 100, 6, 50, false, '', 'LIGHTBLUE', 50, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (4, 'Calle Bravo Murillo', 120, 8, 60, false, '', 'LIGHTBLUE', 50, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (5, 'Glorieta de Bilbao', 140, 10, 70, false, '', 'PINK', 100, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (6, 'Calle Alberto Aguilera', 140, 10, 70, false, '', 'PINK', 100, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (7, 'Calle Fuencarral', 160, 12, 80, false, '', 'PINK', 100, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (8, 'Avenida Felipe II', 180, 14, 90, false, '', 'ORANGE', 100, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (9, 'Calle Velázquez', 180, 14, 90, false, '', 'ORANGE', 100, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (10, 'Calle Serrano', 200, 16, 100, false, '', 'ORANGE', 100, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (11, 'Avenida de América', 220, 18, 110, false, '', 'RED', 150, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (12, 'Calle María de Molina', 220, 18, 110, false, '', 'RED', 150, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (13, 'Calle Cea Bermúdez', 240, 20, 120, false, '', 'RED', 150, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (14, 'Avenida de los Reyes Católicos', 260, 22, 130, false, '', 'YELLOW', 150, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (15, 'Calle Bailén', 260, 22, 130, false, '', 'YELLOW', 150, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (16, 'Plaza de España', 280, 24, 140, false, '', 'YELLOW', 150, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (17, 'Puerta del Sol', 300, 26, 150, false, '', 'GREEN', 200, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (18, 'Calle Alcalá', 300, 26, 150, false, '', 'GREEN', 200, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (19, 'Avenida Reina Victoria', 320, 28, 160, false, '', 'GREEN', 200, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (20, 'Paseo de la Castellana', 350, 35, 175, false, '', 'BLUE', 200, 0, false );
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel) VALUES (21, 'Paseo del Prado', 400, 50, 200, false, '', 'BLUE', 200, 0, false );
+
+INSERT INTO companies (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (22, 'Compañía de Aguas', 150, 0, 75, false, '');
+INSERT INTO companies (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (23, 'Compañía de Electricidad', 150, 0, 75, false, '');
+
+INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (24, 'Estación de las Delicias', 200, 25, 100, false, '');
+INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (25, 'Estación de Goya', 200, 25, 100, false, '');
+INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (26, 'Estación del Norte', 200, 25, 100, false, '');
+INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (27, 'Estación del Mediodía', 200, 25, 100, false, '');
+
 

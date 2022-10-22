@@ -23,11 +23,6 @@ public class Street extends Property{
 	public enum Color {
 		 BROWN, LIGHTBLUE, PINK, ORANGE, RED, YELLOW, GREEN, BLUE
 		}
-
-	
-	@Column(name = "price")
-	@NotBlank
-	private Integer price;
 	
 	@Column(name = "building_price")
 	@NotBlank
