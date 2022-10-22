@@ -12,6 +12,14 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.property.Company;
+import org.springframework.monopoly.property.Station;
+import org.springframework.monopoly.property.Street;
+import org.springframework.monopoly.tile.CommunityBox;
+import org.springframework.monopoly.tile.Generic;
+import org.springframework.monopoly.tile.Luck;
+import org.springframework.monopoly.tile.Taxes;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,12 +31,8 @@ public class Turn extends BaseEntity{
 	
 	@Column(name= "action")
 	@Enumerated(EnumType.STRING)
-	private actionCard action;
-	
-	public enum actionCard {
-		PAY, PAY_PLAYERS, CHARGE, CHARGE_PLAYERS, MOVE 
-	}
-	
+	private Action action;
+		
 	@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer turnNumber;
@@ -36,12 +40,40 @@ public class Turn extends BaseEntity{
 	@NotNull
 	private Integer roll;
 	
-//	@ManyToOne
-//	@JoinColumn(name = "final_box_id")
-//	private Box initial_box;
-//
-//	@ManyToOne(optional= false)
-//	@JoinColumn(name = "final_box_id")
-//	private Box final_box;
+	// Relations
+	
+	@Column(name = "initial_tile_id")
+	private Integer initial_tile;
+
+	@Column(name = "final_tile_id")
+	private Integer final_tile;
+	
+	@ManyToOne
+	@JoinColumn(name = "community_box_id")
+	private CommunityBox communityBox; 
+	
+	@ManyToOne
+	@JoinColumn(name = "luck_id")
+	private Luck luck; 
+	
+	@ManyToOne
+	@JoinColumn(name = "taxes_id")
+	private Taxes taxes; 
+	
+	@ManyToOne
+	@JoinColumn(name = "generic_id")
+	private Generic generic; 
+	
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company; 
+	
+	@ManyToOne
+	@JoinColumn(name = "station_id")
+	private Station station;
+	
+	@ManyToOne
+	@JoinColumn(name = "street_id")
+	private Street street; 
 	
 }
