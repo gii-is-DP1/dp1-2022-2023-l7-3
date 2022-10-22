@@ -1,53 +1,43 @@
 package org.springframework.monopoly.game;
 
-import java.time.Duration;
-import java.util.Date;
+import java.sql.Time;
+import java.sql.Date;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
-import org.springframework.monopoly.user.User;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Entity
 public class Game extends BaseEntity {
-	@ManyToOne
-	@JoinColumn(name = "winner")
-	protected User winner;
 
-	@Column(name = "date")
-	@NotEmpty
-	protected Date date;
-	
-	@Column(name = "duration")
-	protected Duration duration;
+    @NotEmpty
+    @Column(name = "date")
+    protected Date date;
 
-	public User getWinner() {
-		return winner;
-	}
+    @Column(name = "duration")
+    protected Time duration;
 
-	public void setWinner(User winner) {
-		this.winner = winner;
-	}
+    @NotEmpty
+    @Column(name = "num_casas")
+    protected Integer numCasas;
 
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-
-	public Duration getDuration() {
-		return duration;
-	}
-
-	public void setDuration(Duration duration) {
-		this.duration = duration;
-	}
-
+    @ManyToMany
+    @JoinTable(
+    		  name = "game_players", 
+    		  joinColumns = @JoinColumn(name = "game_id"), 
+    		  inverseJoinColumns = @JoinColumn(name = "player_id"))
+    protected Set<Player> players;
+    
 }

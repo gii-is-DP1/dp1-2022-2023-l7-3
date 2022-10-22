@@ -2,104 +2,45 @@ package org.springframework.monopoly.player;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.model.MonopolyUser;
 
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 public class Player extends BaseEntity {
 
-	@Column(name = "username")
-	@NotEmpty
-	protected String username;
+    @Column(name = "money")
+    protected Integer money;
 
-	@Column(name = "password")
-	@NotEmpty
-	protected String password;
-	
-	@Column(name = "isAdmin")
-	protected Boolean isAdmin = false;
-	
-	@Column(name = "money")
-	protected Integer money;
-	
-	@Column(name = "piece")
-	protected pieceColors piece;
-	
-	@Column(name = "tile")
-	protected Integer tile;
-	
-	@Column(name = "hasExitGate")
-	protected Boolean hasExitGate;
-	
-	@Column(name = "isJailed")
-	protected Boolean isJailed;
+    @Column(name = "piece")
+    @Enumerated(EnumType.STRING)
+    protected pieceColors piece;
 
-	public String getUsername() {
-		return username;
-	}
+    @Column(name = "tile")
+    protected Integer tile;
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    @Column(name = "has_exit_gate")
+    protected Boolean hasExitGate;
 
-	public String getPassword() {
-		return password;
-	}
+    @Column(name = "is_jailed")
+    protected Boolean isJailed;
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    @Column(name = "is_winner")
+    protected Boolean isWinner;
+    
+    @ManyToOne
+    @JoinColumn(name = "monopoly_user_id")
+    private MonopolyUser monopolyUser;
 
-	public Boolean getIsAdmin() {
-		return isAdmin;
-	}
 
-	public void setIsAdmin(Boolean isAdmin) {
-		this.isAdmin = isAdmin;
-	}
-
-	public Integer getMoney() {
-		return money;
-	}
-
-	public void setMoney(Integer money) {
-		this.money = money;
-	}
-
-	public pieceColors getPiece() {
-		return piece;
-	}
-
-	public void setPiece(pieceColors piece) {
-		this.piece = piece;
-	}
-
-	public Integer getTile() {
-		return tile;
-	}
-
-	public void setTile(Integer tile) {
-		this.tile = tile;
-	}
-
-	public Boolean getHasExitGate() {
-		return hasExitGate;
-	}
-
-	public void setHasExitGate(Boolean hasExitGate) {
-		this.hasExitGate = hasExitGate;
-	}
-
-	public Boolean getIsJailed() {
-		return isJailed;
-	}
-
-	public void setIsJailed(Boolean isJailed) {
-		this.isJailed = isJailed;
-	}
-
-	
 
 }
