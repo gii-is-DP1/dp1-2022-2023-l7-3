@@ -1,5 +1,7 @@
 package org.springframework.monopoly.turn;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,7 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.Street;
@@ -75,5 +79,14 @@ public class Turn extends BaseEntity{
 	@ManyToOne
 	@JoinColumn(name = "street_id")
 	private Street street; 
+	
+	@ManyToOne
+	@JoinColumn(name = "game_id")
+	private Game game;
+	
+	@ManyToOne
+	@JoinColumn(name = "player_id")
+	private Player player;
+	
 	
 }
