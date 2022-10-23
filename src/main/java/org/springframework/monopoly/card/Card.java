@@ -9,6 +9,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.tile.CommunityBox;
@@ -32,7 +33,12 @@ public class Card extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private Action action;
 	
+	@Column(name = "quantity")
 	private Integer quantity;
+	
+	@Column(name = "badge_image")
+	@NotBlank
+	private String badgeImage;
 	
 	// Relations
 	
