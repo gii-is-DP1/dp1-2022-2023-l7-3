@@ -1,17 +1,21 @@
 package org.springframework.monopoly.card;
 
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.tile.CommunityBox;
 import org.springframework.monopoly.tile.Luck;
 import org.springframework.monopoly.turn.Action;
@@ -42,11 +46,17 @@ public class Card extends BaseEntity{
 	
 	// Relations
 	
-	@OneToMany
-	@JoinColumn(name = "luck_id")
-	private Collection<Luck> luck;
+    @ManyToMany
+    @JoinTable(
+    		  name = "card_luck", 
+    		  joinColumns = @JoinColumn(name = "card_id"), 
+    		  inverseJoinColumns = @JoinColumn(name = "luck_id"))
+    protected Set<Luck> lucks;
 	
-	@OneToMany
-	@JoinColumn(name = "community_box_id")
-	private Collection<CommunityBox> communityBox;
+	@ManyToMany
+    @JoinTable(
+  		  name = "card_community_box", 
+  		  joinColumns = @JoinColumn(name = "card_id"), 
+  		  inverseJoinColumns = @JoinColumn(name = "community_box_id"))
+  protected Set<CommunityBox> community_box;
 }
