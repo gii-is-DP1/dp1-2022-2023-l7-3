@@ -1,6 +1,5 @@
 package org.springframework.monopoly.card;
 
-import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,12 +9,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.monopoly.model.BaseEntity;
-import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.tile.CommunityBox;
 import org.springframework.monopoly.tile.Luck;
 import org.springframework.monopoly.turn.Action;
