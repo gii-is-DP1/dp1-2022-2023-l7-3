@@ -1,4 +1,4 @@
-package org.springframework.monopoly.model;
+package org.springframework.monopoly.monopolyUser;
 
 
 import java.util.Set;
@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
+import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
 
 import lombok.Getter;

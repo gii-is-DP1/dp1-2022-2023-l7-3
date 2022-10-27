@@ -12,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import org.springframework.monopoly.model.BaseEntity;
-import org.springframework.monopoly.model.MonopolyUser;
+import org.springframework.monopoly.monopolyUser.MonopolyUser;
 import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.Street;
