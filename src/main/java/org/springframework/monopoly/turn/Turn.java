@@ -1,7 +1,5 @@
 package org.springframework.monopoly.turn;
 
-import java.util.Collection;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
