@@ -51,34 +51,6 @@ public class Turn extends BaseEntity{
 	private Integer final_tile;
 	
 	@ManyToOne
-	@JoinColumn(name = "community_box_id")
-	private CommunityBox communityBox; 
-	
-	@ManyToOne
-	@JoinColumn(name = "luck_id")
-	private Luck luck; 
-	
-	@ManyToOne
-	@JoinColumn(name = "taxes_id")
-	private Taxes taxes; 
-	
-	@ManyToOne
-	@JoinColumn(name = "generic_id")
-	private Generic generic; 
-	
-	@ManyToOne
-	@JoinColumn(name = "company_id")
-	private Company company; 
-	
-	@ManyToOne
-	@JoinColumn(name = "station_id")
-	private Station station;
-	
-	@ManyToOne
-	@JoinColumn(name = "street_id")
-	private Street street; 
-	
-	@ManyToOne
 	@JoinColumn(name = "game_id")
 	private Game game;
 	
