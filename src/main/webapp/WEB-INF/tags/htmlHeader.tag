@@ -1,8 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-<%--
-PetClinic :: a Spring Framework demonstration
---%>
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -14,11 +11,16 @@ PetClinic :: a Spring Framework demonstration
     <spring:url value="/resources/images/favicon.png" var="favicon"/>
     <link rel="shortcut icon" type="image/x-icon" href="${favicon}">
 
-    <title>PetClinic :: a Spring Framework demonstration</title>
+    <title>Monopoly</title>
 
-    <%-- CSS generated from LESS --%>
-    <spring:url value="/resources/css/petclinic.css" var="petclinicCss"/>
-    <link href="${petclinicCss}" rel="stylesheet"/>
+    <%-- CSS --%>
+    <spring:url value="resources/css/layoutStyles.css" var="layoutStylesCss"/>
+    <link href="${layoutStylesCss}" rel="stylesheet"/>
+    
+    <spring:url value="resources/css/SignUpStyles.css" var="signUpStylesCss"/>
+    <link href="${signUpStylesCss}" rel="stylesheet"/>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
 
     <%-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries --%>

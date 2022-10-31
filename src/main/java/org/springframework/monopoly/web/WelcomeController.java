@@ -25,7 +25,7 @@ public class WelcomeController {
 		  persons.add(person);
 		  person2.setFirstName("Olegario");
 		  person2.setLastName(" Morato");
-		  persons.add(person2);
+		  persons.add(person2); 
 		  person3.setFirstName("Úrsula");
 		  person3.setLastName(" Garrucho");
 		  persons.add(person3);
@@ -41,6 +41,7 @@ public class WelcomeController {
 		  model.put("persons", persons);
 		  model.put("title", "Monopoly");
 		  model.put("group", "dp1-2022-2023-l7-3");
+		  model.put("screenTittle", "Screen Tittle");
 	    return "welcome";
 	  }
 }

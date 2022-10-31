@@ -37,23 +37,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
 				.antMatchers("/users/new").permitAll()
 				.antMatchers("/session/**").permitAll()
+				.antMatchers("/signup/**").permitAll()
 				.antMatchers("/admin/**").hasAnyAuthority("admin")
 				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
 				.antMatchers("/vets/**").authenticated()
 				.anyRequest().denyAll()
 				.and()
 				 	.formLogin()
-				 	/*.loginPage("/login")*/
+				 	//.loginPage("/login") // TODO Descomentar
+				 	//.loginProcessingUrl("/monopolyUsers/new") // TODO cambiar monopolyUser por user
+				 	//.defaultSuccessUrl("/")
 				 	.failureUrl("/login-error")
 				.and()
-					.logout()
+					.logout() 
 						.logoutSuccessUrl("/"); 
-                // Configuración para que funcione la consola de administración 
-                // de la BD H2 (deshabilitar las cabeceras de protección contra
-                // ataques de tipo csrf y habilitar los framesets si su contenido
-                // se sirve desde esta misma página.
-                http.csrf().ignoringAntMatchers("/h2-console/**");
-                http.headers().frameOptions().sameOrigin();
+        // Configuración para que funcione la consola de administración 
+        // de la BD H2 (deshabilitar las cabeceras de protección contra
+        // ataques de tipo csrf y habilitar los framesets si su contenido
+        // se sirve desde esta misma página.
+        http.csrf().ignoringAntMatchers("/h2-console/**");
+        http.headers().frameOptions().sameOrigin();
 	}
 
 	@Override
