@@ -12,6 +12,7 @@ body {
     margin: 0;
     background-color: transparent;
     background-image: url("/resources/images/background.jpg");
+    background-size: auto;
 }
 
 #Header {
@@ -95,7 +96,8 @@ body {
 #mainBody {
     width: 100%;
     height: auto;
-    padding: 20px;
+    margin: 40px;
     background-color: transparent;
+    max-width: -webkit-fill-available;
 }
 

@@ -2,7 +2,7 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<%@ attribute name="screenTittle" required="true" %>
+<%@ attribute name="screenTittle" required="true" %> 
 <%@ attribute name="customScript" required="false" fragment="true"%>
 
 <!doctype html>

@@ -24,9 +24,9 @@ public class MonopolyUser extends BaseEntity {
 	@NotEmpty
 	protected String username;
 
-	@Column(name = "Password")
+	@Column(name = "password")
 	@NotEmpty
-	protected String Password;
+	protected String password;
 	
 	@Column(name = "is_admin")
 	protected Boolean isAdmin = false;
