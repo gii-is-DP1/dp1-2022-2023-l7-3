@@ -4,15 +4,23 @@
     font-weight: bold;
 }
 
-#MainBodySignUp {
-    background-color: transparent;
-    height: 80%;
-    width: 100%;
-    display: grid;
-    row-gap: 0px;
-    grid-template-rows: 20% 50% 30%;
-    justify-content: center;
+body {
+	overflow: auto;
 }
+
+#MainBodySignUp {
+	    background-color: transparent;
+	    display: grid;
+	    min-height: 800px;
+	    min-width: 700px;
+	    height: 80%;
+	    width: 100%;
+	    overflow: auto;
+	    row-gap: 0px;
+	    grid-template-rows: 20% 50% 30%;
+	    justify-content: center;
+	}
+
 
 #signInText {
     grid-row: 1;
