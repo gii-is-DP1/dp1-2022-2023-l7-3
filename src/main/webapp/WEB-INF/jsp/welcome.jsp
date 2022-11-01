@@ -5,23 +5,30 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <!-- %@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %-->  
 
-<petclinic:layout pageName="home">
-    <h2><fmt:message key="welcome"/></h2>
-    <div class="row">
-    <h2> Project: ${title}</h2>
-    <p><h2>Group ${group}</h2></p>
-    <p><ul>
-    <c:forEach items= "${persons}" var = "person"> 
-    <li>${person.firstName} ${person.lastName}</li>
-    </c:forEach>
-    </ul></p>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <spring:url value="/resources/images/00.png" htmlEscape="true" var="petsImage"/>
-            <spring:url value="/resources/images/welcome.png" htmlEscape="true" var="usLogo"/>
-            <img class="img-responsive" src="${petsImage}"/>
-            <img class="img-responsive" src="${usLogo}"/>
+<petclinic:layout screenTittle="${screenTittle}">
+    <div id="mainBody">
+        <h2><fmt:message key="welcome"/></h2>
+        <div class="row">
+        <h2> Project: ${title}</h2>
+        <p>
+        	<h2>Group ${group}</h2>
+        </p>
+        <p>
+        	<ul>
+		        <c:forEach items= "${persons}" var = "person"> 
+		        <li>${person.firstName} ${person.lastName}</li>
+		        </c:forEach>
+	        </ul>
+        </p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <spring:url value="/resources/images/00.png" htmlEscape="true" var="petsImage"/>
+                <spring:url value="/resources/images/welcome.png" htmlEscape="true" var="usLogo"/>
+                <img class="img-responsive" src="${petsImage}"/>
+                <img class="img-responsive" src="${usLogo}"/>
+            </div>
         </div>
     </div>
 </petclinic:layout>
