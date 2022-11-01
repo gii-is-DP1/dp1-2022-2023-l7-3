@@ -19,6 +19,7 @@ body {
 	    row-gap: 0px;
 	    grid-template-rows: 20% 50% 30%;
 	    justify-content: center;
+	    max-width: -webkit-fill-available;
 	}
 
 

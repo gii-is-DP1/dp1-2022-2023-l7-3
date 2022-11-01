@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 
-<petclinic:layout pageName="error">
+<petclinic:layout screenTittle="error">
 
     <spring:url value="/resources/images/monopoly.png" var="monopolyImage"/>
     <img src="${monopolyImage}"/>
