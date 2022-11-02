@@ -1,5 +1,5 @@
 #AlreadySignedUp {
-    font-family: "Bree Serif";
+    font-family: "Bree_Serif";
     font-size: 20px;
     font-weight: bold;
 }
@@ -65,7 +65,7 @@ body {
 .inputText {
     margin-bottom: 20px;
     font-size: 20px;
-    font-family: "Bree Serif";
+    font-family: "Bree_Serif";
 }
 
 input[type=submit] {
@@ -78,7 +78,7 @@ input[type=submit] {
     border-radius: 10px;
     justify-self: center;
     cursor: pointer;
-    font-family: "Bree Serif";
+    font-family: "Bree_Serif";
     font-size: 20px;
 }
 
