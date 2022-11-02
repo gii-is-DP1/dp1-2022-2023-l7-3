@@ -14,6 +14,9 @@
     <title>Monopoly</title>
 
     <%-- CSS --%>
+    <spring:url value="resources/css/font.css" var="fontCss"/>
+    <link href="${fontCss}" rel="stylesheet"/>
+    
     <spring:url value="resources/css/layoutStyles.css" var="layoutStylesCss"/>
     <link href="${layoutStylesCss}" rel="stylesheet"/>
     
