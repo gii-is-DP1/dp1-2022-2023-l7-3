@@ -14,13 +14,13 @@
     <title>Monopoly</title>
 
     <%-- CSS --%>
-    <spring:url value="resources/css/font.css" var="fontCss"/>
+    <spring:url value="/resources/css/font.css" var="fontCss"/>
     <link href="${fontCss}" rel="stylesheet"/>
     
-    <spring:url value="resources/css/layoutStyles.css" var="layoutStylesCss"/>
+    <spring:url value="/resources/css/layoutStyles.css" var="layoutStylesCss"/>
     <link href="${layoutStylesCss}" rel="stylesheet"/>
     
-    <spring:url value="resources/css/SignUpStyles.css" var="signUpStylesCss"/>
+    <spring:url value="/resources/css/SignUpStyles.css" var="signUpStylesCss"/>
     <link href="${signUpStylesCss}" rel="stylesheet"/>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
