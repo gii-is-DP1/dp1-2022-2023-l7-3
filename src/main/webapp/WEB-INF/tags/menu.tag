@@ -9,7 +9,7 @@
 
 <div id="Header">
 	<div id="LogoTittle">
-		<img src="resources/images/logo.png" id="Logo"/>
+		<img src="/resources/images/logo.png" id="Logo"/>
 		<p id="ScreenTittle">${screenTittle}</p>
 	</div>
 	
@@ -32,7 +32,7 @@
 		</a>
 
 		<a href="">
-			<img href="" src="resources/images/settings.png" id="Settings"/>
+			<img href="" src="/resources/images/settings.png" id="Settings"/>
 		</a>
 	</div>
 </div>
