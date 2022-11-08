@@ -14,13 +14,6 @@ import javax.validation.constraints.NotNull;
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
-import org.springframework.monopoly.property.Company;
-import org.springframework.monopoly.property.Station;
-import org.springframework.monopoly.property.Street;
-import org.springframework.monopoly.tile.CommunityBox;
-import org.springframework.monopoly.tile.Generic;
-import org.springframework.monopoly.tile.Luck;
-import org.springframework.monopoly.tile.Taxes;
 
 import lombok.Getter;
 import lombok.Setter;
