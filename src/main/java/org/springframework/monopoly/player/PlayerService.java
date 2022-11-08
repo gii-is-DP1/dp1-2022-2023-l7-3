@@ -15,11 +15,15 @@
  */
 package org.springframework.monopoly.player;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.monopolyUser.MonopolyUserService;
+import org.springframework.monopoly.property.Property;
+import org.springframework.monopoly.property.PropertyRepository;
+import org.springframework.monopoly.property.Street;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,13 +43,16 @@ public class PlayerService {
 	@Autowired
 	private MonopolyUserService monopolyUserService;
 	
+	private PropertyRepository propertyRepository;
+	
 	// @Autowired
 	// private AuthoritiesService authoritiesService;
 
 	@Autowired
-	public PlayerService(PlayerRepository playerRepository) {
+	public PlayerService(PlayerRepository playerRepository, PropertyRepository propertyRepository) {
 		this.playerRepository = playerRepository;
-	}	
+		this.propertyRepository = propertyRepository;
+	}
 
 	@Transactional(readOnly = true)
 	public Player findPlayerById(int id) throws DataAccessException {
@@ -61,4 +68,13 @@ public class PlayerService {
 		// authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
 	}		
 
+	public void getPropertyById(Integer idProperty, Integer idPlayer) {
+		Optional<Property> property = propertyRepository.findById(idProperty);
+		Player player = playerRepository.findPlayerById(idPlayer);
+		if(player.getMoney()>= property.get().getPrice()) {
+			property.get().setPlayer(player);
+		}
+		
+		
+	}
 }

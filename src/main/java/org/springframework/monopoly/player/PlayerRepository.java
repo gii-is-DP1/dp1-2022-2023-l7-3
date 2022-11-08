@@ -15,6 +15,8 @@
  */
 package org.springframework.monopoly.player;
 
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -24,6 +26,9 @@ import org.springframework.data.repository.CrudRepository;
  * @since 15.1.2013
  */
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
+	
+	Player findPlayerById(Integer id);
+	
 
 
 }

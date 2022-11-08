@@ -26,4 +26,5 @@ public class PropertyService {
 	public Optional<Property> findProperty(Integer id) {
 		return propertyRepository.findById(id);
 	}
+	
 }
