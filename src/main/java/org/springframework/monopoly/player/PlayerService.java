@@ -15,7 +15,6 @@
  */
 package org.springframework.monopoly.player;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.monopolyUser.MonopolyUserService;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyRepository;
-import org.springframework.monopoly.property.Street;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
