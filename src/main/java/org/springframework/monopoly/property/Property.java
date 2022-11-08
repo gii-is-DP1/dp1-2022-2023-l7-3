@@ -2,9 +2,12 @@ package org.springframework.monopoly.property;
 
 
 import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.tile.Tile;
 
 import lombok.Getter;
@@ -37,5 +40,9 @@ public class Property extends Tile {
 	@Column(name = "badge_Image")
 	@NotBlank
 	private String badgeImage;
+	
+	@ManyToOne
+	@JoinColumn(name = "player_id")
+	private Player player;
 	
 }
