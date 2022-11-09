@@ -40,6 +40,26 @@ public class Property extends Tile {
 	@Column(name = "badge_Image")
 	@NotBlank
 	private String badgeImage;
+
+	@Column(name = "rental_1_house")
+	@NotBlank
+	private Integer rental1House;
+
+	@Column(name = "rental_2_house")
+	@NotBlank
+	private Integer rental2House;
+
+	@Column(name = "rental_3_house")
+	@NotBlank
+	private Integer rental3House;
+
+	@Column(name = "rental_4_house")
+	@NotBlank
+	private Integer rental4House;
+
+	@Column(name = "rental_hotel")
+	@NotBlank
+	private Integer rentalHotel;
 	
 	@ManyToOne
 	@JoinColumn(name = "owner")
