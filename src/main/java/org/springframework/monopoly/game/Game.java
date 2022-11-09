@@ -1,6 +1,7 @@
 package org.springframework.monopoly.game;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.sql.Date;
 import java.util.Set;
 
@@ -21,6 +22,11 @@ import lombok.Setter;
 @Entity
 public class Game extends BaseEntity {
 
+	public Game() {
+		this.date= Date.valueOf(LocalDate.now());
+		this.numCasas = 32;
+	}
+	
     @NotEmpty
     @Column(name = "date")
     protected Date date;
@@ -32,6 +38,7 @@ public class Game extends BaseEntity {
     @Column(name = "num_casas")
     protected Integer numCasas;
 
+    
     @ManyToMany
     @JoinTable(
     		  name = "game_players", 
