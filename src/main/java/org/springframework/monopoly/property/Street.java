@@ -33,6 +33,26 @@ public class Street extends Property{
 	@NotBlank
 	private Boolean haveHotel;
 	
+	@Column(name = "rental_1_house")
+	@NotBlank
+	private Integer rental1House;
+
+	@Column(name = "rental_2_house")
+	@NotBlank
+	private Integer rental2House;
+
+	@Column(name = "rental_3_house")
+	@NotBlank
+	private Integer rental3House;
+
+	@Column(name = "rental_4_house")
+	@NotBlank
+	private Integer rental4House;
+
+	@Column(name = "rental_hotel")
+	@NotBlank
+	private Integer rentalHotel;
+	
 	
 
 }
