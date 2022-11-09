@@ -8,8 +8,4 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface GenericRepository extends CrudRepository<Generic, Integer> {
 	List<Generic> findAll();
-	
-	Optional<Generic> findById();
-	@Query("SELECT ct FROM CardType ct")
-	List<GenericType> findAllTypes();
 }
