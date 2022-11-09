@@ -15,6 +15,7 @@
  */
 package org.springframework.monopoly.player;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class PlayerService {
 
 	@Transactional(readOnly = true)
 	public List<Player> findAll() {
-		return playerRepository.findAllPlayers();
+		return new ArrayList<Player>(playerRepository.findAll());
 	}
 	@Transactional(readOnly = true)
 	public Player findPlayerById(int id) throws DataAccessException {

@@ -15,7 +15,7 @@
  */
 package org.springframework.monopoly.player;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.springframework.data.repository.CrudRepository;
 
@@ -26,7 +26,7 @@ import org.springframework.data.repository.CrudRepository;
  * @since 15.1.2013
  */
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
-	List<Player> findAllPlayers();
+	Collection<Player> findAll();
 	
 	Player findPlayerById(Integer id);
 	
