@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -33,25 +34,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/resources/**","/webjars/**","/h2-console/**", "/login").permitAll()
-				.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
-				.antMatchers("/users/new").permitAll()
-				.antMatchers("/session/**").permitAll()
-				.antMatchers("/signup/**").permitAll()
-				.antMatchers("/admin/**").hasAnyAuthority("admin")
-				.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
-				.antMatchers("/vets/**", "/logout").authenticated()
-				.anyRequest().denyAll()
-				.and()
-				 	.formLogin()
-				 	//.loginPage("/login") // TODO Descomentar
-				 	//.defaultSuccessUrl("/")
-				 	//.failureUrl("/login-error")
-				 	.permitAll()
-				.and()
-					.logout()
-					//.logoutSuccessUrl("/")
-					.permitAll(); 
+		.antMatchers("/resources/**","/webjars/**","/h2-console/**").permitAll()
+		.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
+		.antMatchers("/users/new", "/login").permitAll()
+		.antMatchers("/cards/**").permitAll()
+		.antMatchers("/session/**").permitAll()
+		.antMatchers("/signup/**").permitAll()
+		.antMatchers("/admin/**").hasAnyAuthority("admin")
+		.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
+		.antMatchers("/vets/**", "/logout").authenticated()
+		.anyRequest().denyAll()
+		.and()
+		 	.formLogin()
+		 	.loginPage("/login")
+		 	.defaultSuccessUrl("/")
+		 	.failureUrl("/login?error") 
+		.and()
+			.logout()
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/")
+				.deleteCookies("JSESSIONID")
+				.invalidateHttpSession(true);
         // Configuración para que funcione la consola de administración 
         // de la BD H2 (deshabilitar las cabeceras de protección contra
         // ataques de tipo csrf y habilitar los framesets si su contenido
@@ -65,13 +68,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication()
 	      .dataSource(dataSource)
 	      .usersByUsernameQuery(
-	       "select username,password,enabled "
-	        + "from users "
-	        + "where username = ?")
-	      .authoritiesByUsernameQuery(
-	       "select username, authority "
-	        + "from authorities "
-	        + "where username = ?")	      	      
+			  "select username,password,enabled "
+		        + "from users "
+		        + "where username = ?")
+		      .authoritiesByUsernameQuery(
+		       "select username,authority "
+		        + "from authorities "
+		        + "where username = ?")	 	      	      
 	      .passwordEncoder(passwordEncoder());	
 	}
 	

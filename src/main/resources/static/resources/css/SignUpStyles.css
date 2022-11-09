@@ -4,15 +4,11 @@
     font-weight: bold;
 }
 
-body {
-	overflow: auto;
-}
-
 #MainBodySignUp {
 	    background-color: transparent;
 	    display: grid;
-	    min-height: 800px;
-	    min-width: 700px;
+	    min-height: 700px;
+	    min-width: 500px;
 	    height: 80%;
 	    width: 100%;
 	    overflow: auto;
@@ -33,8 +29,9 @@ body {
 #formDiv {
     grid-row: 2;
     margin-top: 0px;
-    width: fit-content;
-    height: 100%;
+    height: 500px;
+	min-width: 300px;
+	max-width: 500px;
     justify-self: center;
     padding: 30px;
     display: grid; /* Alternative: inline-flexbox */

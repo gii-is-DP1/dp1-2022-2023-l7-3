@@ -177,7 +177,7 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (25, 'Estación del Mediodía', 200, 25, 100, false, '/resources/images/27.png');
 
 /* USERS */
-INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (0, 'admin', 'admin', 'admin');
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (0, 'admin', 'admin', 'admin'); 
 INSERT INTO monopoly_user (id, username, password) VALUES (1, 'xXPaco02Xx', 'sdhwrth');
 INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (2, 'CryptoBro64', 'sdhwasfdrth', 'admin');
 INSERT INTO monopoly_user (id, username, password) VALUES (3, 'TuAndreita98', 'asfsdafsdhwrth');
