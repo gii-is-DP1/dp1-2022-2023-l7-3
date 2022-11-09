@@ -15,8 +15,6 @@
  */
 package org.springframework.monopoly.player;
 
-import java.util.Optional;
-
 import org.springframework.data.repository.CrudRepository;
 
 /**

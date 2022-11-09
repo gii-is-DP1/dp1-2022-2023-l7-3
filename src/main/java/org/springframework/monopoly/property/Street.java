@@ -15,14 +15,11 @@ import lombok.Setter;
 @Setter
 @Table(name = "streets")
 public class Street extends Property{
+	
 	@Column(name = "color")
 	@NotBlank
 	@Enumerated(EnumType.STRING)
 	private Color color;
-	
-	public enum Color {
-		 BROWN, LIGHTBLUE, PINK, ORANGE, RED, YELLOW, GREEN, BLUE
-		}
 	
 	@Column(name = "building_price")
 	@NotBlank

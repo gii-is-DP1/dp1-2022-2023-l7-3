@@ -42,7 +42,7 @@ public class Property extends Tile {
 	private String badgeImage;
 	
 	@ManyToOne
-	@JoinColumn(name = "player_id")
-	private Player player;
+	@JoinColumn(name = "owner")
+	private Player owner;
 	
 }
