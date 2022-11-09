@@ -28,8 +28,8 @@ public class MonopolyUser extends BaseEntity {
 	@NotEmpty
 	protected String password;
 	
-	@Column(name = "is_admin")
-	protected Boolean isAdmin = false;
+	@Column(name = "is_admin", columnDefinition = "varchar(255) default 'user'")
+	protected String isAdmin;
 	
 	@OneToMany(mappedBy = "monopolyUser",
             cascade = CascadeType.ALL)
