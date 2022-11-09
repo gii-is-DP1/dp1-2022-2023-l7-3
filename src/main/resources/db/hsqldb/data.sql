@@ -177,10 +177,11 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image) VALUES (25, 'Estación del Mediodía', 200, 25, 100, false, '/resources/images/27.png');
 
 /* USERS */
-INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (1, 'xXPaco02Xx', 'sdhwrth', 0);
-INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (2, 'CryptoBro64', 'sdhwasfdrth', 1);
-INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (3, 'TuAndreita98', 'asfsdafsdhwrth', 0);
-INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (4, 'AnimeEnjoyer', 'sdhwrvldsfnglth', 0);
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (0, 'admin', 'admin', 'admin');
+INSERT INTO monopoly_user (id, username, password) VALUES (1, 'xXPaco02Xx', 'sdhwrth');
+INSERT INTO monopoly_user (id, username, password, is_admin) VALUES (2, 'CryptoBro64', 'sdhwasfdrth', 'admin');
+INSERT INTO monopoly_user (id, username, password) VALUES (3, 'TuAndreita98', 'asfsdafsdhwrth');
+INSERT INTO monopoly_user (id, username, password) VALUES (4, 'AnimeEnjoyer', 'sdhwrvldsfnglth');
 
 /* GAMES, PLAYERS */
 INSERT INTO game (id, date, duration, num_casas) VALUES (0, TO_DATE('11/10/2022', 'DD/MM/YYYY'), '1:47', 0);
