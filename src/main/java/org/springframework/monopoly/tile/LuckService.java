@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LuckService {
+	
 	private LuckRepository luckRepository;
 	private CardRepository cardRepository;
 	

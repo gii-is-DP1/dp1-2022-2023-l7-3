@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GenericService {
+	
 	private GenericRepository genericRepository;
 
 	@Autowired
