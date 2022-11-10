@@ -23,7 +23,7 @@ public class Player extends BaseEntity {
 
 	@Column(name = "piece")
 	@Enumerated(EnumType.STRING)
-	protected pieceColors piece;
+	protected PieceColors piece;
 
 	@Column(name = "tile")
 	protected Integer tile;
@@ -37,6 +37,9 @@ public class Player extends BaseEntity {
 	@Column(name = "is_winner")
 	protected Boolean isWinner;
 
+	@Column(name = "turn_number")
+	protected Integer turn_number;
+	
 	@ManyToOne
 	@JoinColumn(name = "monopoly_user_id")
 	private MonopolyUser monopolyUser;

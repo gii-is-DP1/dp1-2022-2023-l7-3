@@ -42,12 +42,27 @@ public class MonopolyUserService {
 	}
 	
 	@Transactional
+	public List<MonopolyUser> findAll() {
+		return monopolyUserRepository.findAll();
+	}
+	@Transactional
 	public void saveUser(MonopolyUser monopolyUser) throws DataAccessException {
 		monopolyUserRepository.save(monopolyUser);
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<MonopolyUser> findUser(Integer id) {
 		return monopolyUserRepository.findById(id);
 	}	
+	
+	@Transactional(readOnly = true)
+	public MonopolyUser findUserByName(String name) {
+		Optional<MonopolyUser> user = monopolyUserRepository.findByUsername(name);
+		if(user.isPresent()) {
+			return user.get();
+		} else {
+			return null;
+		}
+	}
 
 }

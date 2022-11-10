@@ -15,7 +15,12 @@
  */
 package org.springframework.monopoly.player;
 
+import java.util.Collection;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Spring Data JPA OwnerRepository interface
@@ -24,9 +29,11 @@ import org.springframework.data.repository.CrudRepository;
  * @since 15.1.2013
  */
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
-	
+	Collection<Player> findAll();
 	Player findPlayerById(Integer id);
 	
-
+	@Query("SELECT player FROM Player player WHERE player.monopolyUser =:id")
+	Optional<Player> findPlayerByUser(@Param("id") Integer id);
+	
 
 }

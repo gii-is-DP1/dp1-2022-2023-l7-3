@@ -15,6 +15,9 @@
  */
 package org.springframework.monopoly.player;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +54,19 @@ public class PlayerService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<Player> findAll() {
+		return new ArrayList<Player>(playerRepository.findAll());
+	}
+	
+	@Transactional(readOnly = true)
 	public Player findPlayerById(int id) throws DataAccessException {
 		Optional<Player> result = playerRepository.findById(id);
+		return result.isPresent() ? result.get() : null;
+	}
+	
+	@Transactional(readOnly = true)
+	public Player findPlayerByUserId(int id) throws DataAccessException {
+		Optional<Player> result = playerRepository.findPlayerByUser(id);
 		return result.isPresent() ? result.get() : null;
 	}
 
@@ -62,7 +76,15 @@ public class PlayerService {
 		monopolyUserService.saveUser(player.getMonopolyUser());
 		
 		// authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
-	}		
+	}	
+	
+	@Transactional
+	public List<PieceColors> getAllPieceTypes() {
+		PieceColors[] pieceColors = PieceColors.values();
+		List<PieceColors> colors = Arrays.asList(pieceColors);
+		return colors;
+	}
+	
 	
 	
 }

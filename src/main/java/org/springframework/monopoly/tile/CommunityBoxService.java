@@ -1,7 +1,5 @@
 package org.springframework.monopoly.tile;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,6 +36,5 @@ public class CommunityBoxService {
 		}
 		Card card =  ls2.get(rand.nextInt((ls2.size() - 0)));
 		return card;
-		
 	}
 }
