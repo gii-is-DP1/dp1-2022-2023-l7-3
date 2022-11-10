@@ -1,5 +1,5 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%@ attribute name="screenTittle" required="true" %> 
@@ -7,16 +7,16 @@
 
 <!doctype html>
 <html>
-<petclinic:htmlHeader/>
+<monopoly:htmlHeader/>
 
 <body>
-<petclinic:bodyHeader screenTittle="${screenTittle}"/>
+<monopoly:bodyHeader screenTittle="${screenTittle}"/>
 
 <div class="scrollableBodyDiv">
 	<jsp:doBody/>
 </div>
 
-<petclinic:footer/>
+<monopoly:footer/>
 <jsp:invoke fragment="customScript" />
 
 </body>

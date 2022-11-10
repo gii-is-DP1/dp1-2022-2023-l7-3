@@ -4,7 +4,9 @@
 
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
-
-<div class="buildPopUp">
-<h1>HOLA</h1>
+<div class= "parent">
+	<div class="gamePopUp">
+		<h1>HOLA</h1>
+	</div>
 </div>
+
