@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.monopoly.monopolyUser.MonopolyUserService;
+import org.springframework.monopoly.user.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +40,7 @@ public class PlayerService {
 	private PlayerRepository playerRepository;	
 	
 	@Autowired
-	private MonopolyUserService monopolyUserService;
+	private UserService monopolyUserService;
 	
 	
 	
@@ -73,7 +73,7 @@ public class PlayerService {
 	@Transactional
 	public void savePlayer(Player player) throws DataAccessException {
 		playerRepository.save(player);		
-		monopolyUserService.saveUser(player.getMonopolyUser());
+		monopolyUserService.saveUser(player.getUser());
 		
 		// authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
 	}	

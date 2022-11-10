@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication()
-public class PetclinicApplication {
+public class MonopolyApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PetclinicApplication.class, args);
-	}    
- 
+		SpringApplication.run(MonopolyApplication.class, args);
+	}
+  
 }

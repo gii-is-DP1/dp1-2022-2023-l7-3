@@ -32,7 +32,7 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 	Collection<Player> findAll();
 	Player findPlayerById(Integer id);
 	
-	@Query("SELECT player FROM Player player WHERE player.monopolyUser =:id")
+	@Query("SELECT player FROM Player player WHERE player.user =:id")
 	Optional<Player> findPlayerByUser(@Param("id") Integer id);
 	
 

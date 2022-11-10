@@ -42,8 +42,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.antMatchers("/signup/**").permitAll()
 		.antMatchers("/admin/**").hasAnyAuthority("admin")
 		.antMatchers("/monopolyUsers/list/**").hasAnyAuthority("admin")
-		.antMatchers("/owners/**").hasAnyAuthority("owner","admin")				
-		.antMatchers("/vets/**", "/logout").authenticated()
 		.anyRequest().denyAll()
 		.and()
 		 	.formLogin()
@@ -73,8 +71,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		        + "from users "
 		        + "where username = ?")
 		      .authoritiesByUsernameQuery(
-		       "select username,authority "
-		        + "from authorities "
+		       "select username,is_admin "
+		        + "from users "
 		        + "where username = ?")	 	      	      
 	      .passwordEncoder(passwordEncoder());	
 	}

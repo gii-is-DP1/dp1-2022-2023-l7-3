@@ -15,18 +15,6 @@
  */
 package org.springframework.monopoly.vet;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Collection;
-
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.monopoly.util.EntityUtils;
-import org.springframework.monopoly.vet.Vet;
-import org.springframework.monopoly.vet.VetService;
-import org.springframework.stereotype.Service;
 
 /**
  * Integration test of the Service and the Repository layer.
@@ -58,22 +46,22 @@ import org.springframework.stereotype.Service;
  * @author Dave Syer
  */
 
-@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
+//@DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 class VetServiceTests {
 
-	@Autowired
-	protected VetService vetService;	
-
-	@Test
-	void shouldFindVets() {
-		Collection<Vet> vets = this.vetService.findVets();
-
-		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
-		assertThat(vet.getLastName()).isEqualTo("Douglas");
-		assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
-		assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
-		assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
-	}
+//	@Autowired
+//	protected VetService vetService;	
+//
+//	@Test
+//	void shouldFindVets() {
+//		Collection<Vet> vets = this.vetService.findVets();
+//
+//		Vet vet = EntityUtils.getById(vets, Vet.class, 3);
+//		assertThat(vet.getLastName()).isEqualTo("Douglas");
+//		assertThat(vet.getNrOfSpecialties()).isEqualTo(2);
+//		assertThat(vet.getSpecialties().get(0).getName()).isEqualTo("dentistry");
+//		assertThat(vet.getSpecialties().get(1).getName()).isEqualTo("surgery");
+//	}
 
 
 }
