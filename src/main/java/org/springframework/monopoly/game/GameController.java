@@ -8,10 +8,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.monopoly.monopolyUser.MonopolyUserService;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
+import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +25,11 @@ public class GameController {
 	
 	private GameService gameService;
 	private PlayerService playerService;
-	private MonopolyUserService userService;
+	private UserService userService;
 	
 	
 	@Autowired
-	public GameController(GameService gameService, PlayerService playerService, MonopolyUserService userService) {
+	public GameController(GameService gameService, PlayerService playerService, UserService userService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;

@@ -1,12 +1,14 @@
 package org.springframework.monopoly.user;
 
-import java.util.Set;
 
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.player.Player;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,14 +17,24 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-public class User{
-	@Id
-	String username;
-	
-	String password;
+public class User extends BaseEntity {
+
+	@Column(name = "username")
+	@NotEmpty
+	protected String username;
+
+	@Column(name = "password")
+	@NotEmpty
+	protected String password;
 	
 	boolean enabled;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-	private Set<Authorities> authorities;
+	//@Column(name = "is_admin", columnDefinition = "tinyint default 0")
+	//protected Boolean isAdmin = false;
+	@Column(name = "is_admin", columnDefinition = "varchar(30) default 'user'")
+	protected String is_admin;
+	
+	@OneToOne(mappedBy = "user")
+	protected Player player;
+	
 }

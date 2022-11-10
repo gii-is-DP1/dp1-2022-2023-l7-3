@@ -1,14 +1,15 @@
 package org.springframework.monopoly.player;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.springframework.monopoly.model.BaseEntity;
-import org.springframework.monopoly.monopolyUser.MonopolyUser;
+import org.springframework.monopoly.user.User;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,8 +41,8 @@ public class Player extends BaseEntity {
 	@Column(name = "turn_number")
 	protected Integer turn_number;
 	
-	@ManyToOne
-	@JoinColumn(name = "monopoly_user_id")
-	private MonopolyUser monopolyUser;
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
 
 }
