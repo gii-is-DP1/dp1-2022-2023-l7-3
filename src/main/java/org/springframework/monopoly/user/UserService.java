@@ -45,6 +45,12 @@ public class UserService {
 	public List<User> findAll() {
 		return monopolyUserRepository.findAll();
 	}
+	
+	@Transactional
+	public List<User> findAllWithUsername(String username) {
+		return monopolyUserRepository.findAllWithUsername(username);
+	}
+	
 	@Transactional
 	public void saveUser(User monopolyUser) throws DataAccessException {
 		monopolyUserRepository.save(monopolyUser);

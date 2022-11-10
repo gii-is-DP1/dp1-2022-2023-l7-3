@@ -44,6 +44,7 @@
 .pagDiv {
 	height: 15%;
 	width: 100%;
+	align-items:center;
 	
 	position: relative;
 	display: flex;
@@ -101,4 +102,22 @@
     position: absolute;
     right: 20px;
     top: 35%;
+}
+
+#SubmitButton {
+    height: 35px;
+    width: 170px;
+    background-color: #C70008;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Bree_Serif";
+    position: absolute;
+    right: 415px;
+    top: 12%;
+    text-align: center;
+    padding: 3px;
 }

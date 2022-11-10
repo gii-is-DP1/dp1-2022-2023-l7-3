@@ -15,12 +15,15 @@
  */
 package org.springframework.monopoly.user;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,15 +47,30 @@ public class UserController {
 	public UserController(UserService monopolyUserService) {
 		this.monopolyUserService = monopolyUserService;
 	}
-
+	
+//	@GetMapping("/monopolyUsers/list")
+//    public ModelAndView showMonopolyUsersListing() {
+//        ModelAndView result=new ModelAndView(VIEWS_USERS_LISTING);
+//        result.addObject("monopolyUsers", monopolyUserService.findAll());
+//        return result;
+//	}
 	
 	@GetMapping("/monopolyUsers/list")
-    public ModelAndView showMonopolyUsersListing() {
-        ModelAndView result=new ModelAndView(VIEWS_USERS_LISTING);
-        result.addObject("monopolyUsers", monopolyUserService.findAll());
-        return result;
+    public String showMonopolyUsersListing(Model model, @Param("username") String username) {
+		
+		if (username.isEmpty()) {
+			model.addAttribute("monopolyUsers", monopolyUserService.findAll());
+			model.addAttribute("username", "");
+			
+		} else {
+			List<User> ls = monopolyUserService.findAllWithUsername(username);
+			model.addAttribute("monopolyUsers", ls);
+			model.addAttribute("username", username);
+		}
+		
+        return VIEWS_USERS_LISTING;
 	}
-        
+		
 	@GetMapping(value = "/monopolyUsers/new")
 	public String initCreationForm(Map<String, Object> model) {
 		User monopolyUser = new User();
@@ -71,6 +89,5 @@ public class UserController {
 			return "redirect:/";
 		}
 	}
-
 
 }
