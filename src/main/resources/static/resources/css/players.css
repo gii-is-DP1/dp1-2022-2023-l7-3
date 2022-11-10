@@ -1,7 +1,7 @@
 
 
 .playersListMainBody {
-	height: 100%;
+	height: auto;
 	width: auto;
 	overflow: auto;
 	margin-left: 40px;
