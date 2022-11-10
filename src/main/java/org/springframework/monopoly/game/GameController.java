@@ -17,6 +17,7 @@ import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -67,7 +68,7 @@ public class GameController {
 //	}
 	
 	@GetMapping(value = "/newGame/creating/add")
-	public String getCreatingGameAddPlayer( Map<String, Object> model) {
+	public String getCreatingGameAddPlayer(Map<String, Object> model) {
 		model.put("adding", true);
 		return VIEWS_NEW_GAME;
 	}
