@@ -1,6 +1,6 @@
 
 <div class="popUpOverlay" id="popUpOverlayId">
-	<div class="popUp" id="popUpId">
+	<div class="gamePopUp" id="popUpId">
 		<jsp:doBody/>
 	</div>
 </div>

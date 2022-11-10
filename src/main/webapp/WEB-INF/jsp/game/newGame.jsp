@@ -121,7 +121,7 @@
 		</div>
 		
 		<div class="popUpOverlay" id="popUpOverlayId">
-			<div class="popUp" id="addPlayerPopUpId">
+			<div class="addPlayerPopUp" id="addPlayerPopUpId">
 				<c:forEach items="${users}" var="user" >
 					<div class="userToAdd">
 						<spring:url value="/newGame/creating/add/{userId}" var="addUserUrl" >

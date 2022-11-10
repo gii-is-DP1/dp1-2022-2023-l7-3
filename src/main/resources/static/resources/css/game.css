@@ -53,19 +53,18 @@
   	opacity: 0;
 }
 
-.popUp {
+.gamePopUp {
 	background-color: #76d09e;
 	border-radius: 5px;
 	
   	padding: 20px;
-  	height: 50%;
+  	height: 70%;
   	width: 50%;
   	
-  	top: 25%;
-  	bottom: 25%;
+  	top: 15%;
+  	bottom: 15%;
   	left: 25%;
   	right: 25%;
-  	
   	position: relative;
 /*   	transition: all 5s ease-in-out; */
   	
@@ -97,17 +96,6 @@
 	width: 100%;
 	height: auto;
 	margin-bottom: 5px;
-}
-
-.gamePopUp{
-	height: 70%;
-	width: 50%;
-	position: absolute;
-	top: 15%;
-	bottom: 15%;
-	right: 25%;
-	left: 25%;
-	background-color: rgb(93 144 116 / 0.80);
 }
 
 .parent {
