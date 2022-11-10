@@ -18,7 +18,7 @@
 
 .bottomButtons {
 	width: 80%;
-	height: 30%;
+	height: 20%;
 	position: relative;
 	align-self: center;
 }
@@ -41,32 +41,61 @@
 	height: 30%;
 }
 
-.addPlayerPopUp {
-	height: 600px;
-	width: 400px;
-	position: absolute;
-	top: 40%;
-	right: 40%;
-	overflow: auto;
-	display: flex;
+.popUpOverlay {
+	position: fixed;
+  	top: 0;
+  	bottom: 0;
+  	left: 0;
+  	right: 0;
+  	background: rgba(0, 0, 0, 0.7);
+  	transition: opacity 500ms;
+  	visibility: hidden;
+  	opacity: 0;
+}
+
+.gamePopUp {
+	background-color: #76d09e;
+	border-radius: 5px;
+	
+  	padding: 20px;
+  	height: 70%;
+  	width: 50%;
+  	
+  	top: 15%;
+  	bottom: 15%;
+  	left: 25%;
+  	right: 25%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+  	
+  	max-height: 700px;
+  	
+  	display: flex;
 	flex-direction: column;
+	overflow: auto;
+}
+
+.addPlayerPopUp {
+	background-color: #76d09e;
+	border-radius: 5px;
+	
+	margin: 40vh auto;
+  	padding: 20px;
+  	width: 30%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+  	
+  	max-height: 700px;
+  	
+  	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
 
 .userToAdd {
 	width: 100%;
 	height: auto;
 	margin-bottom: 5px;
-}
-
-.gamePopUp{
-	height: 70%;
-	width: 50%;
-	position: absolute;
-	top: 15%;
-	bottom: 15%;
-	right: 25%;
-	left: 25%;
-	background-color: rgb(93 144 116 / 0.80);
 }
 
 .parent {

@@ -12,6 +12,8 @@
 		<div class="players">
 			
 			<form:form>
+				<spring:url value="/newGame/creating/add" var="addPlayerUrl"/>
+			
 				<div class="formDiv">
 					<div class="player" id="player1">
 						<img class="playerImg" src="/resources/images/Verde.png"/>
@@ -21,7 +23,7 @@
 						
 					<div class="player" id="player2">
 						<c:choose>
-							<c:when test="${players1] != null}">
+							<c:when test="${players[1] != null}">
 								<img class="playerImg" src="/resources/images/Verde.png"/>
 								
 								<spring:url value="/newGame/creating/remove/{playerNum}" var="playerUrl1">
@@ -32,9 +34,8 @@
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png"/>
-								<a href="/newGame/creating/add/">
-									<button class="playerName">Add player</button>
-								</a>
+								
+								<a onclick="showPopUp()" href="JavaScript:void(0)" class="playerName">Add player</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -52,9 +53,8 @@
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png"/>
-								<a href="/newGame/creating/add/">
-									<button class="playerName">Add player</button>
-								</a>
+								
+								<a onclick="showPopUp()" href="JavaScript:void(0)" class="playerName">Add player</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -72,9 +72,8 @@
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png"/>
-								<a href="/newGame/creating/add/">
-									<button class="playerName">Add player</button>
-								</a>
+								
+								<a onclick="showPopUp()" href="JavaScript:void(0)" class="playerName">Add player</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -92,9 +91,8 @@
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png"/>
-								<a href="/newGame/creating/add/">
-									<button class="playerName">Add player</button>
-								</a>
+								
+								<a onclick="showPopUp()" href="JavaScript:void(0)" class="playerName">Add player</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -112,9 +110,8 @@
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png"/>
-								<a href="/newGame/creating/add/">
-									<button class="playerName">Add player</button>
-								</a>
+								
+								<a onclick="showPopUp()" href="JavaScript:void(0)" class="playerName">Add player</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -123,23 +120,33 @@
 		
 		</div>
 		
-		<c:if test="${adding == true}">
-			<div class="addPlayerPopUp">
-				<c:forEach items="users">
+		<div class="popUpOverlay" id="popUpOverlayId">
+			<div class="addPlayerPopUp" id="addPlayerPopUpId">
+				<c:forEach items="${users}" var="user" >
 					<div class="userToAdd">
-						<spring:url value="/newGame/creating/add/{userId}" var="userUrl<c:out value="${user.id}"/>">
+						<spring:url value="/newGame/creating/add/{userId}" var="addUserUrl" >
 	                        <spring:param name="userId" value="${user.id}"/>
 	                    </spring:url>
 						
-						<a href="${'userUrl' + 'user.id'}" class="playerName">${users}</a>
+						<a href="${addUserUrl}" class="playerName">${user.username}</a>
 					</div>
 				</c:forEach>
 			</div>
-		</c:if>
+		</div>
 	
 		<div class="bottomButtons">
-		
+			<p> <c:out value="${adding}"></c:out> </p>
 		</div>
 	</div>
+
+<script>
+function showPopUp() {
+	var overlay = document.getElementById("popUpOverlayId");
+	overlay.style.visibility = "visible";
+	overlay.style.opacity = 1;
+	
+	return false;
+}
+</script>
 
 </monopoly:layout>
