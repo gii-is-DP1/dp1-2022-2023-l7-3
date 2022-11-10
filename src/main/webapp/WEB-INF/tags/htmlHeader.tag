@@ -14,7 +14,9 @@
     <title>Monopoly</title>
 
     <%-- CSS --%>
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    
     <spring:url value="/resources/css/font.css" var="fontCss"/>
     <link href="${fontCss}" rel="stylesheet"/>
     

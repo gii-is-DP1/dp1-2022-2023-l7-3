@@ -15,9 +15,7 @@
         </p>
         <p>
         	<ul>
-		        <c:forEach items= "${persons}" var = "person"> 
-		        <li>${person.firstName} ${person.lastName}</li>
-		        </c:forEach>
+		        <li><a href="/monopolyUsers/list?username=">View Players</a></li>
 	        </ul>
         </p>
         </div>
