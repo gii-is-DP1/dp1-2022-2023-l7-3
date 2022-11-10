@@ -27,10 +27,10 @@
 				
 				<p class="playerInfoLine"> <c:out value="${monopolyUser.username}"/> </p>
             	<a href="/login">
-                <button id="EditButton">Edit</button>
+                <button id="EditButton">Edit <span class="glyphicon glyphicon-pencil"></span></button>
             	</a>
             	<a href="/login">
-                <button id="DeleteButton">Delete</button>
+                <button id="DeleteButton">Delete <span class="glyphicon glyphicon-trash"></span></button>
             	</a>
 
 				<spring:url value="/monopolyUsers/{monopolyUserId}" var="monopolyUserUrl">
