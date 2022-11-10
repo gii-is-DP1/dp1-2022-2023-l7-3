@@ -1,60 +1,42 @@
 package org.springframework.monopoly.property;
 
+import java.util.List;
+import java.util.Map;
+
 public class AuxBuildings {
-
-    //poner lista nombres lista cantidades
     
-    private Boolean hotel;
-    private Integer name1;
-    private Integer name2;
-    private Integer name3;
-    private Integer cant1;
-    private Integer cant2;
-    private Integer cant3;
+    private List<Boolean> hotels;
+    private List<String> names;
+    private List<Integer> quantity;
+    static final Map<String, List<String>> propertiesByColor = initMap();
 
-    public Boolean getHotel() {
-        return hotel;
-    }
-    public void setHotel(Boolean hotel) {
-        this.hotel = hotel;
-    }
-    public Integer getName1() {
-        return name1;
-    }
-    public void setName1(Integer name1) {
-        this.name1 = name1;
-    }
-    public Integer getName2() {
-        return name2;
-    }
-    public void setName2(Integer name2) {
-        this.name2 = name2;
-    }
-    public Integer getName3() {
-        return name3;
-    }
-    public void setName3(Integer name3) {
-        this.name3 = name3;
-    }
-    public Integer getCant1() {
-        return cant1;
-    }
-    public void setCant1(Integer cant1) {
-        this.cant1 = cant1;
-    }
-    public Integer getCant2() {
-        return cant2;
-    }
-    public void setCant2(Integer cant2) {
-        this.cant2 = cant2;
-    }
-    public Integer getCant3() {
-        return cant3;
-    }
-    public void setCant3(Integer cant3) {
-        this.cant3 = cant3;
+    private static StreetRepository streetRepository;
+
+    public static Map<String, List<String>> initMap() {
+        List<String> keys = streetRepository.findAllColor();
+        for(String key: keys) {
+            propertiesByColor.put(key, streetRepository.findByColor(key));
+        }
+        return propertiesByColor;
     }
 
- 
+    public List<Boolean> getHotels() {
+        return hotels;
+    }
+    public void setHotels(List<Boolean> hotels) {
+        this.hotels = hotels;
+    }
+    public List<String> getNames() {
+        return names;
+    }
+    public void setNames(List<String> names) {
+        this.names = names;
+    }
+    public List<Integer> getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(List<Integer> quantity) {
+        this.quantity = quantity;
+    }
     
 }
