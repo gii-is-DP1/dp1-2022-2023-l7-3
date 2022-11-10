@@ -27,7 +27,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Juergen Hoeller
@@ -47,14 +46,7 @@ public class UserController {
 	public UserController(UserService monopolyUserService) {
 		this.monopolyUserService = monopolyUserService;
 	}
-	
-//	@GetMapping("/monopolyUsers/list")
-//    public ModelAndView showMonopolyUsersListing() {
-//        ModelAndView result=new ModelAndView(VIEWS_USERS_LISTING);
-//        result.addObject("monopolyUsers", monopolyUserService.findAll());
-//        return result;
-//	}
-	
+		
 	@GetMapping("/monopolyUsers/list")
     public String showMonopolyUsersListing(Model model, @Param("username") String username) {
 		
