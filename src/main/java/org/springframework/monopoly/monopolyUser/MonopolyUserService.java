@@ -15,6 +15,7 @@
  */
 package org.springframework.monopoly.monopolyUser;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class MonopolyUserService {
 	public MonopolyUserService(MonopolyUserRepository monopolyUserRepository) {
 		this.monopolyUserRepository = monopolyUserRepository;
 	}
-
+	
 	@Transactional
 	public void saveUser(MonopolyUser monopolyUser) throws DataAccessException {
 		monopolyUserRepository.save(monopolyUser);

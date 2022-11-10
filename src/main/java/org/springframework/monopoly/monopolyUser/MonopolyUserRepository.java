@@ -15,6 +15,8 @@
  */
 package org.springframework.monopoly.monopolyUser;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -24,6 +26,5 @@ import org.springframework.data.repository.CrudRepository;
  * @since 15.1.2013
  */
 public interface MonopolyUserRepository extends CrudRepository<MonopolyUser, Integer> {
-
 
 }
