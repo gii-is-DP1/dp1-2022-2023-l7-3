@@ -6,14 +6,14 @@
 
 #MainBodySignUp {
 	    background-color: transparent;
-	    display: grid;
-	    min-height: 700px;
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	    min-height: 850px;
 	    min-width: 500px;
 	    height: 80%;
 	    width: 100%;
-	    overflow: auto;
-	    row-gap: 0px;
-	    grid-template-rows: 20% 50% 30%;
+	    
 	    justify-content: center;
 	    max-width: -webkit-fill-available;
 	}
