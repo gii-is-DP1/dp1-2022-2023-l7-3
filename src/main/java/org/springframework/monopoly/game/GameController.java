@@ -25,6 +25,8 @@ public class GameController {
 	
 	private static final String VIEWS_NEW_GAME = "game/newGame";
 	private static final String GAME_MAIN = "game/main";
+	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
+
 	
 	private GameService gameService;
 	private PlayerService playerService;
@@ -36,6 +38,12 @@ public class GameController {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
+	}
+
+	//PROVISIONAL
+	@GetMapping(value = "/blankGame")
+	public String blankGame(Map<String, Object> model, Authentication authentication) {
+		return BLANK_GAME;
 	}
 	
 	@GetMapping(value = "/newGame")
