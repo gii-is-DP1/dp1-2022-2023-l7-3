@@ -15,34 +15,36 @@
 		</div>
     </div>
     
-	<div id="MainBodySignUp">
-        <h1 id="signInText"> Sign in to begin the fun!</h1>
-
-        <div id="formDiv">
-            <h2 id="formHeader">Enter your details below</h2>
-			
-            <form:form id="form" name="newUser" action="/login" method="post">
-            
-            	<c:if test="${param.error != null}">
-            		<div style="margin-bottom: 15px;">
-						Failed to login.
-						<c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
-							Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
-						</c:if>            		
-            		</div>
-            	</c:if>
-            
-                <label for="username" class="formLabel">Username</label>
-                <input type="text" id="username" class="inputText" name="username" placeholder="Your username.." required>
-
-                <label for="password" class="formLabel">Password</label>
-                <input type="password" id="password" class="inputText" name="password" placeholder="Your password.." required>
-                <i class="far fa-eye" id="togglePassword"></i>
-
-                <input type="submit" value="Sign in">
-            </form:form>
-        </div>
-
+    <div class="scrollableBodyDiv">
+		<div id="MainBodySignUp">
+	        <h1 id="signInText"> Sign in to begin the fun!</h1>
+	
+	        <div id="formDiv">
+	            <h2 id="formHeader">Enter your details below</h2>
+				
+	            <form:form id="form" name="newUser" action="/login" method="post">
+	            
+	            	<c:if test="${param.error != null}">
+	            		<div style="margin-bottom: 15px;">
+							Failed to login.
+							<c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
+								Reason: <c:out value="${SPRING_SECURITY_LAST_EXCEPTION.message}"/>
+							</c:if>            		
+	            		</div>
+	            	</c:if>
+	            
+	                <label for="username" class="formLabel">Username</label>
+	                <input type="text" id="username" class="inputText" name="username" placeholder="Your username.." required>
+	
+	                <label for="password" class="formLabel">Password</label>
+	                <input type="password" id="password" class="inputText" name="password" placeholder="Your password.." required>
+	                <i class="far fa-eye" id="togglePassword"></i>
+	
+	                <input type="submit" value="Sign in">
+	            </form:form>
+	        </div>
+	
+	    </div>
     </div>
 
 <petclinic:footer/>
