@@ -17,8 +17,9 @@ package org.springframework.monopoly.user;
 import java.util.List;
 import java.util.Optional;
 
-
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Spring Data JPA OwnerRepository interface
@@ -27,9 +28,12 @@ import org.springframework.data.repository.CrudRepository;
  * @since 15.1.2013
  */
 public interface UserRepository extends CrudRepository<User, Integer> {
-
 	
 	Optional<User> findByUsername(String name);
+	
+	@Query("SELECT u FROM User u WHERE u.username = :username")
+	List<User> findAllWithUsername(@Param("username") String username);
+	
 	List<User> findAll();
 
 }

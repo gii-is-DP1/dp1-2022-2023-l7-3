@@ -9,9 +9,16 @@
 	<div class="playersListMainBody">
 		
 		<div class="pagDiv">
-			
+		
 			<h1> List of all players</h1>
 			
+			<form class ="form-inline" action = "/monopolyUsers/list" method = "get">
+				<div class= "form-group mx-sm-3 mb-2">
+					<input type = "text" name="username" class="form-control" id="username" value="${username}" placeholder="Search a player"> 
+				</div>
+				<input type="submit" id = "SubmitButton" value = "Search">
+			</form> 
+
 			<div class="HeaderButtons">
 				<a href="/monopolyUsers/list/previous">
 					<button class="pageButton"> - </button>
@@ -20,6 +27,7 @@
 					<button href="/monopolyUsers/list/previous" class="pageButton"> + </button>
 				</a>
 			</div>
+			
 		</div>
 		
 		<c:forEach items="${monopolyUsers}" var="monopolyUser">
@@ -39,8 +47,6 @@
 				
 			</div>
 		</c:forEach>
-		
-		
 		
 	</div>
 
