@@ -20,14 +20,11 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.monopoly.owner.Owner;
-import org.springframework.monopoly.owner.OwnerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Juergen Hoeller
@@ -39,6 +36,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class MonopolyUserController {
 	
 	private static final String VIEWS_USER_CREATE_FORM = "authentication/signUp";
+	private static final String VIEWS_USERS_LISTING = "users/monopolyUsersList";
 
 	private final MonopolyUserService monopolyUserService;
 
@@ -47,6 +45,14 @@ public class MonopolyUserController {
 		this.monopolyUserService = monopolyUserService;
 	}
 
+	
+	@GetMapping("/monopolyUsers/list")
+    public ModelAndView showMonopolyUsersListing() {
+        ModelAndView result=new ModelAndView(VIEWS_USERS_LISTING);
+        result.addObject("monopolyUsers", monopolyUserService.findAll());
+        return result;
+	}
+        
 	@GetMapping(value = "/monopolyUsers/new")
 	public String initCreationForm(Map<String, Object> model) {
 		MonopolyUser monopolyUser = new MonopolyUser();

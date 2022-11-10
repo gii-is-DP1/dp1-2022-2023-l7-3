@@ -1,0 +1,104 @@
+
+
+.playersListMainBody {
+	height: 87%;
+	width: auto;
+	overflow: auto;
+	margin-left: 40px;
+	margin-bottom: 10px;
+}
+
+
+.playerListItem {
+	height: 100px;
+	width: 97%;
+	margin-bottom: 10px;
+	padding: 15px;
+	
+	border-width: 4px;
+ 	border-color: rgba(118, 208, 158, 0.5); /* Esto es lo de la opacidad */
+	border-radius: 10px;
+	border-style: solid;
+	
+	background-color: rgba(118, 208, 158, 0.7);
+	
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items:center;
+	justify-content: space-between;
+	
+}
+
+.playerInfoLine {
+	font-size: 40px;
+	margin-left: 10px;
+
+}
+
+
+.form {
+	display: block;
+}
+
+.pagDiv {
+	height: 15%;
+	width: 100%;
+	
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	
+	justify-content: space-between;
+}
+
+.pageButton {
+	height: 50px;
+	width: 50px;
+	
+	border-width: 4px;
+	border-color: #76d09e;
+	border-radius: 10px;
+	border-style: solid;
+}
+
+.HeaderButtons {
+	display: flex;
+    flex: 0 1 400px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    margin-right: 20px;
+}
+
+#EditButton {
+    height: 50px;
+    width: 170px;
+    background-color: #C70008;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Bree_Serif";
+    position: absolute;
+    right: 200px;
+    top: 35%;
+}
+
+#DeleteButton {
+    height: 50px;
+    width: 170px;
+    background-color: #C70008;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Bree_Serif";
+    position: absolute;
+    right: 20px;
+    top: 35%;
+}

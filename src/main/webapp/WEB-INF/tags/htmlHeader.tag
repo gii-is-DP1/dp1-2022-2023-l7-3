@@ -23,6 +23,9 @@
     <spring:url value="/resources/css/SignUpStyles.css" var="signUpStylesCss"/>
     <link href="${signUpStylesCss}" rel="stylesheet"/>
     
+    <spring:url value="/resources/css/players.css" var="playersCss"/>
+    <link href="${playersCss}" rel="stylesheet"/>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
 
