@@ -3,7 +3,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-
-<monopoly:buildBuildings>
-
-</monopoly:buildBuildings>
+<monopoly:layout screenTittle="Blank Game">
+	<monopoly:buildBuildings/>
+</monopoly:layout>
