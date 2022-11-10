@@ -3,29 +3,22 @@ package org.springframework.monopoly.game;
 import java.util.List;
 
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.user.User;
 
 public class GameForm {
 
-	private Game game;
-	private List<Player> players;
+	private List<Integer> users;
 	
 	public GameForm() {
 		
 	}
 
-	public Game getGame() {
-		return game;
+	public List<Integer> getUsers() {
+		return users;
 	}
 
-	public void setGame(Game gameId) {
-		this.game = gameId;
+	public void setUsers(List<Integer> users) {
+		this.users = users;
 	}
-
-	public List<Player> getPlayers() {
-		return players;
-	}
-
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
+	
 }

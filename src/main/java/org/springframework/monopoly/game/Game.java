@@ -27,14 +27,12 @@ public class Game extends BaseEntity {
 		this.numCasas = 32;
 	}
 	
-    @NotEmpty
     @Column(name = "date")
     protected Date date;
 
     @Column(name = "duration")
     protected Time duration;
 
-    @NotEmpty
     @Column(name = "num_casas")
     protected Integer numCasas;
 

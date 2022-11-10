@@ -6,21 +6,23 @@
 }
 
 .players {
-	width: 80%;
+	width: 100%;
 	height: 70%;
 	position: relative;
 	align-self: center;
 	justify-content: space-between;
-	padding-left: 50px;
-	padding-right: 50px;
+	padding-left: 200px;
+	padding-right: 200px;
 	margin-bottom: 20px;
 }
 
 .bottomButtons {
-	width: 80%;
+	width: 100%;
 	height: 20%;
 	position: relative;
-	align-self: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .formDiv {
@@ -30,15 +32,26 @@
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	margin-left: 50px;
+	margin-right: 50px;
 }
 
 .player {
 	height: 100%;
 	width: 16%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .playerImg {
 	height: 30%;
+}
+
+.playerName {
+	font-size: 30px;
+	text-align: center;
 }
 
 .popUpOverlay {
@@ -80,7 +93,7 @@
 	border-radius: 5px;
 	
 	margin: 40vh auto;
-  	padding: 20px;
+  	padding: 40px;
   	width: 30%;
   	position: relative;
 /*   	transition: all 5s ease-in-out; */
@@ -95,7 +108,7 @@
 .userToAdd {
 	width: 100%;
 	height: auto;
-	margin-bottom: 5px;
+	margin-bottom: 15px;
 }
 
 .parent {
