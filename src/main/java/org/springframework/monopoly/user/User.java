@@ -1,9 +1,11 @@
 package org.springframework.monopoly.user;
 
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
@@ -34,7 +36,7 @@ public class User extends BaseEntity {
 	@Column(name = "is_admin", columnDefinition = "varchar(30) default 'user'")
 	protected String is_admin;
 	
-	@OneToOne(mappedBy = "user")
-	protected Player player;
+	@OneToMany(mappedBy = "user")
+	protected Set<Player> player;
 	
 }
