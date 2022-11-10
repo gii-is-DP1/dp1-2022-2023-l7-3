@@ -58,16 +58,19 @@
 	margin-bottom: 5px;
 }
 
-.buildPopUp{
+.gamePopUp{
 	height: 70%;
 	width: 50%;
-	margin: auto;
-	margin-top: 15%;
-	margin-bottom: 15%;
+	position: absolute;
+	top: 15%;
+	bottom: 15%;
+	right: 25%;
+	left: 25%;
 	background-color: rgb(93 144 116 / 0.80);
 }
 
 .parent {
 	height: 100%;
+	width: 100%;
 	position: relative;
 }
