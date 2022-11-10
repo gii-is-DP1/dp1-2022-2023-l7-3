@@ -1,0 +1,59 @@
+
+.NewGameMainBody {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.players {
+	width: 80%;
+	height: 70%;
+	position: relative;
+	align-self: center;
+	justify-content: space-between;
+	padding-left: 50px;
+	padding-right: 50px;
+	margin-bottom: 20px;
+}
+
+.bottomButtons {
+	width: 80%;
+	height: 30%;
+	position: relative;
+	align-self: center;
+}
+
+.formDiv {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.player {
+	height: 100%;
+	width: 16%;
+}
+
+.playerImg {
+	height: 30%;
+}
+
+.addPlayerPopUp {
+	height: 600px;
+	width: 400px;
+	position: absolute;
+	top: 40%;
+	right: 40%;
+	overflow: auto;
+	display: flex;
+	flex-direction: column;
+}
+
+.userToAdd {
+	width: 100%;
+	height: auto;
+	margin-bottom: 5px;
+}

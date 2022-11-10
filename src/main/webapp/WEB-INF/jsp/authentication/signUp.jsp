@@ -23,7 +23,7 @@
 	                <input type="password" id="passwordConfirm" class="inputText" name="passwordConfirm" placeholder=".." required>
 	                <i class="far fa-eye" id="togglePasswordConfirm"></i>
 	
-	                <input type="submit" value="Sign in">
+	                <input type="submit" value="Sign up">
 	            </form:form>
 	        </div>
 	
