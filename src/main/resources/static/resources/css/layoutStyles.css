@@ -16,6 +16,12 @@ body {
     font-family: "Bree_Serif";
 }
 
+.scrollableBodyDiv {
+	height: 100%;
+	width: 100%;
+	overflow: auto;
+}
+
 #Header {
     width: 100%;
     height: 10%;

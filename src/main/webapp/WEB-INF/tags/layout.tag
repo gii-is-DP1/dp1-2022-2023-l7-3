@@ -12,7 +12,9 @@
 <body>
 <petclinic:bodyHeader screenTittle="${screenTittle}"/>
 
-<jsp:doBody/>
+<div class="scrollableBodyDiv">
+	<jsp:doBody/>
+</div>
 
 <petclinic:footer/>
 <jsp:invoke fragment="customScript" />

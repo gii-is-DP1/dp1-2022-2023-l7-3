@@ -57,9 +57,16 @@ public class PlayerService {
 	public List<Player> findAll() {
 		return new ArrayList<Player>(playerRepository.findAll());
 	}
+	
 	@Transactional(readOnly = true)
 	public Player findPlayerById(int id) throws DataAccessException {
 		Optional<Player> result = playerRepository.findById(id);
+		return result.isPresent() ? result.get() : null;
+	}
+	
+	@Transactional(readOnly = true)
+	public Player findPlayerByUserId(int id) throws DataAccessException {
+		Optional<Player> result = playerRepository.findPlayerByUser(id);
 		return result.isPresent() ? result.get() : null;
 	}
 

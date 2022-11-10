@@ -9,10 +9,11 @@
 
 <body>
 	<div id="Header">
-        <div id="LogoContainer">
-            <img src="resources/images/logo.png" id="Logo"/>
-        </div>
-
+		<div id="LogoTittle">
+			<img src="resources/images/logo.png" id="Logo"/>
+			<p id="ScreenTittle">${screenTittle}</p>
+		</div>
+		
         <div id="HeaderButtons">
             <p id="AlreadySignedUp">Already have an account?</p>
             <a href="/login">
@@ -20,13 +21,24 @@
             </a>
         </div>
     </div>
-    
-<jsp:doBody/>
-
+	<div class="scrollableBodyDiv">
+		<jsp:doBody/>
+	</div>
 
 <petclinic:footer/>
 
 </body>
+
+<script>
+	function validateForm() {
+		var password = document.forms['newUser']['password'].value;
+		var repeat = document.forms['newUser']['passwordConfirm'].value;
+		if(password !== repeat) {
+			alert("The password fields are not equal")
+			return false;
+		}
+	}
+</script>
 
 <script>
     const togglePassword = document.querySelector('#togglePassword');
