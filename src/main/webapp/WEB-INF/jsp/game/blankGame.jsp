@@ -5,4 +5,6 @@
 
 <monopoly:layout screenTittle="Blank Game">
 	<monopoly:buildBuildings/>
+	
+	
 </monopoly:layout>

@@ -25,6 +25,8 @@
 	align-items: center;
 }
 
+
+
 .formDiv {
 	height: 100%;
 	width: 100%;
@@ -67,14 +69,14 @@
 }
 
 .gamePopUp {
-	background-color: #76d09e;
-	border-radius: 5px;
-	
+	background-color: #7cb897bd;
+	border-radius: 20px;
   	padding: 20px;
-  	height: 70%;
+  	height: 75%;
   	width: 50%;
-  	
-  	top: 15%;
+  	align-items: center;
+	color: #47525e;
+  	top: 10%;
   	bottom: 15%;
   	left: 25%;
   	right: 25%;
@@ -86,6 +88,44 @@
   	display: flex;
 	flex-direction: column;
 	overflow: auto;
+}
+
+.propertyImg{
+	width:200px;
+	position:absolute;
+	right:37%;
+}
+.buildYesButton {
+    height: 50px;
+    width: 170px;
+    background-color: #47525e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Bree_Serif";
+    position: absolute;
+    right: 10%;
+    top: 75%;
+}
+
+.buildNoButton {
+    height: 50px;
+    width: 170px;
+    background-color: #47525e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Bree_Serif";
+    position: absolute;
+    right: 68%;
+    top: 75%;
+	
 }
 
 .addPlayerPopUp {
