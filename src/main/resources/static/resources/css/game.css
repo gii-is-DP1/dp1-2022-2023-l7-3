@@ -6,51 +6,83 @@
 }
 
 .players {
-	width: 80%;
+	width: 100%;
 	height: 70%;
 	position: relative;
 	align-self: center;
 	justify-content: space-between;
-	padding-left: 50px;
-	padding-right: 50px;
+	padding-left: 200px;
+	padding-right: 200px;
 	margin-bottom: 20px;
 }
 
 .bottomButtons {
-	width: 80%;
+	width: 100%;
 	height: 20%;
 	position: relative;
-	align-self: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .formDiv {
-	height: 100%;
-	width: 100%;
-	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+	margin-left: 50px;
+	margin-right: 50px;
 }
 
 .player {
 	height: 100%;
 	width: 16%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
 }
 
 .playerImg {
 	height: 30%;
 }
 
+.playerName {
+	font-size: 30px;
+	text-align: center;
+}
+
 .popUpOverlay {
 	position: fixed;
   	top: 0;
-  	bottom: 0;
-  	left: 0;
-  	right: 0;
-  	background: rgba(0, 0, 0, 0.7);
-  	transition: opacity 500ms;
-  	visibility: hidden;
-  	opacity: 0;
+	border-radius: 5px;
+
+	margin: 40vh auto;
+  	padding: 40px;
+  	width: 30%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+}
+.userToAdd {
+	width: 100%;
+	height: auto;
+	margin-bottom: 15px;
+}
+
+.addPlayerPopUp {
+	background-color: #76d09e;
+	border-radius: 5px;
+
+	margin: 40vh auto;
+  	padding: 20px;
+  	width: 30%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+
+  	max-height: 700px;
+
+  	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
 
 .gamePopUp {
@@ -82,13 +114,6 @@
 	scale: 90%;
 }
 
-.buyButtons {
-	display:flex;
-	justify-content: space-between;
-	padding-left: 10%;
-	padding-right: 10%;
-}
-
 .buyYesButton {
     height: 50px;
     width: 170px;
@@ -114,25 +139,4 @@
     font-weight: bold;
 	display: table-cell;
 }
-.addPlayerPopUp {
-	background-color: #76d09e;
-	border-radius: 5px;
-	
-	margin: 40vh auto;
-  	padding: 20px;
-  	width: 30%;
-  	position: relative;
-/*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
-	overflow: auto;
-}
 
-.userToAdd {
-	width: 100%;
-	height: auto;
-	margin-bottom: 5px;
-}
