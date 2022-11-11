@@ -8,6 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.user.User;
 
@@ -40,6 +41,10 @@ public class Player extends BaseEntity {
 
 	@Column(name = "turn_number")
 	protected Integer turn_number;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "game_id", referencedColumnName = "id")
+	private Game game;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -114,19 +114,18 @@
     font-weight: bold;
 	display: table-cell;
 }
-
 .addPlayerPopUp {
 	background-color: #76d09e;
 	border-radius: 5px;
-
+	
 	margin: 40vh auto;
   	padding: 20px;
   	width: 30%;
   	position: relative;
 /*   	transition: all 5s ease-in-out; */
-
+  	
   	max-height: 700px;
-
+  	
   	display: flex;
 	flex-direction: column;
 	overflow: auto;
