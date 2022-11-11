@@ -54,52 +54,68 @@
 }
 
 .gamePopUp {
-	background-color: #76d09e;
-	border-radius: 5px;
-	
+	visibility: hidden;
+	background-color: #7cb897bd;
+	border-radius: 20px;
   	padding: 20px;
-  	height: 70%;
+  	height: 75%;
   	width: 50%;
-  	
-  	top: 15%;
-  	bottom: 15%;
-  	left: 25%;
-  	right: 25%;
-  	position: relative;
-/*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
+  	align-items: center;
+	color: #47525e;
+  	margin: auto;
 	overflow: auto;
+	display: table;
+	position:absolute;
+	top:17.5%;
+	left:25%
+}
+
+.propertyTxt{
+	padding:10px;
+	display: inherit;
+	margin: inherit;
+}
+.propertyImg{
+	padding:10px;
+	display: inherit;
+	margin: inherit;
+	scale: 90%;
+}
+
+.buyButtons {
+	display:flex;
+	justify-content: space-between;
+	padding-left: 10%;
+	padding-right: 10%;
+}
+
+.buyYesButton {
+    height: 50px;
+    width: 170px;
+    background-color: #47525e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+	display: table-cell;
+}
+
+.buyNoButton {
+    height: 50px;
+    width: 170px;
+    background-color: #47525e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+	display: table-cell;
 }
 
 .addPlayerPopUp {
 	background-color: #76d09e;
 	border-radius: 5px;
-	
-	margin: 40vh auto;
-  	padding: 20px;
-  	width: 30%;
-  	position: relative;
-/*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
-	overflow: auto;
-}
-
-.userToAdd {
-	width: 100%;
-	height: auto;
-	margin-bottom: 5px;
-}
-
-.parent {
-	height: 100%;
-	width: 100%;
-	position: relative;
 }
