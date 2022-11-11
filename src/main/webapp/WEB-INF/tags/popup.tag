@@ -1,16 +1,18 @@
-
-<div class="popUpOverlay" id="popUpOverlayId">
-	<div class="gamePopUp" id="popUpId">
+<spring:url value="/resources/css/game.css" var="gameCss"/>
+<link href="${gameCss}" rel="stylesheet"/>
+	<div class="gamePopUp" id="gamePopUp">
 		<jsp:doBody/>
 	</div>
-</div>
 
 <script>
-function showPopUp() {
-	var overlay = document.getElementById("popUpOverlayId");
-	overlay.style.visibility = "visible";
-	overlay.style.opacity = 1;
-	
-	return false;
-}
+	function showPopUp() {
+		var overlay = document.getElementById("gamePopUp");
+		overlay.style.visibility = "visible";
+		return;
+	}
+	function closePopUp() {
+		var overlay = document.getElementById("gamePopUp")
+		overlay.style.visibility = "hidden";
+		return;
+	}
 </script>

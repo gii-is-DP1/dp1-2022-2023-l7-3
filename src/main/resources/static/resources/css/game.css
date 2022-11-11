@@ -6,26 +6,22 @@
 }
 
 .players {
-	width: 100%;
+	width: 80%;
 	height: 70%;
 	position: relative;
 	align-self: center;
 	justify-content: space-between;
-	padding-left: 200px;
-	padding-right: 200px;
+	padding-left: 50px;
+	padding-right: 50px;
 	margin-bottom: 20px;
 }
 
 .bottomButtons {
-	width: 100%;
+	width: 80%;
 	height: 20%;
 	position: relative;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+	align-self: center;
 }
-
-
 
 .formDiv {
 	height: 100%;
@@ -34,26 +30,15 @@
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	margin-left: 50px;
-	margin-right: 50px;
 }
 
 .player {
 	height: 100%;
 	width: 16%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
 }
 
 .playerImg {
 	height: 30%;
-}
-
-.playerName {
-	font-size: 30px;
-	text-align: center;
 }
 
 .popUpOverlay {
@@ -69,6 +54,7 @@
 }
 
 .gamePopUp {
+	visibility: hidden;
 	background-color: #7cb897bd;
 	border-radius: 20px;
   	padding: 20px;
@@ -76,26 +62,34 @@
   	width: 50%;
   	align-items: center;
 	color: #47525e;
-  	top: 10%;
-  	bottom: 15%;
-  	left: 25%;
-  	right: 25%;
-  	position: relative;
-/*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
+  	margin: auto;
 	overflow: auto;
-}
-
-.propertyImg{
-	width:200px;
+	display: table;
 	position:absolute;
-	right:37%;
+	top:17.5%;
+	left:25%
 }
-.buildYesButton {
+
+.propertyTxt{
+	padding:10px;
+	display: inherit;
+	margin: inherit;
+}
+.propertyImg{
+	padding:10px;
+	display: inherit;
+	margin: inherit;
+	scale: 90%;
+}
+
+.buyButtons {
+	display:flex;
+	justify-content: space-between;
+	padding-left: 10%;
+	padding-right: 10%;
+}
+
+.buyYesButton {
     height: 50px;
     width: 170px;
     background-color: #47525e;
@@ -105,13 +99,10 @@
     cursor: pointer;
     font-size: 20px;
     font-weight: bold;
-    font-family: "Bree_Serif";
-    position: absolute;
-    right: 10%;
-    top: 75%;
+	display: table-cell;
 }
 
-.buildNoButton {
+.buyNoButton {
     height: 50px;
     width: 170px;
     background-color: #47525e;
@@ -121,19 +112,14 @@
     cursor: pointer;
     font-size: 20px;
     font-weight: bold;
-    font-family: "Bree_Serif";
-    position: absolute;
-    right: 68%;
-    top: 75%;
-	
+	display: table-cell;
 }
-
 .addPlayerPopUp {
 	background-color: #76d09e;
 	border-radius: 5px;
 	
 	margin: 40vh auto;
-  	padding: 40px;
+  	padding: 20px;
   	width: 30%;
   	position: relative;
 /*   	transition: all 5s ease-in-out; */
@@ -148,11 +134,5 @@
 .userToAdd {
 	width: 100%;
 	height: auto;
-	margin-bottom: 15px;
-}
-
-.parent {
-	height: 100%;
-	width: 100%;
-	position: relative;
+	margin-bottom: 5px;
 }
