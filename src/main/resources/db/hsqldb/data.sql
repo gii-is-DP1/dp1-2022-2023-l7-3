@@ -90,12 +90,11 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 /* GAMES, PLAYERS */
 INSERT INTO game (id, date, duration, num_casas) VALUES (0, TO_DATE('11/10/2022', 'DD/MM/YYYY'), '1:47', 0);
 
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 1, 1);
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 0, 2);
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, user_id) VALUES (2,  420, 'RED', 2, 0, 0, 0, 3);
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 0, 0, 4);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 1, 0, 1);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 0, 0, 2);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (2,  420, 'RED', 2, 0, 0, 0, 0, 3);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 0, 0, 0, 4);
 
-INSERT INTO game_players VALUES (0 , 0);
-INSERT INTO game_players VALUES (0 , 1);
-INSERT INTO game_players VALUES (0 , 2);
-INSERT INTO game_players VALUES (0 , 3);
+INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (0, 9, 0, 0);
+INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (1, 5, 0, 1);
+INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (2, 7, 0, 2);

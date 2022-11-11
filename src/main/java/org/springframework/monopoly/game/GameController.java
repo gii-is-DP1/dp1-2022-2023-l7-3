@@ -2,10 +2,12 @@ package org.springframework.monopoly.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,14 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
+import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -28,34 +30,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class GameController {
 	
 	private static final String VIEWS_NEW_GAME = "game/newGame";
-	private static final String GAME_MAIN = "game/main";
+	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
 
 	
 	private GameService gameService;
 	private PlayerService playerService;
 	private UserService userService;
+	private TurnService turnService;
 	
 	
 	@Autowired
-	public GameController(GameService gameService, PlayerService playerService, UserService userService) {
+	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
+		this.turnService = turnService;
 	}
-	
-//	@InitBinder("Player")
-//	public void initPlayerBinder(WebDataBinder dataBinder) {
-//		
-//	}
-//	@InitBinder("User")
-//	public void initUserBinder(WebDataBinder dataBinder) {
-//		
-//	}
-//	@InitBinder("Game")
-//	public void initGameFormBinder(WebDataBinder dataBinder) {
-//		
-//	}
 
 	//PROVISIONAL
 	@GetMapping(value = "/blankGame")
@@ -65,7 +56,6 @@ public class GameController {
 	
 	@GetMapping(value = "/newGame")
 	public String newGame(Map<String, Object> model, Authentication authentication) {
-//		Game newGame = new Game(); 
 		List<User> users = userService.findAll();
 		
 		User creatorUser = userService.findUserByName(authentication.getName());
@@ -74,8 +64,6 @@ public class GameController {
 		List<User> players = new ArrayList<User>();
 		players.add(creatorUser);
 		
-//		model.put("game", newGame);
-//		model.put("creator", creator);
 		model.put("users", users);
 		model.put("players", players);
 		return VIEWS_NEW_GAME;
@@ -151,7 +139,38 @@ public class GameController {
 		}
 		
 		game.setPlayers(new HashSet<Player>());
-		gameService.saveGame(game);
-		return "/welcome";//GAME_MAIN;
+		Game savedGame = gameService.saveGame(game);
+		
+		return "redirect:/game/" + savedGame.getId();
 	}
+	
+	@GetMapping(value = "/game/{gameId}")
+	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
+		
+		// Find all details needed to show to users
+		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
+		
+		Optional<Game> gameOptional = gameService.findGame(gameId);
+		if(gameOptional.isEmpty()) {
+			throw new Exception("Game doesn't exist");
+		} 
+		Game game = gameOptional.get();
+		
+		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		Comparator<Player> c = Comparator.comparing(p -> p.getTurn_number());
+		Collections.sort(players, c);
+		Turn lastTurn = turnService.findLastTurn(gameId);
+		
+		// Calculating next turn result
+		Player nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+		
+		Turn nextTurn = new Turn();
+		nextTurn.setGame(game);
+		nextTurn.setPlayer(nextPlayer);
+		nextTurn.setInitial_tile(nextPlayer.getTile());
+		nextTurn = turnService.calculateTurn(nextTurn);
+		
+		return GAME_MAIN;
+	}
+	
 }

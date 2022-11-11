@@ -1,16 +1,14 @@
 package org.springframework.monopoly.game;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
-import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.OneToMany;
+
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
 
@@ -35,13 +33,8 @@ public class Game extends BaseEntity {
 
     @Column(name = "num_casas")
     protected Integer numCasas;
-
     
-    @ManyToMany
-    @JoinTable(
-    		  name = "game_players", 
-    		  joinColumns = @JoinColumn(name = "game_id"), 
-    		  inverseJoinColumns = @JoinColumn(name = "player_id"))
+    @OneToMany(mappedBy = "game")
     protected Set<Player> players;
     
 }
