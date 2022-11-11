@@ -3,6 +3,7 @@ package org.springframework.monopoly.user;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -36,7 +37,7 @@ public class User extends BaseEntity {
 	@Column(name = "is_admin", columnDefinition = "varchar(30) default 'user'")
 	protected String is_admin;
 	
-	@OneToMany(mappedBy = "user")
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	protected Set<Player> player;
 	
 }
