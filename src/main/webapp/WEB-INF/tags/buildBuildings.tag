@@ -6,7 +6,19 @@
 <link href="${gameCss}" rel="stylesheet"/>
 <div class= "parent">
 	<div class="gamePopUp">
-		<h1>HOLA</h1>
+		<h1>Do you want to buy this property?</h1>
+		
+		<a href="${cardUrl}">
+					<img class="propertyImg" alt="Card image" src="/resources/images/00.png">
+		</a>
+		
+		<a href="/login">
+         <button class="buildYesButton">Yes</button>
+         <button class="buildNoButton">No</button>
+        
+        </a>
+		
 	</div>
+	
 </div>
 
