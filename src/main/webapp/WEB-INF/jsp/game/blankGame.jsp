@@ -9,12 +9,10 @@
 	<div class="gamePopUp" id="buyPopUp">
 		<monopoly:buyBuildings/>
 	</div>
-	<button onclick="showPopUp(&quot;buyPopUp&quot)">Sample comprar Propiedad</button>
 
 	<div class="gamePopUp" id="wantToBuildPopUp">
 		<monopoly:wantToBuild/>
 	</div>
-	<button onclick="showPopUp(&quot;wantToBuildPopUp&quot)">Sample construir</button>
 
 	<div class="gamePopUp" id="buildBuildingsPopUp">
 		<monopoly:buildBuildings/>
@@ -23,8 +21,21 @@
 	<div class="gamePopUp" id="haveToPay">
 		<monopoly:haveToPay/>
 	</div>
-	<button onclick="showPopUp(&quot;haveToPay&quot)">Sample tener que pagar</button>
 
+	<div class="gamePopUp" id="auctionBuilding">
+		<monopoly:auctionBuilding/>
+	</div>
+
+	<div class="gamePopUp" id="mergeBuilding">
+		<monopoly:mergeBuilding/>
+	</div>
+	<a class="popUpButtons">
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;buyPopUp&quot)">Sample comprar Propiedad</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;wantToBuildPopUp&quot)">Sample construir</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;haveToPay&quot)">Sample tener que pagar</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;auctionBuilding&quot)">Sample subasta</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;mergeBuilding&quot)">Sample hipoteca</button>
+	</a>
 </monopoly:layout>
 
 <script>
