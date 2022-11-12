@@ -265,5 +265,13 @@
 		</div>
 		
 	</div>
+	
+	<!-- 
+	
+	Aqui es donde van los layouts de los popups, con c:if para cargarlos solo cuando vayan a hacer falta
+	o ponerlos todos y que salgan solo los que se usen
+	
+	 -->
+	
 
 </monopoly:layout>
