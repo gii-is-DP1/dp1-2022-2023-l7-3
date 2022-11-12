@@ -30,9 +30,6 @@
 }
 
 .formDiv {
-	height: 100%;
-	width: 100%;
-	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
@@ -61,62 +58,104 @@
 .popUpOverlay {
 	position: fixed;
   	top: 0;
-  	bottom: 0;
-  	left: 0;
-  	right: 0;
-  	background: rgba(0, 0, 0, 0.7);
-  	transition: opacity 500ms;
-  	visibility: hidden;
-  	opacity: 0;
-}
-
-.gamePopUp {
-	background-color: #76d09e;
 	border-radius: 5px;
-	
-  	padding: 20px;
-  	height: 70%;
-  	width: 50%;
-  	
-  	top: 15%;
-  	bottom: 15%;
-  	left: 25%;
-  	right: 25%;
-  	position: relative;
-/*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
-	overflow: auto;
-}
 
-.addPlayerPopUp {
-	background-color: #76d09e;
-	border-radius: 5px;
-	
 	margin: 40vh auto;
   	padding: 40px;
   	width: 30%;
   	position: relative;
 /*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
-	overflow: auto;
 }
-
 .userToAdd {
 	width: 100%;
 	height: auto;
 	margin-bottom: 15px;
 }
 
-.parent {
-	height: 100%;
-	width: 100%;
-	position: relative;
+.addPlayerPopUp {
+	background-color: #76d09e;
+	border-radius: 5px;
+
+	margin: 40vh auto;
+  	padding: 20px;
+  	width: 30%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+
+  	max-height: 700px;
+
+  	display: flex;
+	flex-direction: column;
+	overflow: auto;
 }
+
+.gamePopUp {
+	visibility: hidden;
+	background-color: #7cb897bd;
+	border-radius: 20px;
+  	padding: 20px;
+  	height: 75%;
+  	width: 50%;
+  	align-items: center;
+	color: #47525e;
+  	margin: auto;
+	overflow: auto;
+	display: table;
+	position:absolute;
+	top:17.5%;
+	left:25%
+}
+
+.propertyTxt{
+	padding:10px;
+	display: inherit;
+	margin: inherit;
+	text-align: center;
+}
+.propertyImg{
+	padding:10px;
+	display: inherit;
+	margin: inherit;
+	scale: 90%;
+}
+
+.constructorImg{
+	padding:10px;
+	margin: inherit;
+	display: inherit;
+}
+
+.popUpButtons {
+	display:flex;
+	justify-content: space-between;
+	padding-left: 10%;
+	padding-right: 10%;
+}
+
+.popUpButton {
+    height: 50px;
+    width: 170px;
+    background-color: #47525e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+	display: table-cell;
+}
+
+.popUpSampleButton{
+	height: 60px;
+    width: 170px;
+    background-color: #47525e;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 17px;
+	display: table-cell;
+	margin-top: 20%;
+}
+
+

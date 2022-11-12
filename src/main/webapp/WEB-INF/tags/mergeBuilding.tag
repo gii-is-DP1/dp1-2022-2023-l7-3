@@ -5,4 +5,4 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-	<h1 class="propertyTxt">What do you want to build?</h1>
+	<h1 class="propertyTxt">MERGE BUILDING</h1>
