@@ -6,11 +6,44 @@
 
 <monopoly:layout screenTittle="Blank Game">
 	
-	<monopoly:popup>
+	<div class="gamePopUp" id="buyPopUp">
 		<monopoly:buyBuildings/>
-	</monopoly:popup>
-	<button onclick="showPopUp()">Sample comprar Propiedad</button>
+	</div>
+	<button onclick="showPopUp(&quot;buyPopUp&quot)">Sample comprar Propiedad</button>
+
+	<div class="gamePopUp" id="wantToBuildPopUp">
+		<monopoly:wantToBuild/>
+	</div>
+	<button onclick="showPopUp(&quot;wantToBuildPopUp&quot)">Sample construir</button>
+
+	<div class="gamePopUp" id="buildBuildingsPopUp">
+		<monopoly:buildBuildings/>
+	</div>
+
+	<div class="gamePopUp" id="haveToPay">
+		<monopoly:haveToPay/>
+	</div>
+	<button onclick="showPopUp(&quot;haveToPay&quot)">Sample tener que pagar</button>
 
 </monopoly:layout>
+
+<script>
+	function showPopUp(id) {
+		var overlay = document.getElementById(id);
+		overlay.style.visibility = "visible";
+		return;
+	}
+	function closePopUp(id) {
+		var overlay = document.getElementById(id)
+		overlay.style.visibility = "hidden";
+		return;
+	}
+
+	function buildBuildingsPopUp() {
+		closePopUp("wantToBuildPopUp")
+		showPopUp("buildBuildingsPopUp");
+		return;
+	}
+	</script>
 
 

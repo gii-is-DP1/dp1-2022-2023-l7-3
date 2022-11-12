@@ -106,12 +106,26 @@
 	padding:10px;
 	display: inherit;
 	margin: inherit;
+	text-align: center;
 }
 .propertyImg{
 	padding:10px;
 	display: inherit;
 	margin: inherit;
 	scale: 90%;
+}
+
+.constructorImg{
+	padding:10px;
+	margin: inherit;
+	display: inherit;
+}
+
+.buyButtons {
+	display:flex;
+	justify-content: space-between;
+	padding-left: 10%;
+	padding-right: 10%;
 }
 
 .buyYesButton {
