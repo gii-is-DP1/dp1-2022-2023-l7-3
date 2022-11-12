@@ -5,13 +5,8 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-	<h1 class="propertyTxt">Do you want to buy this property?</h1>
+	<h1 class="propertyTxt">Oh no...! It's PLAYER's property, you have to pay... </h1>
 
-	<a  class="propertyImg" href="${cardUrl}">
+    <a  class="propertyImg" href="${cardUrl}">
 		<img  alt="Card image" src="/resources/images/00.png">
-	</a>
-
-	<a class="buyButtons">
-		<button class="buyYesButton">Yes</button>
-		<button onclick="closePopUp(&quot;buyPopUp&quot)" class="buyNoButton">No</button>
 	</a>
