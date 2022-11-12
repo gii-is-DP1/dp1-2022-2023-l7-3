@@ -29,6 +29,12 @@
     <spring:url value="/resources/css/players.css" var="playersCss"/>
     <link href="${playersCss}" rel="stylesheet"/>
     
+    <spring:url value="/resources/css/game.css" var="gameCss" />
+	<link href="${gameCss}" rel="stylesheet" />
+	
+	<spring:url value="/resources/css/mainGame.css" var="mainGameCss" />
+	<link href="${mainGameCss}" rel="stylesheet" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
 
 

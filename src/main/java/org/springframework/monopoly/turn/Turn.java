@@ -33,8 +33,10 @@ public class Turn extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private List<Action> actions = new ArrayList<Action>();
 	
-	@Column(name = "quantity")
-	private Integer quantity;
+	@ElementCollection
+	@Column(name = "quantities")
+	private List<Integer> quantities = new ArrayList<Integer>();
+	
 		
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
@@ -50,7 +52,7 @@ public class Turn extends BaseEntity{
 	
 	@ElementCollection
 	@Column(name = "mid_tiles")
-	private List<Integer> mid_tiles;
+	private List<Integer> mid_tiles = new ArrayList<Integer>();
 
 	@Column(name = "final_tile_id")
 	private Integer final_tile;

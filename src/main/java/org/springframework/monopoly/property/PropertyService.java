@@ -32,10 +32,16 @@ public class PropertyService {
 		propertyRepository.save(property);
 	}
 	
+	@Transactional
 	public Optional<Property> findProperty(Integer id) {
 		return propertyRepository.findById(id);
 	}
 
+	@Transactional
+	public List<Property> getAllGameProperties() {
+		
+	}
+	
 	public Trio<Boolean, Boolean, Integer> hasOwner (Turn turn, Integer tileId, Integer tirada) {
 		Optional<Property> property = propertyRepository.findById(tileId);
 		if(property.isPresent()) {
@@ -78,8 +84,8 @@ public class PropertyService {
 			property.get().getOwner().setMoney(property.get().getOwner().getMoney() + n);
 		}
 		
-		return Trio.of(true, null, n);
-		// si no se hipoteca		
+		return Trio.of(true, null, n); // Temporal
+		// si no, se hipoteca		
 	}
 
 	private Integer payStreet(Integer idProperty, Integer idPOwner) {

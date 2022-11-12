@@ -2,6 +2,8 @@ package org.springframework.monopoly.turn;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,8 +18,9 @@ public class TurnServiceTests {
 	
 	@Test
 	void shouldFindLastTurn() {
-		Turn lastTurn = turnService.findLastTurn(0);
-		assertThat(lastTurn.getTurnNumber()).isEqualTo(2);
+		Optional<Turn> lastTurn = turnService.findLastTurn(0);
+		assertThat(lastTurn.isPresent()).isTrue();
+		assertThat(lastTurn.get().getTurnNumber()).isEqualTo(2);
 	}
 	
 }

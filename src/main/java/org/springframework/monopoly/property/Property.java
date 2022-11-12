@@ -7,6 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.tile.Tile;
 

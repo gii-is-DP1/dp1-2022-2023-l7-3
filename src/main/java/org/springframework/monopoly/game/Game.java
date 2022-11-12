@@ -11,6 +11,7 @@ import javax.persistence.OneToMany;
 
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.property.Property;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,5 +37,8 @@ public class Game extends BaseEntity {
     
     @OneToMany(mappedBy = "game")
     protected Set<Player> players;
+    
+    @OneToMany(mappedBy = "properties")
+    protected Set<Property> properties;
     
 }

@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
+import org.springframework.monopoly.property.Color;
+import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
@@ -32,20 +33,24 @@ public class GameController {
 	private static final String VIEWS_NEW_GAME = "game/newGame";
 	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
-
+	public static User currentUser;
+	private static String currentUserLocation;
 	
 	private GameService gameService;
 	private PlayerService playerService;
 	private UserService userService;
 	private TurnService turnService;
+	private StreetService streetService;
 	
 	
 	@Autowired
-	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService) {
+	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
+			StreetService streetService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
+		this.streetService = streetService;
 	}
 
 	//PROVISIONAL
@@ -133,12 +138,13 @@ public class GameController {
 			p.setPiece(colors.get(i));
 			p.setHasExitGate(false);
 			p.setTurn_number(turns.get(i++));
+			p.setGame(game);
 			
 			playerService.savePlayer(p);
 			players.add(p);
 		}
 		
-		game.setPlayers(new HashSet<Player>());
+		game.setPlayers(new HashSet<Player>(players));
 		Game savedGame = gameService.saveGame(game);
 		
 		return "redirect:/game/" + savedGame.getId();
@@ -146,31 +152,100 @@ public class GameController {
 	
 	@GetMapping(value = "/game/{gameId}")
 	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
-		
-		// Find all details needed to show to users
-		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
-		
 		Optional<Game> gameOptional = gameService.findGame(gameId);
 		if(gameOptional.isEmpty()) {
 			throw new Exception("Game doesn't exist");
 		} 
 		Game game = gameOptional.get();
+		 
+		User requestUser = userService.findUserByName(auth.getName());
 		
 		List<Player> players = new ArrayList<Player>(game.getPlayers());
 		Comparator<Player> c = Comparator.comparing(p -> p.getTurn_number());
 		Collections.sort(players, c);
-		Turn lastTurn = turnService.findLastTurn(gameId);
-		
-		// Calculating next turn result
-		Player nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+		Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
 		
 		Turn nextTurn = new Turn();
-		nextTurn.setGame(game);
-		nextTurn.setPlayer(nextPlayer);
-		nextTurn.setInitial_tile(nextPlayer.getTile());
-		nextTurn = turnService.calculateTurn(nextTurn);
+		Player nextPlayer = null;
 		
-		return GAME_MAIN;
+		// Calculating next turn result
+		if(lastTurnOpt.isPresent()) {
+			Turn lastTurn = lastTurnOpt.get();
+			nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+		} else {
+			nextTurn.setTurnNumber(0);
+			nextPlayer = players.get(0);
+		}
+		
+		model.addAttribute("Game", game);
+		model.addAttribute("Turn", null);
+		model.addAttribute("Players", game.getPlayers());
+		
+		// Street colors
+		List<List<Color>> colors = new ArrayList<List<Color>>();
+		for(Player p:game.getPlayers()) {
+			colors.add(streetService.getStreetsColors(p.getProperties()));
+		}
+		model.addAttribute("colors", colors);
+		
+		if(currentUser == null && requestUser.equals(nextPlayer.getUser())) {
+			currentUser = requestUser;
+			return "redirect:/game/" + gameId + "/nextTurn";
+		} else {
+			return GAME_MAIN;
+		}
+		
+		
+	}
+	
+	@GetMapping(value = "/game/{gameId}/nextTurn")
+	public String calculateGameTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
+		
+		// Find all details needed to show to users
+		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
+		
+		if(currentUser.getId().equals(requestUserId)) {
+			
+			Optional<Game> gameOptional = gameService.findGame(gameId);
+			if(gameOptional.isEmpty()) {
+				throw new Exception("Game doesn't exist");
+			} 
+			Game game = gameOptional.get();
+			
+			List<Player> players = new ArrayList<Player>(game.getPlayers());
+			Comparator<Player> c = Comparator.comparing(p -> p.getTurn_number());
+			Collections.sort(players, c);
+			Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
+			
+			Turn nextTurn = new Turn();
+			Player nextPlayer = null;
+			
+			// Calculating next turn result
+			if(lastTurnOpt.isPresent()) {
+				Turn lastTurn = lastTurnOpt.get();
+				nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			} else {
+				nextTurn.setTurnNumber(0);
+				nextPlayer = players.get(0);
+			} 
+			
+			nextTurn.setGame(game);
+			nextTurn.setPlayer(nextPlayer);
+			nextTurn.setInitial_tile(nextPlayer.getTile());
+			nextTurn = turnService.calculateTurn(nextTurn);
+			
+			turnService.saveTurn(nextTurn);
+			
+			model.addAttribute("Game", game);
+			model.addAttribute("Turn", nextTurn);
+			model.addAttribute("Players", game.getPlayers());
+	
+			return GAME_MAIN;
+		} else {
+			return "redirect:/game/" + gameId;
+		}
 	}
 	
 }

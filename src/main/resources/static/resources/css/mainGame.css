@@ -1,0 +1,36 @@
+
+
+.mainGameDiv {
+	height: 100%;
+	width: 100%;
+}
+
+.firstColumn {
+	height: 100%;
+	width: 32%
+}
+
+.secondColumn {
+	height: 100%;
+	width: 36%;
+}
+
+.thirdColumn {
+	height: 100%;
+	width: 32%;
+}
+
+.propertiesAndColors {
+	height: 100%;
+	width: 50%;
+}
+
+.hasExitGate {
+	height: 100%;
+	width: 20%;
+}
+
+.playerAndMoney {
+	height: 100%;
+	width: 30%;
+}
