@@ -25,6 +25,10 @@
 	align-items: center;
 }
 
+#GameForm {
+	height: 100%;
+}
+
 .formDiv {
 	flex-direction: row;
 	justify-content: space-between;

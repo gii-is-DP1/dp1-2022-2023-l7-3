@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.util.Trio;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,31 +31,37 @@ public class PropertyService {
 		propertyRepository.save(property);
 	}
 	
+	@Transactional
 	public Optional<Property> findProperty(Integer id) {
 		return propertyRepository.findById(id);
 	}
 
-	public void hasOwner (Turn turn) {
-		Optional<Property> property = propertyRepository.findById(turn.getFinal_tile());
-		if(property != null) {
+	public Trio<Boolean, Boolean, Integer> hasOwner (Turn turn, Integer tileId, Integer tirada) {
+		Optional<Property> property = propertyRepository.findById(tileId);
+		if(property.isPresent()) {
 			if(property.get().getOwner() == null) {
-				buyPropertyById(property.get().getId(), turn.getPlayer());
+				return buyPropertyById(property.get().getId(), turn.getPlayer());
 			} else {
-				payPropertyById(property.get().getId(), turn.getPlayer());
+				return payPropertyById(property.get().getId(), turn.getPlayer(), tirada);
 			}
+		} else {
+			return null;
 		}
 	}
 	
-	public void buyPropertyById(Integer idProperty, Player player) {
+	public Trio<Boolean, Boolean, Integer> buyPropertyById(Integer idProperty, Player player) {
 		Optional<Property> property = propertyRepository.findById(idProperty);
 		if(player.getMoney()>= property.get().getPrice()) {
+			player.setMoney(player.getMoney() - property.get().getPrice());
 			property.get().setOwner(player);
+			return Trio.of(false, true, property.get().getPrice());
 		}
-
+		
+		return Trio.of(false, false, null); // temporal
 		// si no es mayor se manda a subasta
 	}
 	
-	public void payPropertyById(Integer idProperty, Player player) {
+	public Trio<Boolean, Boolean, Integer> payPropertyById(Integer idProperty, Player player, Integer tirada) {
 		Integer n =0;
 		Optional<Property> property = propertyRepository.findById(idProperty);
 		Integer idPOwner = property.get().getOwner().getId();
@@ -63,7 +70,7 @@ public class PropertyService {
 		}else if (stationRepository.findIsStationById(idProperty)) {
 			n = payStation(idProperty, idPOwner);
 		} else if (companyRepository.findIsCompanyById(idProperty)) {
-			n = payCompany(idProperty, idPOwner);
+			n = payCompany(idProperty, idPOwner, tirada);
 		}
 		
 		if (player.getMoney() >= n) {
@@ -71,7 +78,8 @@ public class PropertyService {
 			property.get().getOwner().setMoney(property.get().getOwner().getMoney() + n);
 		}
 		
-		// si no se hipoteca		
+		return Trio.of(true, null, n); // Temporal
+		// si no, se hipoteca		
 	}
 
 	private Integer payStreet(Integer idProperty, Integer idPOwner) {
@@ -100,11 +108,11 @@ public class PropertyService {
 		return station.getRentalPrice()*n;
 	}
 
-	private Integer payCompany(Integer idProperty, Integer idPOwner) {
+	private Integer payCompany(Integer idProperty, Integer idPOwner, Integer tirada) {
 		Company company = companyRepository.findCompanyById(idProperty);
 		Integer n = 4;
 		if (companyRepository.findByOwner(idPOwner).stream().count() == 2.) n = 10;
-		return company.getRentalPrice() * n ; // falta multiplicarlo por la tirada específica para las compañias
+		return company.getRentalPrice() * n * tirada; // (Hecho) falta multiplicarlo por la tirada específica para las compañias
 	}
 
 }

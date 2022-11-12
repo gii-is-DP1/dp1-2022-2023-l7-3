@@ -47,13 +47,19 @@ public class Card extends BaseEntity{
     @JoinTable(
     		  name = "card_luck", 
     		  joinColumns = @JoinColumn(name = "card_id"), 
-    		  inverseJoinColumns = @JoinColumn(name = "luck_id"))
+    		  inverseJoinColumns = {
+    				  @JoinColumn(name = "luck_id"),
+    				  @JoinColumn(name = "game_id")
+    				  })
     protected Set<Luck> lucks;
 	
 	@ManyToMany
     @JoinTable(
   		  name = "card_community_box", 
   		  joinColumns = @JoinColumn(name = "card_id"), 
-  		  inverseJoinColumns = @JoinColumn(name = "community_box_id"))
+  		  inverseJoinColumns = {
+  				  @JoinColumn(name = "community_box_id"),
+				  @JoinColumn(name = "game_id")
+				  })
   protected Set<CommunityBox> community_box;
 }

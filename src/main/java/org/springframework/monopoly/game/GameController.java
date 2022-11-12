@@ -2,10 +2,11 @@ package org.springframework.monopoly.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -13,14 +14,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
+import org.springframework.monopoly.property.Color;
+import org.springframework.monopoly.property.Property;
+import org.springframework.monopoly.property.StreetService;
+import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -28,34 +32,27 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class GameController {
 	
 	private static final String VIEWS_NEW_GAME = "game/newGame";
-	private static final String GAME_MAIN = "game/main";
+	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
-
+	public static User currentUser;
+	private static String currentUserLocation;
 	
 	private GameService gameService;
 	private PlayerService playerService;
 	private UserService userService;
+	private TurnService turnService;
+	private StreetService streetService;
 	
 	
 	@Autowired
-	public GameController(GameService gameService, PlayerService playerService, UserService userService) {
+	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
+			StreetService streetService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
+		this.turnService = turnService;
+		this.streetService = streetService;
 	}
-	
-//	@InitBinder("Player")
-//	public void initPlayerBinder(WebDataBinder dataBinder) {
-//		
-//	}
-//	@InitBinder("User")
-//	public void initUserBinder(WebDataBinder dataBinder) {
-//		
-//	}
-//	@InitBinder("Game")
-//	public void initGameFormBinder(WebDataBinder dataBinder) {
-//		
-//	}
 
 	//PROVISIONAL
 	@GetMapping(value = "/blankGame")
@@ -65,7 +62,6 @@ public class GameController {
 	
 	@GetMapping(value = "/newGame")
 	public String newGame(Map<String, Object> model, Authentication authentication) {
-//		Game newGame = new Game(); 
 		List<User> users = userService.findAll();
 		
 		User creatorUser = userService.findUserByName(authentication.getName());
@@ -74,8 +70,6 @@ public class GameController {
 		List<User> players = new ArrayList<User>();
 		players.add(creatorUser);
 		
-//		model.put("game", newGame);
-//		model.put("creator", creator);
 		model.put("users", users);
 		model.put("players", players);
 		return VIEWS_NEW_GAME;
@@ -144,14 +138,122 @@ public class GameController {
 			p.setMoney(1500);
 			p.setPiece(colors.get(i));
 			p.setHasExitGate(false);
-			p.setTurn_number(turns.get(i++));
+			p.setTurnOrder(turns.get(i++));
+			p.setGame(game);
 			
 			playerService.savePlayer(p);
 			players.add(p);
+		} 
+		
+		game.setPlayers(new HashSet<Player>(players));
+		Game savedGame = gameService.saveGame(game);
+		
+		return "redirect:/game/" + savedGame.getId();
+	}
+	
+	@GetMapping(value = "/game/{gameId}")
+	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
+		Optional<Game> gameOptional = gameService.findGame(gameId);
+		if(gameOptional.isEmpty()) {
+			throw new Exception("Game doesn't exist");
+		} 
+		Game game = gameOptional.get();
+		 
+		User requestUser = userService.findUserByName(auth.getName());
+		
+		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
+		Collections.sort(players, c);
+		Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
+		
+		Turn nextTurn = new Turn();
+		Player nextPlayer = null;
+		
+		// Calculating next turn result
+		if(lastTurnOpt.isPresent()) {
+			Turn lastTurn = lastTurnOpt.get();
+			nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+		} else {
+			nextTurn.setTurnNumber(0);
+			nextPlayer = players.get(0);
 		}
 		
-		game.setPlayers(new HashSet<Player>());
-		gameService.saveGame(game);
-		return "/welcome";//GAME_MAIN;
+		model.addAttribute("Game", game);
+		model.addAttribute("Turn", null);
+		model.addAttribute("Players", players);
+		
+		List<List<Property>> properties = new ArrayList<List<Property>>();
+		for(Player p:players) {
+			properties.add(p.getProperties());
+		}
+		    
+		model.addAttribute("Properties", properties);
+		    
+		// Street colors
+ 		List<List<Color>> colors = new ArrayList<List<Color>>();
+		for(Player p:players) {
+			colors.add(streetService.getStreetsColors(p.getStreets()));
+		}
+ 		model.addAttribute("Colors", colors);
+   		
+		if(currentUser == null && requestUser.equals(nextPlayer.getUser())) {
+			currentUser = requestUser;
+			return "redirect:/game/" + gameId + "/nextTurn";
+		} else {
+			return GAME_MAIN;
+		}
+		
+		
 	}
+	
+	@GetMapping(value = "/game/{gameId}/nextTurn")
+	public String calculateGameTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
+		
+		// Find all details needed to show to users
+		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
+		
+		if(currentUser.getId().equals(requestUserId)) {
+			
+			Optional<Game> gameOptional = gameService.findGame(gameId);
+			if(gameOptional.isEmpty()) {
+				throw new Exception("Game doesn't exist");
+			} 
+			Game game = gameOptional.get();
+			
+			List<Player> players = new ArrayList<Player>(game.getPlayers());
+			Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
+			Collections.sort(players, c);
+			Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
+			
+			Turn nextTurn = new Turn();
+			Player nextPlayer = null;
+			
+			// Calculating next turn result
+			if(lastTurnOpt.isPresent()) {
+				Turn lastTurn = lastTurnOpt.get();
+				nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			} else {
+				nextTurn.setTurnNumber(0);
+				nextPlayer = players.get(0);
+			} 
+			
+			nextTurn.setGame(game);
+			nextTurn.setPlayer(nextPlayer);
+			nextTurn.setInitial_tile(nextPlayer.getTile());
+			nextTurn = turnService.calculateTurn(nextTurn);
+			
+			turnService.saveTurn(nextTurn);
+			
+			model.addAttribute("Game", game);
+			model.addAttribute("Turn", nextTurn);
+			model.addAttribute("Players", game.getPlayers());
+	
+			return GAME_MAIN;
+		} else {
+			return "redirect:/game/" + gameId;
+		}
+	}
+	
 }

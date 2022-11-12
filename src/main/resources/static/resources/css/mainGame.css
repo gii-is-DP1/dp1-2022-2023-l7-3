@@ -1,0 +1,134 @@
+
+
+.mainGameDiv {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+.firstColumn {
+	height: 100%;
+	width: 32%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 10px 0px 10px 10px;
+}
+
+.secondColumn {
+	height: 100%;
+	width: 36%;
+}
+
+.thirdColumn {
+	height: 100%;
+	width: 32%;
+	display: flex;
+	flex-direction: column;
+}
+
+.propertiesAndColors {
+	height: 100%;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+}
+
+.properties {
+	height: 70%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+}
+
+.colors {
+	height: 25%;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+.hasExitGate {
+	height: 100%;
+	width: 20%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.exitGateIconDiv {
+	border-style: solid;
+	background-color: #76d09e;
+	border-color: #36cf7a;
+	border-width: 5px;
+}
+
+.exitGateIcon {
+	height: 20%;
+}
+
+.playerAndMoney {
+	height: 100%;
+	width: 30%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.playerDiv {
+	height: 30%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	padding: 10px;
+}
+
+.playerImg {
+	height: 70%;
+}
+
+
+
+.colorBROWN {
+	background-color: #804000;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorBLUE {
+	background-color: blue;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorGREEN {
+	background-color: green;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorLIGHTBLUE {
+	background-color: #00ffff;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorORANGE {
+	background-color: orange;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorPINK {
+	background-color: pink;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorRED {
+	background-color: red;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorYELLOW {
+	background-color: yellow;
+	margin: 15px 10px 15px 10px;
+}
