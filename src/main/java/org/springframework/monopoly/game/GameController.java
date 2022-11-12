@@ -27,6 +27,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class GameController {
@@ -34,6 +35,8 @@ public class GameController {
 	private static final String VIEWS_NEW_GAME = "game/newGame";
 	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
+	public static final String GAMES_LISTING="game/GameList"; // Creado para listar partidas
+	
 	public static User currentUser;
 	private static String currentUserLocation;
 	
@@ -256,4 +259,11 @@ public class GameController {
 		}
 	}
 	
+    @GetMapping("/games/list")
+    public ModelAndView showGamesListing() {
+        ModelAndView result=new ModelAndView(GAMES_LISTING);
+        result.addObject("games", gameService.getAll());
+        return result;
+    }
+   	
 }
