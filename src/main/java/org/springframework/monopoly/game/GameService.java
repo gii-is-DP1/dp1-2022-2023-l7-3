@@ -1,11 +1,15 @@
 package org.springframework.monopoly.game;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.user.User;
+import org.springframework.monopoly.user.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class GameService {
 	
 	private GameRepository gameRepository;
-
+	private UserRepository userRepository;
+	
 	@Autowired
-	public GameService(GameRepository gameRepository) {
+	public GameService(GameRepository gameRepository, UserRepository userRepository) {
 		this.gameRepository = gameRepository;
+		this.userRepository = userRepository;
 	}
 	
 	@Transactional
@@ -31,4 +37,20 @@ public class GameService {
 	public List<Player> getPlayersOrderedByTurn(Integer gameId) {
 		return gameRepository.findPlayersOrderByTurn(gameId);
 	}
+	
+	public List<Game> getAll() {
+		
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		Optional<User> u = userRepository.findByUsername(username);
+		List<Game> games = new ArrayList<>();
+		
+		if (u.isPresent() && u.get().getIs_admin().equals("admin")) {
+			games = gameRepository.findAll();
+			
+		} else if (u.isPresent() && !u.get().getIs_admin().equals("admin")) {
+			games = gameRepository.findUserGames(u.get().getId());
+		}
+		return games;
+	}
+		
 }
