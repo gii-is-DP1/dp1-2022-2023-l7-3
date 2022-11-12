@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 @Table(name = "stations")
 public class Station extends Property{
-
+	
 }

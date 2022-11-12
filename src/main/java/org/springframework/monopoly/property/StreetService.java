@@ -8,8 +8,10 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class StreetService {
 	
 	private StreetRepository streetRepository;
@@ -29,14 +31,11 @@ public class StreetService {
 		return streetRepository.findById(id);
 	}
 	
-	public List<Color> getStreetsColors(List<Property> properties) {
+	public List<Color> getStreetsColors(Set<Street> streets) {
 		Set<Color> colors = new HashSet<Color>();
 		
-		for(Property p:properties) {
-			if(p instanceof Street) {
-				Street c = (Street) p;
-				colors.add(c.getColor());
-			}
+		for(Street s:streets) {
+			colors.add(s.getColor());
 		}
 		
 		return new ArrayList<Color>(colors);

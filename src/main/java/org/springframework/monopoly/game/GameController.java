@@ -15,6 +15,7 @@ import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Color;
+import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
@@ -137,12 +138,12 @@ public class GameController {
 			p.setMoney(1500);
 			p.setPiece(colors.get(i));
 			p.setHasExitGate(false);
-			p.setTurn_number(turns.get(i++));
+			p.setTurnOrder(turns.get(i++));
 			p.setGame(game);
 			
 			playerService.savePlayer(p);
 			players.add(p);
-		}
+		} 
 		
 		game.setPlayers(new HashSet<Player>(players));
 		Game savedGame = gameService.saveGame(game);
@@ -161,7 +162,7 @@ public class GameController {
 		User requestUser = userService.findUserByName(auth.getName());
 		
 		List<Player> players = new ArrayList<Player>(game.getPlayers());
-		Comparator<Player> c = Comparator.comparing(p -> p.getTurn_number());
+		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 		Collections.sort(players, c);
 		Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
 		
@@ -180,15 +181,22 @@ public class GameController {
 		
 		model.addAttribute("Game", game);
 		model.addAttribute("Turn", null);
-		model.addAttribute("Players", game.getPlayers());
+		model.addAttribute("Players", players);
 		
-		// Street colors
-		List<List<Color>> colors = new ArrayList<List<Color>>();
-		for(Player p:game.getPlayers()) {
-			colors.add(streetService.getStreetsColors(p.getProperties()));
+		List<List<Property>> properties = new ArrayList<List<Property>>();
+		for(Player p:players) {
+			properties.add(p.getProperties());
 		}
-		model.addAttribute("colors", colors);
-		
+		    
+		model.addAttribute("Properties", properties);
+		    
+		// Street colors
+ 		List<List<Color>> colors = new ArrayList<List<Color>>();
+		for(Player p:players) {
+			colors.add(streetService.getStreetsColors(p.getStreets()));
+		}
+ 		model.addAttribute("Colors", colors);
+   		
 		if(currentUser == null && requestUser.equals(nextPlayer.getUser())) {
 			currentUser = requestUser;
 			return "redirect:/game/" + gameId + "/nextTurn";
@@ -214,7 +222,7 @@ public class GameController {
 			Game game = gameOptional.get();
 			
 			List<Player> players = new ArrayList<Player>(game.getPlayers());
-			Comparator<Player> c = Comparator.comparing(p -> p.getTurn_number());
+			Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 			Collections.sort(players, c);
 			Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
 			

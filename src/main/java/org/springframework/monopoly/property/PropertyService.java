@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.util.Pair;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.util.Trio;
@@ -37,11 +36,6 @@ public class PropertyService {
 		return propertyRepository.findById(id);
 	}
 
-	@Transactional
-	public List<Property> getAllGameProperties() {
-		
-	}
-	
 	public Trio<Boolean, Boolean, Integer> hasOwner (Turn turn, Integer tileId, Integer tirada) {
 		Optional<Property> property = propertyRepository.findById(tileId);
 		if(property.isPresent()) {

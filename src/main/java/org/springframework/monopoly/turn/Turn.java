@@ -58,11 +58,11 @@ public class Turn extends BaseEntity{
 	private Integer final_tile;
 	
 	@ManyToOne
-	@JoinColumn(name = "game_id")
+	@JoinColumn(name = "game_id", referencedColumnName = "id")
 	private Game game;
 	
 	@ManyToOne
-	@JoinColumn(name = "player_id")
+	@JoinColumn(name = "player_id", referencedColumnName = "id")
 	private Player player;
 	
 	

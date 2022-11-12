@@ -1,19 +1,27 @@
 package org.springframework.monopoly.player;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.model.BaseEntity;
+import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.Property;
+import org.springframework.monopoly.property.Station;
+import org.springframework.monopoly.property.Street;
+import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.user.User;
 
 import lombok.Getter;
@@ -22,6 +30,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@Table(name = "player")
 public class Player extends BaseEntity {
 
 	@Column(name = "money")
@@ -43,11 +52,20 @@ public class Player extends BaseEntity {
 	@Column(name = "is_winner")
 	protected Boolean isWinner;
 
-	@Column(name = "turn_number")
-	protected Integer turn_number;
+	@Column(name = "turn_order")
+	protected Integer turnOrder;
 	
-	@OneToMany(mappedBy = "Property")
-	private List<Property> properties;
+	@OneToMany(mappedBy = "player")
+    protected Set<Turn> turns;
+	
+	@OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    protected Set<Company> companies;
+    
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    protected Set<Station> stations;
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    protected Set<Street> streets;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "game_id", referencedColumnName = "id")
@@ -56,5 +74,19 @@ public class Player extends BaseEntity {
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
-
+	
+	public List<Property> getProperties() {
+		List<Property> res = new ArrayList<Property>();
+		for(Street s:this.getStreets()) {
+			res.add((Property) s);
+		}
+		for(Company c:this.getCompanies()) {
+			res.add((Property) c);
+		}
+		for(Station st:this.getStations()) {
+			res.add((Property) st);
+		}
+		return res;
+	}
+	
 }
