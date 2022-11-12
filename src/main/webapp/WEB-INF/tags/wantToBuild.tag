@@ -11,7 +11,7 @@
 		<img  alt="Card image" src="/resources/images/monopolyConstructor.png">
 	</a>
 
-	<a class="buyButtons">
-		<button onclick="buildBuildingsPopUp()"class="buyYesButton">Yes</button>
-		<button onclick="closePopUp(&quot;wantToBuildPopUp&quot)" class="buyNoButton">No</button>
+	<a class="popUpButtons">
+		<button onclick="buildBuildingsPopUp()"class="popUpButton">Yes</button>
+		<button onclick="closePopUp(&quot;wantToBuildPopUp&quot)" class="popUpButton">No</button>
 	</a>

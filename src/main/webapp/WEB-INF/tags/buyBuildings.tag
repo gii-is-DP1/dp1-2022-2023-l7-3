@@ -11,7 +11,7 @@
 		<img  alt="Card image" src="/resources/images/00.png">
 	</a>
 
-	<a class="buyButtons">
-		<button class="buyYesButton">Yes</button>
-		<button onclick="closePopUp(&quot;buyPopUp&quot)" class="buyNoButton">No</button>
+	<a class="popUpButtons">
+		<button class="popUpButton">Yes</button>
+		<button onclick="closePopUp(&quot;buyPopUp&quot)" class="popUpButton">No</button>
 	</a>

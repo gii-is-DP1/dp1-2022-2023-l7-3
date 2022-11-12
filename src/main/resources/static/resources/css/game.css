@@ -121,14 +121,14 @@
 	display: inherit;
 }
 
-.buyButtons {
+.popUpButtons {
 	display:flex;
 	justify-content: space-between;
 	padding-left: 10%;
 	padding-right: 10%;
 }
 
-.buyYesButton {
+.popUpButton {
     height: 50px;
     width: 170px;
     background-color: #47525e;
@@ -141,16 +141,17 @@
 	display: table-cell;
 }
 
-.buyNoButton {
-    height: 50px;
+.popUpSampleButton{
+	height: 60px;
     width: 170px;
     background-color: #47525e;
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 17px;
 	display: table-cell;
+	margin-top: 20%;
 }
+
 
