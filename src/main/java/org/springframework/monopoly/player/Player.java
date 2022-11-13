@@ -55,6 +55,9 @@ public class Player extends BaseEntity {
 	@Column(name = "turn_order")
 	protected Integer turnOrder;
 	
+	@Column(name = "is_bankrupcy")
+	protected Boolean is_bankrupcy;
+	
 	@OneToMany(mappedBy = "player")
     protected Set<Turn> turns;
 	
