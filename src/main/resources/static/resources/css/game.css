@@ -216,10 +216,13 @@
 	height: auto; 
 	width: 25%;
 	align-items: center;
+	margin-top: 10 px;
 	
 	position: relative;
-	display: flex;
-	flex-direction: column;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 30% 30% 30%;
+	grid-auto-flow: column;
 	
 }
 
