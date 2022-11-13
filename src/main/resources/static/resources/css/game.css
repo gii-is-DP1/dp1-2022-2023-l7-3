@@ -158,4 +158,68 @@
 	margin-top: 20%;
 }
 
+.gameListMainBody {
+	height: auto;
+	width: auto;
+	overflow: auto;
+	margin-left: 40px;
+	margin-bottom: 20px;
+}
+
+.gameListItem {
+	height: auto;
+	width: 97%;
+	margin-bottom: 10px;
+	padding: 15px;
+	
+	border-width: 4px;
+ 	border-color: rgba(118, 208, 158, 0.5); /* Esto es lo de la opacidad */
+	border-radius: 10px;
+	border-style: solid;
+	
+	background-color: rgba(118, 208, 158, 0.7);
+	
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	align-items:center;
+	justify-content: space-between;
+	
+}
+
+.gameInfoLine {
+	font-size: 40px;
+	margin-left: 5px;
+	
+}
+
+.gameDurationAndPlayers {
+	font-size: 30px;
+	margin-left: 5px;
+	
+}
+
+.namePlayers {
+	font-size: 20px;
+	margin-left: 5px;
+	
+}
+
+.nameWinners {
+	font-size: 20px;
+	margin-left: 5px;
+	font-weight: bold;
+	
+}
+
+.pagDiv2 {
+	height: auto; 
+	width: 25%;
+	align-items: center;
+	
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	
+}
 

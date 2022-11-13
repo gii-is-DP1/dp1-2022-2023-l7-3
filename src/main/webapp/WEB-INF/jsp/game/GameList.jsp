@@ -5,8 +5,8 @@
 
 
 <petclinic:layout screenTittle="Games History">
-	
-	<div class="playersListMainBody">
+   
+	<div class="gameListMainBody">
 		
 		<div class="pagDiv">
 		
@@ -22,16 +22,33 @@
 		</div>
 		
 		<c:forEach items="${games}" var="game">
-			<div class="playerListItem"> 
-				<p class="playerInfoLine"> <c:out value="${game.date}"/> </p>
-				<p class="playerInfoLine"> <c:out value="${game.duration}"/> </p>
+			<div class="gameListItem"> 
+				<p class="gameInfoLine"> <c:out value="Game ${game.date}"/> <br> </p>
 				
-				<c:forEach items="${game.players}" var="player">
-					<p class="playerInfoLine"> <c:out value="${player.user.username}"/> </p>
-					<p><br></br></p>
-				</c:forEach>		
+				<c:choose>
+					<c:when test="${not empty game.duration}">
+						<p class="gameDurationAndPlayers"> <c:out value="${game.duration} Hours"/> </p>
+					</c:when>
+				</c:choose>
+				
+				<p class="gameDurationAndPlayers"> <c:out value= "${game.players.size()}/6 Players" /> </p>
+				
+				<div class = "pagDiv2">  
+					<c:forEach items="${game.players}" var="player">
+					
+						<c:choose>
+							<c:when test="${player.getIsWinner()}">
+								<p class="nameWinners"> <c:out value="${player.user.username} WINNER!"/> </p>
+							</c:when>
+							<c:otherwise>
+								<p class="namePlayers"> <c:out value="${player.user.username}"/> </p>
+							</c:otherwise>
+					</c:choose>				
+					</c:forEach>
+				</div>		
+					
 			</div>
 		</c:forEach>
 	</div>
-
+	  
 </petclinic:layout>
