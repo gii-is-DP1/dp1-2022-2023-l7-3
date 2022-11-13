@@ -143,6 +143,7 @@ public class GameController {
 			p.setHasExitGate(false);
 			p.setTurnOrder(turns.get(i++));
 			p.setGame(game);
+			p.setIs_bankrupcy(false);
 			
 			playerService.savePlayer(p);
 			players.add(p);

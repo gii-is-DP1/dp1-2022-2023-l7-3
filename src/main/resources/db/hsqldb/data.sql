@@ -106,10 +106,10 @@ INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (2, 7, 1, 2);
 /* Game being played now */
 INSERT INTO game (id, date, num_casas) VALUES (2, TO_DATE('12/11/2022', 'DD/MM/YYYY'), 16);
 
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id) VALUES (4,  23000, 'BLUE', 27, 0, 0, 2, 2, 1);
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id) VALUES (5,  577, 'GREEN', 10, 0, 1, 0, 2, 2);
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id) VALUES (6,  1493, 'RED', 2, 0, 0, 1, 2, 3);
-INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id) VALUES (7,  1684, 'YELLOW', 31, 0, 0, 3, 2, 4);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (4,  23000, 'BLUE', 27, 0, 0, 2, 2, 1, false);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (5,  577, 'GREEN', 10, 0, 1, 0, 2, 2, false);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (6,  1493, 'RED', 2, 0, 0, 1, 2, 3, false);
+INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (7,  1684, 'YELLOW', 31, 0, 0, 3, 2, 4, false);
 
 /* STREETS COMPANIES AND STATIONS */
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game_id, owner) VALUES (1, 'Ronda de Valencia', 60, 2, 30, false, '/resources/images/00.png', 'BROWN', 50, 2, false, 10, 30, 90, 160, 250, 2, 5);
