@@ -17,16 +17,22 @@ package org.springframework.monopoly.user;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Juergen Hoeller
@@ -45,23 +51,31 @@ public class UserController {
 	@Autowired
 	public UserController(UserService monopolyUserService) {
 		this.monopolyUserService = monopolyUserService;
-	}
+	} 
 		
-	@GetMapping("/monopolyUsers/list")
-    public String showMonopolyUsersListing(Model model, @Param("username") String username) {
-		
+	@GetMapping(value = "/monopolyUsers/list")
+    public String showMonopolyUsersListing(@RequestParam Map<String, Object> params, Model model) {
+		int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString())) : 0;
+		String username = params.get("username") != null ? params.get("username").toString() : "";
+		Page<User> pageUser = null;
 		if (username.isEmpty()) {
-			model.addAttribute("monopolyUsers", monopolyUserService.findAll());
+			pageUser = monopolyUserService.getAll(PageRequest.of(page, 5));
 			model.addAttribute("username", "");
-			
 		} else {
-			List<User> ls = monopolyUserService.findAllWithUsername(username);
-			model.addAttribute("monopolyUsers", ls);
+			pageUser = monopolyUserService.findAllWithUsername(username, PageRequest.of(page, 5));
 			model.addAttribute("username", username);
+		}
+		
+		model.addAttribute("monopolyUsers", pageUser.getContent());
+		int totalPages = pageUser.getTotalPages();
+		if(totalPages > 0) {
+			List<Integer> pages = IntStream.range(0, totalPages).boxed().collect(Collectors.toList());
+			model.addAttribute("pages", pages);
 		}
 		
         return VIEWS_USERS_LISTING;
 	}
+	
 		
 	@GetMapping(value = "/monopolyUsers/new")
 	public String initCreationForm(Map<String, Object> model) {
@@ -81,5 +95,13 @@ public class UserController {
 			return "redirect:/";
 		}
 	}
+	
+	//TO DO
+	@GetMapping("/monopolyUsers/delete")
+	public String deleteUser() {
+		monopolyUserService.delete(3);
+		return "redirect:/monopolyUsers/list";
+	}
+	
 
 }

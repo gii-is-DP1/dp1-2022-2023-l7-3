@@ -20,6 +20,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +49,8 @@ public class UserService {
 	}
 	
 	@Transactional
-	public List<User> findAllWithUsername(String username) {
-		return monopolyUserRepository.findAllWithUsername(username);
+	public Page<User> findAllWithUsername(String username,Pageable pageable) {
+		return monopolyUserRepository.findAllWithUsername(username, pageable);
 	}
 	
 	@Transactional
@@ -69,6 +71,16 @@ public class UserService {
 		} else {
 			return null;
 		}
+	}
+	@Transactional
+	public void delete(Integer id) throws DataAccessException{
+		monopolyUserRepository.deleteById(id);
+		
+	}
+	
+	@Transactional
+	public Page<User> getAll(Pageable pageable) {
+		return monopolyUserRepository.findAll(pageable);
 	}
 
 }

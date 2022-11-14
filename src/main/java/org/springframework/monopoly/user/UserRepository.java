@@ -17,6 +17,8 @@ package org.springframework.monopoly.user;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -31,9 +33,13 @@ public interface UserRepository extends CrudRepository<User, Integer> {
 	
 	Optional<User> findByUsername(String name);
 	
-	@Query("SELECT u FROM User u WHERE u.username = :username")
-	List<User> findAllWithUsername(@Param("username") String username);
+	@Query(value = "SELECT u FROM User u WHERE u.username = :username",
+			countQuery = "Select count(u) FROM User u")
+	Page<User> findAllWithUsername(@Param("username") String username, Pageable pageable);
 	
+	Page<User> findAll(Pageable pageable);
 	List<User> findAll();
+
+	void deleteById(Integer id);
 
 }
