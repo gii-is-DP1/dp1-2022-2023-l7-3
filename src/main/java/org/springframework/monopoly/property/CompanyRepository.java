@@ -8,9 +8,12 @@ import org.springframework.data.repository.query.Param;
 
 public interface CompanyRepository extends  CrudRepository<Company, Integer>{
 	
-	boolean findIsCompanyById(Integer id);
-	Company findCompanyById(Integer id);
+	@Query("SELECT c FROM Company c WHERE c.id = :idparam AND c.game.id = :idgame")
+	Boolean findIsCompanyById(@Param("idparam")Integer id,@Param("idgame") Integer id2);
+	
+	@Query("SELECT c FROM Company c WHERE c.id = :idparam AND c.game.id = :idgame")
+	Company findCompanyById(@Param("idparam")Integer id,@Param("idgame") Integer id2);
 
-	@Query("SELECT c FROM Company c WHERE c.owner = :idOwner")
-	List<Company> findByOwner(@Param("idOwner")Integer id);	
+	@Query("SELECT c FROM Company c WHERE c.owner.id = :idOwner AND c.game.id = :idgame")
+	List<Company> findByOwner(@Param("idOwner")Integer id,@Param("idgame") Integer id2);	
 }

@@ -103,7 +103,7 @@
 	display: table;
 	position:absolute;
 	top:17.5%;
-	left:25%
+	left:25%;
 }
 
 .propertyTxt{
@@ -112,6 +112,7 @@
 	margin: inherit;
 	text-align: center;
 }
+
 .propertyImg{
 	padding:10px;
 	display: inherit;

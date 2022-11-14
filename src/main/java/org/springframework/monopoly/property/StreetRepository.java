@@ -8,9 +8,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface StreetRepository extends  CrudRepository<Street, Integer>{
 	
-	boolean findIsStreetById(Integer id);
+	@Query("SELECT s FROM Street s WHERE s.id = :idparam AND s.game.id = :idgame")
+	Boolean findIsStreetById(@Param("idparam") Integer id , @Param("idgame") Integer id2);
 
-	Street findStreetById(Integer id);
+	@Query("SELECT s FROM Street s WHERE s.id = :idparam AND s.game.id = :idgame")
+	Street findStreetById(@Param("idparam") Integer id , @Param("idgame") Integer id2);
 
 	@Query("SELECT s.color FROM Street s")
 	List<String> findAllColor();

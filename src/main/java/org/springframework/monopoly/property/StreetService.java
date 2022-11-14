@@ -3,7 +3,6 @@ package org.springframework.monopoly.property;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +26,8 @@ public class StreetService {
 	}
 	
 	@Transactional
-	public Optional<Street> findStreet(Integer id) {
-		return streetRepository.findById(id);
+	public Street findStreet(Integer id, Integer idgame) {
+		return streetRepository.findStreetById(id,idgame);
 	}
 	
 	public List<Color> getStreetsColors(Set<Street> streets) {
