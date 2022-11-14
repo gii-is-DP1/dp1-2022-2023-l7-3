@@ -8,9 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
@@ -27,6 +30,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -259,11 +263,23 @@ public class GameController {
 			return "redirect:/game/" + gameId;
 		}
 	}
-	
+		
     @GetMapping("/games/list")
-    public ModelAndView showGamesListing() {
+    public ModelAndView showGamesListing(@RequestParam Map<String, Object> params) {
+    	int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString())) : 0;
+		Page<Game> pageGame = null;
+		pageGame = gameService.getAll(PageRequest.of(page, 5));
+
         ModelAndView result=new ModelAndView(GAMES_LISTING);
-        result.addObject("games", gameService.getAll());
+        result.addObject("games", pageGame.getContent());
+        
+        int totalPages = pageGame.getTotalPages();
+        
+        if(totalPages > 0) {
+			List<Integer> pages = IntStream.range(0, totalPages).boxed().collect(Collectors.toList());
+			result.addObject("pages", pages);
+		}
+        
         return result;
     }
    	
