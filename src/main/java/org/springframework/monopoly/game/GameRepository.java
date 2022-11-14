@@ -2,6 +2,8 @@ package org.springframework.monopoly.game;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -19,6 +21,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 	List<Game> findAll();
 	
 	@Query(nativeQuery=true, value = "SELECT * FROM game g JOIN player p ON g.id = p.game_id WHERE p.user_id = :userId")
-	List<Game> findUserGames(@Param("userId") Integer userId);
+	Page<Game> findUserGames(@Param("userId") Integer userId, Pageable pageable);
+	Page<Game> findAll(Pageable pageable);
 		
 }

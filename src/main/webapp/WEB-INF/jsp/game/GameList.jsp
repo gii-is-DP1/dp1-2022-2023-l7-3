@@ -9,16 +9,15 @@
 	<div class="gameListMainBody">
 		
 		<div class="pagDiv">
-		
 			<div class="HeaderButtons">
-				<a href="/games/list/previous">
-					<button class="pageButton"> - </button>
-				</a>
-				<a href="/games/list/next">
-					<button href="/games/list/previous" class="pageButton"> + </button>
-				</a>
+				<nav aria-label= "Pagination">
+					<ul class = "pagination justify-content-center">
+						<c:forEach items="${pages}" var="page">
+						<li><a href="/games/list?page=${page}">${page + 1}</a></li>
+						</c:forEach>						
+					</ul>
+				</nav>
 			</div>
-			
 		</div>
 		
 		<c:forEach items="${games}" var="game">

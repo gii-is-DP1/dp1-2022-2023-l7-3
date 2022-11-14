@@ -1,11 +1,12 @@
 package org.springframework.monopoly.game;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserRepository;
@@ -38,19 +39,19 @@ public class GameService {
 		return gameRepository.findPlayersOrderByTurn(gameId);
 	}
 	
-	public List<Game> getAll() {
+	public Page<Game> getAll(Pageable pageable) {
 		
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<User> u = userRepository.findByUsername(username);
-		List<Game> games = new ArrayList<>();
+		Page<Game> res = Page.empty();
 		
 		if (u.isPresent() && u.get().getIs_admin().equals("admin")) {
-			games = gameRepository.findAll();
+			res = gameRepository.findAll(pageable);
 			
 		} else if (u.isPresent() && !u.get().getIs_admin().equals("admin")) {
-			games = gameRepository.findUserGames(u.get().getId());
+			res = gameRepository.findUserGames(u.get().getId(), pageable);
 		}
-		return games;
+		return res;
 	}
 		
 }
