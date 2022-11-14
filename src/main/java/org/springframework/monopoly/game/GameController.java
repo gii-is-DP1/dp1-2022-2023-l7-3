@@ -64,6 +64,7 @@ public class GameController {
 	//PROVISIONAL
 	@GetMapping(value = "/blankGame")
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
+		model.put("property", streetService.findStreet(39,2));
 		return BLANK_GAME;
 	}
 	

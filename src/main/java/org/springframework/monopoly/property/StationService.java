@@ -1,8 +1,6 @@
 package org.springframework.monopoly.property;
 
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -21,9 +19,5 @@ public class StationService {
 	@Transactional
 	public void saveStation(Station station) throws DataAccessException {
 		stationRepository.save(station);
-	}
-	
-	public Optional<Station> findStation(Integer id) {
-		return stationRepository.findById(id);
 	}
 }
