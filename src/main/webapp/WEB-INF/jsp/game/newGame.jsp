@@ -3,9 +3,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<spring:url value="/resources/css/game.css" var="gameCss" />
-<link href="${gameCss}" rel="stylesheet" />
-
 <monopoly:layout screenTittle="New Game">
 
 	<div class="NewGameMainBody">

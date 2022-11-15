@@ -1,0 +1,195 @@
+
+
+.mainGameDiv {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+.firstColumn {
+	height: 100%;
+	width: 32%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 10px 0px 10px 10px;
+}
+
+.secondColumn {
+	height: 100%;
+	width: 36%;
+}
+
+.thirdColumn {
+	height: 100%;
+	width: 32%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 10px 10px 10px 0px;
+}
+
+.propertiesAndColors {
+	height: 100%;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+}
+
+.properties {
+	overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+	
+	height: 70%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 3%;
+}
+
+.properties::-webkit-scrollbar { /* WebKit */
+    width: 0;
+    height: 0;
+}
+
+.colors {
+	height: 25%;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+.hasExitGate {
+	height: 100%;
+	width: 20%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.exitGateIconDiv {
+	border-style: solid;
+	background-color: #76d09e;
+	border-color: #36cf7a;
+	border-width: 5px;
+	min-height: 30px;
+	min-width: 60px;
+}
+
+.exitGateIcon {
+	height: 20%;
+}
+
+.playerAndMoney {
+	height: 100%;
+	width: 30%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.playerDiv {
+	height: 30%;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	padding: 10px;
+}
+
+.playerImg {
+	height: 70%;
+}
+
+
+
+.colorBROWN {
+	background-color: #804000;
+	border-style: solid;
+	border-color: #402000;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorBLUE {
+	background-color: blue;
+	border-style: solid;
+	border-color: #0000d5;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorGREEN {
+	background-color: green;
+	border-style: solid;
+	border-color: #005500;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorLIGHTBLUE {
+	background-color: #00ffff;
+	border-style: solid;
+	border-color: #008080;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorORANGE {
+	background-color: orange;
+	border-style: solid;
+	border-color: #aa6f00;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorPINK {
+	background-color: pink;
+	border-style: solid;
+	border-color: #ff6a85;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorRED {
+	background-color: red;
+	border-style: solid;
+	border-color: #800000;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}
+
+.colorYELLOW {
+	background-color: yellow;
+	border-style: solid;
+	border-color: #808000;
+	border-width: 5px;
+	
+	min-height: 10px;
+	min-width: 40px;
+	margin: 15px 10px 15px 10px;
+}

@@ -15,7 +15,7 @@
         </p>
         <p>
         	<ul>
-		        <li><a href="/monopolyUsers/list?username=">View Players</a></li>
+		        <li><a href="/monopolyUsers/list">View Players</a></li>
 	        </ul>
         </p>
         </div>

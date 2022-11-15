@@ -53,8 +53,6 @@ public class Street extends Property{
 	@NotBlank
 	private Integer rentalHotel;
 	
-	
-
 }
 
 

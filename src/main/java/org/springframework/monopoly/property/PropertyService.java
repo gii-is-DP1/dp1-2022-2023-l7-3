@@ -1,11 +1,10 @@
 package org.springframework.monopoly.property;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.util.Trio;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,52 +29,59 @@ public class PropertyService {
 		propertyRepository.save(property);
 	}
 	
-	public Optional<Property> findProperty(Integer id) {
-		return propertyRepository.findById(id);
+	@Transactional
+	public Property findProperty(Integer id,Integer idgame) {
+		return propertyRepository.findPropertyById(id, idgame);
 	}
 
-	public void hasOwner (Turn turn) {
-		Optional<Property> property = propertyRepository.findById(turn.getFinal_tile());
+	public Trio<Boolean, Boolean, Integer> hasOwner (Turn turn, Integer tileId, Integer tirada) {
+		Property property = propertyRepository.findPropertyById(tileId,turn.getGame().getId());
 		if(property != null) {
-			if(property.get().getOwner() == null) {
-				buyPropertyById(property.get().getId(), turn.getPlayer());
+			if(property.getOwner() == null) {
+				return buyPropertyById(property.getId(), turn.getPlayer());
 			} else {
-				payPropertyById(property.get().getId(), turn.getPlayer());
+				return payPropertyById(property.getId(),property.getGame().getId() ,turn.getPlayer(), tirada);
 			}
+		} else {
+			return null;
 		}
 	}
 	
-	public void buyPropertyById(Integer idProperty, Player player) {
-		Optional<Property> property = propertyRepository.findById(idProperty);
-		if(player.getMoney()>= property.get().getPrice()) {
-			property.get().setOwner(player);
+	public Trio<Boolean, Boolean, Integer> buyPropertyById(Integer idProperty, Player player) {
+		Property property = propertyRepository.findPropertyById(idProperty, player.getGame().getId());
+		if(player.getMoney()>= property.getPrice()) {
+			player.setMoney(player.getMoney() - property.getPrice());
+			property.setOwner(player);
+			return Trio.of(false, true, property.getPrice());
 		}
-
+		
+		return Trio.of(false, false, null); // temporal
 		// si no es mayor se manda a subasta
 	}
 	
-	public void payPropertyById(Integer idProperty, Player player) {
+	public Trio<Boolean, Boolean, Integer> payPropertyById(Integer idProperty, Integer idGame,Player player, Integer tirada) {
 		Integer n =0;
-		Optional<Property> property = propertyRepository.findById(idProperty);
-		Integer idPOwner = property.get().getOwner().getId();
-		if(streetRepository.findIsStreetById(idProperty)) {
-			n = payStreet(idProperty, idPOwner);	
-		}else if (stationRepository.findIsStationById(idProperty)) {
-			n = payStation(idProperty, idPOwner);
-		} else if (companyRepository.findIsCompanyById(idProperty)) {
-			n = payCompany(idProperty, idPOwner);
+		Property property = propertyRepository.findPropertyById(idProperty,idGame);
+		Integer idPOwner = property.getOwner().getId();
+		if(streetRepository.findIsStreetById(idProperty,idGame)) {
+			n = payStreet(idProperty, idGame,idPOwner);	
+		}else if (stationRepository.findIsStationById(idProperty,idGame)) {
+			n = payStation(idProperty,idGame, idPOwner);
+		} else if (companyRepository.findIsCompanyById(idProperty,idGame)) {
+			n = payCompany(idProperty,idGame, idPOwner, tirada);
 		}
 		
 		if (player.getMoney() >= n) {
 			player.setMoney(player.getMoney() - n);
-			property.get().getOwner().setMoney(property.get().getOwner().getMoney() + n);
+			property.getOwner().setMoney(property.getOwner().getMoney() + n);
 		}
 		
-		// si no se hipoteca		
+		return Trio.of(true, null, n); // Temporal
+		// si no, se hipoteca		
 	}
 
-	private Integer payStreet(Integer idProperty, Integer idPOwner) {
-		Street street = streetRepository.findStreetById(idProperty);
+	private Integer payStreet(Integer idProperty, Integer idGame, Integer idPOwner) {
+		Street street = streetRepository.findStreetById(idProperty,idGame);
 		Boolean b = propertyRepository.findByColor(street.getColor().toString()).stream().allMatch(x->x.getOwner().getId()==idPOwner);
 		if(b) {
 			if(street.getHaveHotel()) {
@@ -94,17 +100,19 @@ public class PropertyService {
 		}		
 	}
 
-	private Integer payStation(Integer idProperty, Integer idPOwner) {
-		Station station = stationRepository.findStationById(idProperty);
+	private Integer payStation(Integer idProperty,Integer idGame, Integer idPOwner) {
+		Station station = stationRepository.findStationById(idProperty,idGame);
 		Integer n = (int) stationRepository.findByOwner(idPOwner).stream().count();
 		return station.getRentalPrice()*n;
 	}
 
-	private Integer payCompany(Integer idProperty, Integer idPOwner) {
-		Company company = companyRepository.findCompanyById(idProperty);
+	private Integer payCompany(Integer idProperty,Integer idGame, Integer idPOwner, Integer tirada) {
+		Company company = companyRepository.findCompanyById(idProperty,idGame);
 		Integer n = 4;
-		if (companyRepository.findByOwner(idPOwner).stream().count() == 2.) n = 10;
-		return company.getRentalPrice() * n ; // falta multiplicarlo por la tirada específica para las compañias
+		if (companyRepository.findByOwner(idPOwner,idGame).stream().count() == 2.) n = 10;
+		return company.getRentalPrice() * n * tirada; // (Hecho) falta multiplicarlo por la tirada específica para las compañias
 	}
+	
+	
 
 }

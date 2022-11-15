@@ -38,11 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlayerService {
 
 	private PlayerRepository playerRepository;	
+
 	
 	@Autowired
 	private UserService monopolyUserService;
-	
-	
 	
 	// @Autowired
 	// private AuthoritiesService authoritiesService;
@@ -50,7 +49,6 @@ public class PlayerService {
 	@Autowired
 	public PlayerService(PlayerRepository playerRepository) {
 		this.playerRepository = playerRepository;
-		
 	}
 
 	@Transactional(readOnly = true)
@@ -83,6 +81,13 @@ public class PlayerService {
 		PieceColors[] pieceColors = PieceColors.values();
 		List<PieceColors> colors = Arrays.asList(pieceColors);
 		return colors;
+	}
+	
+	@Transactional
+	public void bankruptcy(Player player) { 
+		if(player.getMoney() < 0 && player.getProperties().isEmpty()) {
+			player.setIs_bankrupcy(true);
+		}
 	}
 	
 	

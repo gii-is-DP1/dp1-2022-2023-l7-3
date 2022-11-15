@@ -1,6 +1,10 @@
 package org.springframework.monopoly.turn;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -24,12 +28,18 @@ import lombok.Setter;
 @Table(name = "turns")
 public class Turn extends BaseEntity{
 	
+	@ElementCollection
 	@Column(name= "action")
 	@Enumerated(EnumType.STRING)
-	private Action action;
+	private List<Action> actions = new ArrayList<Action>();
+	
+	@ElementCollection
+	@Column(name = "quantities")
+	private List<Integer> quantities = new ArrayList<Integer>();
+	
 		
-	@NotNull
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "turn_number")
 	private Integer turnNumber;
 	
 	@NotNull
@@ -39,16 +49,20 @@ public class Turn extends BaseEntity{
 	
 	@Column(name = "initial_tile_id")
 	private Integer initial_tile;
+	
+	@ElementCollection
+	@Column(name = "mid_tiles")
+	private List<Integer> mid_tiles = new ArrayList<Integer>();
 
 	@Column(name = "final_tile_id")
 	private Integer final_tile;
 	
 	@ManyToOne
-	@JoinColumn(name = "game_id")
+	@JoinColumn(name = "game_id", referencedColumnName = "id")
 	private Game game;
 	
 	@ManyToOne
-	@JoinColumn(name = "player_id")
+	@JoinColumn(name = "player_id", referencedColumnName = "id")
 	private Player player;
 	
 	

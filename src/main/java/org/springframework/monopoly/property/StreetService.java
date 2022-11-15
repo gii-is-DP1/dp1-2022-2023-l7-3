@@ -1,11 +1,16 @@
 package org.springframework.monopoly.property;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class StreetService {
 	
 	private StreetRepository streetRepository;
@@ -20,8 +25,19 @@ public class StreetService {
 		streetRepository.save(street);
 	}
 	
-	public Optional<Street> findStreet(Integer id) {
-		return streetRepository.findById(id);
+	@Transactional
+	public Street findStreet(Integer id, Integer idgame) {
+		return streetRepository.findStreetById(id,idgame);
+	}
+	
+	public List<Color> getStreetsColors(Set<Street> streets) {
+		Set<Color> colors = new HashSet<Color>();
+		
+		for(Street s:streets) {
+			colors.add(s.getColor());
+		}
+		
+		return new ArrayList<Color>(colors);
 	}
 
 }
