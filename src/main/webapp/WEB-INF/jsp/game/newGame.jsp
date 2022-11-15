@@ -138,8 +138,8 @@
 				</div>
 
 
-				<div class="popUpOverlay" id="popUpOverlayId">
-					<div class="addPlayerPopUp" id="addPlayerPopUpId">
+				<div class="popUpOverlay1" id="popUpOverlayId">
+					<div class="addPlayerPopUp1" id="addPlayerPopUpId">
 						<c:forEach items="${users}" var="user" varStatus="status">
 							<div class="userToAdd">
 								<a onClick="addNewPlayer(${user.id})" href="JavaScript:void(0)" class="playerName">${user.username}</a>
