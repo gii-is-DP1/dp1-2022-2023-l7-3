@@ -39,9 +39,11 @@
             	<a href="/login">
                 <button id="EditButton">Edit <span class="glyphicon glyphicon-pencil"></span></button>
             	</a>
-            	<a href="/monopolyUsers/delete" >
+            	<c:if test="${monopolyUser.id!=0}">
+            	<a href="/monopolyUsers/delete/${monopolyUser.id }" >
                 <button id="DeleteButton">Delete <span class="glyphicon glyphicon-trash"></span></button>
             	</a>
+            	</c:if>
 				
 			</div>
 		</c:forEach>

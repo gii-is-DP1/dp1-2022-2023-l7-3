@@ -18,6 +18,7 @@ package org.springframework.monopoly.player;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -35,5 +36,8 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 	@Query("SELECT player FROM Player player WHERE player.user =:id")
 	Optional<Player> findPlayerByUser(@Param("id") Integer id);
 	
+	@Modifying
+	@Query(nativeQuery = true, value = "UPDATE player SET user_id = 0 WHERE user_id = :userId")
+	void updatePlayerRelation(@Param("userId") Integer id);
 
 }

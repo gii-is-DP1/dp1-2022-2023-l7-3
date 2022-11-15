@@ -39,9 +39,7 @@ public class PlayerService {
 
 	private PlayerRepository playerRepository;	
 
-	
-	@Autowired
-	private UserService monopolyUserService;
+
 	
 	// @Autowired
 	// private AuthoritiesService authoritiesService;
@@ -71,7 +69,6 @@ public class PlayerService {
 	@Transactional
 	public void savePlayer(Player player) throws DataAccessException {
 		playerRepository.save(player);		
-		monopolyUserService.saveUser(player.getUser());
 		
 		// authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
 	}	
@@ -88,6 +85,11 @@ public class PlayerService {
 		if(player.getMoney() < 0 && player.getProperties().isEmpty()) {
 			player.setIs_bankrupcy(true);
 		}
+	}
+	
+	@Transactional
+	public void updatePlayerRelations(Integer id) { 
+		playerRepository.updatePlayerRelation(id);
 	}
 	
 	
