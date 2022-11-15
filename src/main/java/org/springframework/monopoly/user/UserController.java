@@ -28,8 +28,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -94,12 +98,13 @@ public class UserController {
 		}
 	}
 	
-	//TO DO
-	@GetMapping("/monopolyUsers/delete")
-	public String deleteUser() {
-		monopolyUserService.delete(3);
+
+	@RequestMapping(value = "/monopolyUsers/delete/{id}")
+	public String deleteUser(@PathVariable(name = "id") Integer id) {
+		monopolyUserService.delete(id);
 		return "redirect:/monopolyUsers/list";
 	}
+	
 	
 
 }

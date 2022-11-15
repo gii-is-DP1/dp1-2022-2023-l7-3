@@ -17,11 +17,14 @@ package org.springframework.monopoly.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.player.PlayerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,10 +40,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 	
 	private UserRepository monopolyUserRepository;
+	private PlayerService pService;
 
 	@Autowired
-	public UserService(UserRepository monopolyUserRepository) {
+	public UserService(UserRepository monopolyUserRepository, PlayerService pService) {
 		this.monopolyUserRepository = monopolyUserRepository;
+		this.pService = pService;
 	}
 	
 	@Transactional
@@ -74,7 +79,8 @@ public class UserService {
 	}
 	@Transactional
 	public void delete(Integer id) throws DataAccessException{
-		monopolyUserRepository.deleteById(id);
+		pService.updatePlayerRelations(id);
+		monopolyUserRepository.deleteByUserId(id);
 		
 	}
 	

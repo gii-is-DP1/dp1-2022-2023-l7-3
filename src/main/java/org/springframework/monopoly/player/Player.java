@@ -74,7 +74,7 @@ public class Player extends BaseEntity {
     @JoinColumn(name = "game_id", referencedColumnName = "id")
 	private Game game;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
 	
