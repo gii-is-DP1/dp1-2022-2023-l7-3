@@ -13,8 +13,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
@@ -29,6 +31,7 @@ import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,16 +65,16 @@ public class GameController {
 		this.userService = userService;
 		this.turnService = turnService;
 		this.streetService = streetService;
-	
 		this.propertyService = propertyService;
 	}
 
 	//PROVISIONAL
 	@GetMapping(value = "/blankGame")
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
-		Integer idProperty = 3;
+		Integer idProperty = 12;
 		Integer idGame = 2;	
 		model.put("property", propertyService.getProperty(idProperty, idGame));
+		
 		
 		return BLANK_GAME;
 	}
@@ -129,7 +132,7 @@ public class GameController {
 	}
 	
 	@PostMapping(value = "/newGame")
-	public String processGameForm(GameForm gameForm, Map<String, Object> model) {
+	public String processGameForm(GameForm gameForm, Map<String, Object> model, BindingResult result) {
 		Game game = new Game();
 		System.out.println(game.getNumCasas());
 		List<Integer> userIds = gameForm.getUsers();
@@ -163,7 +166,13 @@ public class GameController {
 		} 
 		
 		game.setPlayers(new HashSet<Player>(players));
-		Game savedGame = gameService.saveGame(game);
+		Game savedGame;
+		try {
+			savedGame = gameService.saveGame(game);
+		} catch (InvalidNumberOfPLayersException e) {
+			result.rejectValue("Users[0]", "Not enough players", "There are not enough players to start");
+			return VIEWS_NEW_GAME;
+		}
 		
 		return "redirect:/game/" + savedGame.getId();
 	}
