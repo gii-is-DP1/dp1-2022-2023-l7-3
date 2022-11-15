@@ -137,11 +137,11 @@ public class TurnService {
 			
 		} else if(companies.contains(id)) {
 			// Company
-			res = Trio.of("Company", Action.PAY, propertyService.payPropertyById(id, player, tirada).getThird());
+			res = Trio.of("Company", Action.PAY, propertyService.payPropertyById(id, player.getGame().getId(),player, tirada).getThird());
 			
 		} else if(stations.contains(id)) {
 			// Station
-			res = Trio.of("Station", Action.PAY, propertyService.payPropertyById(id, player, tirada).getThird());
+			res = Trio.of("Station", Action.PAY, propertyService.payPropertyById(id, player.getGame().getId(),player, tirada).getThird());
 			
 		} else if(id.equals(4) || id.equals(38)) {
 			// Taxes

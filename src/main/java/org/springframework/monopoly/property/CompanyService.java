@@ -1,7 +1,5 @@
 package org.springframework.monopoly.property;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -22,9 +20,8 @@ public class CompanyService {
 		companyRepository.save(company);
 	}
 	
-	public Optional<Company> findStreet(Integer id) {
-		return companyRepository.findById(id);
+	@Transactional
+	public Company findCompany(Integer id, Integer idgame) {
+		return companyRepository.findCompanyById(id,idgame);
 	}
-
-
 }

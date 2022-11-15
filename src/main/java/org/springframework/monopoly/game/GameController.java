@@ -19,7 +19,9 @@ import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Color;
+import org.springframework.monopoly.property.CompanyService;
 import org.springframework.monopoly.property.Property;
+import org.springframework.monopoly.property.StationService;
 import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
@@ -50,21 +52,34 @@ public class GameController {
 	private UserService userService;
 	private TurnService turnService;
 	private StreetService streetService;
+	private CompanyService companyService;
+	private StationService stationService;
 	
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService) {
+			StreetService streetService,CompanyService companyService, StationService stationService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
 		this.streetService = streetService;
+		this.companyService = companyService;
+		this.stationService = stationService;
 	}
 
 	//PROVISIONAL
 	@GetMapping(value = "/blankGame")
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
+		Integer idProperty = 12;
+		Integer idGame = 2;
+		if(companyService.findCompany(idProperty, idGame) != null) {
+			model.put("property", companyService.findCompany(idProperty, idGame));
+		}else if(streetService.findStreet(idProperty, idGame) != null) {
+			model.put("property", streetService.findStreet(idProperty, idGame));
+		}else if(stationService.findStation(idProperty, idGame )!= null) {
+			model.put("property", stationService.findStation(idProperty, idGame));
+		}
 		return BLANK_GAME;
 	}
 	
