@@ -1,5 +1,6 @@
 package org.springframework.monopoly.property;
 
+import org.hibernate.boot.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.player.Player;
@@ -30,7 +31,7 @@ public class PropertyService {
 	}
 	
 	@Transactional
-	public Property findProperty(Integer id,Integer idgame) {
+	public Property findProperty(Integer id,Integer idgame) throws MappingException{
 		return propertyRepository.findPropertyById(id, idgame);
 	}
 

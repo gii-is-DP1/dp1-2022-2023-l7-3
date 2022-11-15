@@ -20,4 +20,9 @@ public class StationService {
 	public void saveStation(Station station) throws DataAccessException {
 		stationRepository.save(station);
 	}
+	
+	@Transactional
+	public Station findStation(Integer id, Integer idgame) {
+		return stationRepository.findStationById(id,idgame);
+	}
 }

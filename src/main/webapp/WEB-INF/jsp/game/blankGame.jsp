@@ -50,9 +50,9 @@
 		return;
 	}
 
-	function buildBuildingsPopUp() {
-		closePopUp("wantToBuildPopUp")
-		showPopUp("buildBuildingsPopUp");
+	function closeOpenPopUp(id1, id2) {
+		closePopUp(id1);
+		showPopUp(id2);
 		return;
 	}
 	</script>

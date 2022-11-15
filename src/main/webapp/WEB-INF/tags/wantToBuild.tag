@@ -12,6 +12,6 @@
 	</a>
 
 	<a class="popUpButtons">
-		<button onclick="buildBuildingsPopUp()"class="popUpButton">Yes</button>
+		<button onclick="closeOpenPopUp(&quot;wantToBuildPopUp&quot, &quot;buildBuildingsPopUp&quot)"class="popUpButton">Yes</button>
 		<button onclick="closePopUp(&quot;wantToBuildPopUp&quot)" class="popUpButton">No</button>
 	</a>
