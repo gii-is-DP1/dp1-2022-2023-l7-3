@@ -19,4 +19,9 @@ public class CompanyService {
 	public void saveCompany(Company company) throws DataAccessException {
 		companyRepository.save(company);
 	}
+	
+	@Transactional
+	public Company findCompany(Integer id, Integer idgame) {
+		return companyRepository.findCompanyById(id,idgame);
+	}
 }

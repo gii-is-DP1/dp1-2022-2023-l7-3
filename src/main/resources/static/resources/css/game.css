@@ -55,6 +55,58 @@
 	text-align: center;
 }
 
+.popUpOverlay1 {
+	position: fixed;
+  	top: 0;
+  	bottom: 0;
+  	left: 0;
+  	right: 0;
+  	background: rgba(0, 0, 0, 0.7);
+  	transition: opacity 500ms;
+  	visibility: hidden;
+  	opacity: 0;
+}
+
+.gamePopUp1 {
+	background-color: #76d09e;
+	border-radius: 5px;
+	
+  	padding: 20px;
+  	height: 70%;
+  	width: 50%;
+  	
+  	top: 15%;
+  	bottom: 15%;
+  	left: 25%;
+  	right: 25%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+  	
+  	max-height: 700px;
+  	
+  	display: flex;
+	flex-direction: column;
+	overflow: auto;
+}
+
+.addPlayerPopUp1 {
+	background-color: #76d09e;
+	border-radius: 5px;
+	
+	margin: 40vh auto;
+  	padding: 40px;
+  	width: 30%;
+  	position: relative;
+/*   	transition: all 5s ease-in-out; */
+  	
+  	max-height: 700px;
+  	
+  	display: flex;
+	flex-direction: column;
+	overflow: auto;
+}
+
+
 .popUpOverlay {
 	position: fixed;
   	top: 0;

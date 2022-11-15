@@ -8,7 +8,7 @@
 	<div class="NewGameMainBody">
 		<div class="players">
 
-			<form:form modelAttribute="GameForm" id="GameForm" action="/newGame">
+			<form:form modelAttribute="GameForm" class="GameForm" id="GameForm" action="/newGame">
 				<%-- <spring:url value="/newGame/creating/add/{userId}" var="addUserUrl">
 					<spring:param id="urlParam" name="userId" value="0" />
 				</spring:url> --%>
@@ -138,8 +138,8 @@
 				</div>
 
 
-				<div class="popUpOverlay" id="popUpOverlayId">
-					<div class="addPlayerPopUp" id="addPlayerPopUpId">
+				<div class="popUpOverlay1" id="popUpOverlayId">
+					<div class="addPlayerPopUp1" id="addPlayerPopUpId">
 						<c:forEach items="${users}" var="user" varStatus="status">
 							<div class="userToAdd">
 								<a onClick="addNewPlayer(${user.id})" href="JavaScript:void(0)" class="playerName">${user.username}</a>

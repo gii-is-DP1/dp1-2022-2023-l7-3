@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +38,8 @@ public class GameService {
 		return gameRepository.findPlayersOrderByTurn(gameId);
 	}
 	
-	public Page<Game> getAll(Pageable pageable) {
+	public Page<Game> getAll(Pageable pageable, String username) {
 		
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		Optional<User> u = userRepository.findByUsername(username);
 		Page<Game> res = Page.empty();
 		

@@ -37,7 +37,7 @@ public class User extends BaseEntity {
 	@Column(name = "is_admin", columnDefinition = "varchar(30) default 'user'")
 	protected String is_admin;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "user")
 	protected Set<Player> player;
 	
 }

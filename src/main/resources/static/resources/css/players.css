@@ -85,7 +85,7 @@
     font-family: "Bree_Serif";
     position: absolute;
     right: 200px;
-    top: 35%;
+    top: 24%;
 }
 
 #DeleteButton {
@@ -101,7 +101,7 @@
     font-family: "Bree_Serif";
     position: absolute;
     right: 20px;
-    top: 35%;
+    top: 24%;
 }
 
 #SubmitButton {
@@ -116,8 +116,8 @@
     font-weight: bold;
     font-family: "Bree_Serif";
     position: absolute;
-    right: 415px;
-    top: 6px;
+    right: 522px;
+    top: 15px;
     text-align: center;
     padding: 3px;
 }
