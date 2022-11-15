@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.util.Pair;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.util.Trio;
 import org.springframework.stereotype.Service;
@@ -121,6 +122,7 @@ public class TurnService {
 	
 	// TODO terminar de calcular cosas
 	public static Trio<String, Action, Integer> getTileAction(Turn turn, Integer id, Integer tirada) {
+		Property property =(Property) propertyService.getProperty(id, turn.getGame().getId());
 		Player player = turn.getPlayer();
 		Trio<String, Action, Integer> res = null;
 		if(streets.contains(id)) {
@@ -137,11 +139,11 @@ public class TurnService {
 			
 		} else if(companies.contains(id)) {
 			// Company
-			res = Trio.of("Company", Action.PAY, propertyService.payPropertyById(id, player.getGame().getId(),player, tirada).getThird());
+			res = Trio.of("Company", Action.PAY, propertyService.payPropertyById(property, turn, tirada).getThird());
 			
 		} else if(stations.contains(id)) {
 			// Station
-			res = Trio.of("Station", Action.PAY, propertyService.payPropertyById(id, player.getGame().getId(),player, tirada).getThird());
+			res = Trio.of("Station", Action.PAY, propertyService.payPropertyById(property, turn, tirada).getThird());
 			
 		} else if(id.equals(4) || id.equals(38)) {
 			// Taxes
