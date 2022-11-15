@@ -8,7 +8,7 @@
 	<div class="NewGameMainBody">
 		<div class="players">
 
-			<form:form modelAttribute="GameForm" id="GameForm" action="/newGame">
+			<form:form modelAttribute="GameForm" class="GameForm" id="GameForm" action="/newGame">
 				<%-- <spring:url value="/newGame/creating/add/{userId}" var="addUserUrl">
 					<spring:param id="urlParam" name="userId" value="0" />
 				</spring:url> --%>
