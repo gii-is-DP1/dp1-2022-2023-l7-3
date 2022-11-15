@@ -62,16 +62,16 @@ public class GameController {
 		this.userService = userService;
 		this.turnService = turnService;
 		this.streetService = streetService;
-	
 		this.propertyService = propertyService;
 	}
 
 	//PROVISIONAL
 	@GetMapping(value = "/blankGame")
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
-		Integer idProperty = 3;
+		Integer idProperty = 12;
 		Integer idGame = 2;	
 		model.put("property", propertyService.getProperty(idProperty, idGame));
+		
 		
 		return BLANK_GAME;
 	}
