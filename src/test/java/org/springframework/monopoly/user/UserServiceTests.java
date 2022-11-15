@@ -1,12 +1,15 @@
 package org.springframework.monopoly.user;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@ExtendWith(MockitoExtension.class)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class UserServiceTests {
 
@@ -67,24 +71,21 @@ public class UserServiceTests {
 	}
 	
 	@Test
-	@Transactional 
 	public void findAllWithUsernameExists() {
 		
 		Pageable p = PageRequest.of(0, 5);
 		Page<User> page = userService.findAllWithUsername("xXPaco02Xx", p); // Username exists in the database
-		assertThat(page.getSize() != 0);
+		assertThat(page.getNumberOfElements() > 0);
 	}
 	
 	@Test
-	@Transactional 
 	public void findAllWithUsernameNotExists() {
 		Pageable p = PageRequest.of(0, 5);
 		Page<User> page = userService.findAllWithUsername("testUser", p); // Username does not exist
-		assertThat(page.getSize() == 0);
+		assertThat(page.getNumberOfElements() == 0);
 	}
 	
 	@Test
-	@Transactional 
 	public void getAllUsersPagination() {
 		Pageable p = PageRequest.of(0, 5);
 		Page<User> page = userService.getAll(p);
@@ -105,20 +106,22 @@ public class UserServiceTests {
 		
 		Optional<User> createdUser = userService.findUser(999999999); // Will exist
 		assertThat(createdUser.isPresent());
-		userService.delete(999999999);
+		this.userService.delete(999999999);
 		Optional<User> deletedUser = userService.findUser(999999999); // Will not exist
 		assertThat(!deletedUser.isPresent());
 	}
-	
-	// TO DO 
-//	@Test
-//	@Transactional 
-//	public void deleteUserNotExists() {
-//		
-//		Optional<User> deletedUser = userService.findUser(999999999); // Id does not exist
-//		assertThat(!deletedUser.isPresent());
-//		
-//		userService.delete(999955555); 	
-//	}
+	 
+	@Test
+	@Transactional 
+	public void deleteUserNotExists() {
+		
+		try {
+			this.userService.delete(99999998);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		assertThrows(Exception.class, null); // No action will be performed
+	}
 	
 }
