@@ -1,5 +1,6 @@
 package org.springframework.monopoly.game;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -39,7 +40,7 @@ public class GameController {
 	private static final String VIEWS_NEW_GAME = "game/newGame";
 	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
-	public static final String GAMES_LISTING="game/GameList"; // Creado para listar partidas
+	public static final String GAMES_LISTING="game/GameList";
 	
 	public static User currentUser;
 	private static String currentUserLocation;
@@ -265,10 +266,9 @@ public class GameController {
 	}
 		
     @GetMapping("/games/list")
-    public ModelAndView showGamesListing(@RequestParam Map<String, Object> params) {
+    public ModelAndView showGamesListing(@RequestParam Map<String, Object> params, Principal auth) {
     	int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString())) : 0;
-		Page<Game> pageGame = null;
-		pageGame = gameService.getAll(PageRequest.of(page, 5));
+		Page<Game> pageGame = gameService.getAll(PageRequest.of(page, 5), auth.getName());
 
         ModelAndView result=new ModelAndView(GAMES_LISTING);
         result.addObject("games", pageGame.getContent());
@@ -282,5 +282,5 @@ public class GameController {
         
         return result;
     }
-   	
+	   	
 }
