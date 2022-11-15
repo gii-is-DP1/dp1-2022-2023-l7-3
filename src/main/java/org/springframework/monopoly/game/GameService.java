@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserRepository;
@@ -26,7 +27,10 @@ public class GameService {
 	}
 	
 	@Transactional
-	public Game saveGame(Game game) throws DataAccessException {
+	public Game saveGame(Game game) throws DataAccessException, InvalidNumberOfPLayersException {
+		if(game.getPlayers().size() < 2 || game.getPlayers().size() > 6) {
+			throw new InvalidNumberOfPLayersException();
+		}
 		return gameRepository.save(game);
 	}
 	
