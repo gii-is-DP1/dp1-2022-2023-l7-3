@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.Set;
 
 import javax.transaction.Transactional;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.user.User;
 import org.springframework.stereotype.Service;
@@ -113,12 +116,28 @@ public class GameServiceTests {
 		game.setDuration(Time.valueOf("01:00:00"));
 		game.setNumCasas(0);
 		
-		Set<Player> players = new HashSet<>();
+		Set<Player> players = new HashSet<>(List.of(new Player(), new Player() ));
 		game.setPlayers(players);
 		assertThat(players.size() <= 6);
 		
-		this.gameService.saveGame(game);		
+		try {
+			this.gameService.saveGame(game);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 		assertThat(game.getId()).isNotEqualTo(lastId);
+	}
+	
+	@Test
+	public void shouldThrowExceptionInserting() {
+		
+		Game game = new Game();
+		
+		Set<Player> players = new HashSet<>(List.of(new Player()));
+		game.setPlayers(players);
+		Assertions.assertThrows(InvalidNumberOfPLayersException.class, ()->{
+			gameService.saveGame(game);
+		});
 	}
 	
 	@Test
@@ -142,5 +161,12 @@ public class GameServiceTests {
 	    assertThat(page.hasContent());
 	    assertThat(page.getNumberOfElements() == 1); // p2 has only 1 game
 	}
+
+//	@Test
+//	public void getPlayersOrderedByTurn() {
+//		List<Player> players = gameService.getPlayersOrderedByTurn(2);
+//		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
+//		assertThat(players).isSortedAccordingTo(c);
+//	}
 		
 }
