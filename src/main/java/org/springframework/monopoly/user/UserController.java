@@ -19,21 +19,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.monopoly.game.Game;
+import org.springframework.monopoly.player.Player;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
@@ -47,7 +48,7 @@ public class UserController {
 	
 	private static final String VIEWS_USER_CREATE_FORM = "authentication/signUp";
 	private static final String VIEWS_USERS_LISTING = "users/monopolyUsersList";
-
+	private static final String VIEWS_EDIT_USER = "users/editProfile";
 	private final UserService monopolyUserService;
 
 	@Autowired
@@ -105,6 +106,47 @@ public class UserController {
 		return "redirect:/monopolyUsers/list";
 	}
 	
+	@GetMapping(value = "/users/{userId}")
+	public String getEditUser(@PathVariable(name = "userId") Integer id, Model model) {
+		User user = monopolyUserService.findUser(id).get();
+		Stream<Player> gamesWonStream = user.getPlayer().stream().filter(p -> p.getIsWinner());
+		Long gamesWon = 0l;
+		
+		if(gamesWonStream.findAny().isPresent()) {
+			gamesWon = gamesWonStream.map(p -> p.getGame()).count();
+		}
+		
+		Stream<Game> gamesStream = user.getPlayer().stream().map(p -> p.getGame());
+		Long games = 0l;
+		
+		if(gamesStream.findAny().isPresent()) {
+			games = gamesStream.count();
+		}
+		
+		Integer hoursPlayedSum = user.getPlayer().stream().mapToInt(p -> p.getGame().getDuration()).sum();
+		String hoursPlayed = "";
+		
+		hoursPlayed += hoursPlayedSum/60;
+		hoursPlayed += ":" + hoursPlayedSum%60;
+		
+		model.addAttribute("gamesWon", gamesWon);
+		model.addAttribute("gamesPlayed", games);
+		model.addAttribute("hoursPlayed", hoursPlayed);
+		model.addAttribute("user", user);
+		return VIEWS_EDIT_USER;
+	}
+	
+	@PostMapping(value = "/users/{userId}")
+	public String postEditUser(@PathVariable(name = "userId") Integer id, User user, BindingResult result, Model model) {
+		if(result.hasErrors()) {
+			return VIEWS_EDIT_USER;
+		}else {
+			user.setId(id);
+			this.monopolyUserService.saveUser(user);
+			return "redirect:/monopolyUsers/list";
+		}
+		
+	}
 	
 
 }

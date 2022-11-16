@@ -34,7 +34,7 @@ public class Game extends BaseEntity {
     protected Date date;
 
     @Column(name = "duration")
-    protected Time duration;
+    protected Integer duration;
 
     @Column(name = "num_casas")
     protected Integer numCasas;

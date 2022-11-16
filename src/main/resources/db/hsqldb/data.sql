@@ -92,7 +92,7 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 
 
 /* GAMES, PLAYERS */
-INSERT INTO game (id, date, duration, num_casas) VALUES (1, TO_DATE('11/10/2022', 'DD/MM/YYYY'), '1:47', 0);
+INSERT INTO game (id, date, duration, num_casas) VALUES (1, TO_DATE('11/10/2022', 'DD/MM/YYYY'), 107, 0);
 
 INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 1, 1, 1);
 INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 0, 1, 2);
