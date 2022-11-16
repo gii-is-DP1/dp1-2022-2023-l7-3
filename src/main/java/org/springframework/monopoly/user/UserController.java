@@ -15,6 +15,7 @@
  */
 package org.springframework.monopoly.user;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -109,11 +110,15 @@ public class UserController {
 	@GetMapping(value = "/users/{userId}")
 	public String getEditUser(@PathVariable(name = "userId") Integer id, Model model) {
 		User user = monopolyUserService.findUser(id).get();
-		Stream<Player> gamesWonStream = user.getPlayer().stream().filter(p -> p.getIsWinner());
+		List<Player> winnerPlayers = new ArrayList<Player>();// user.getPlayer().stream().filter(p -> p.getIsWinner()).collect(Collectors.toList());
 		Long gamesWon = 0l;
-		
-		if(gamesWonStream.findAny().isPresent()) {
-			gamesWon = gamesWonStream.map(p -> p.getGame()).count();
+		for(Player p : user.getPlayer()) {
+			if(p.getIsWinner()) {
+				winnerPlayers.add(p);
+			}
+		}
+		if(!winnerPlayers.isEmpty()) {
+			gamesWon = winnerPlayers.stream().map(p -> p.getGame()).count();
 		}
 		
 		Stream<Game> gamesStream = user.getPlayer().stream().map(p -> p.getGame());
