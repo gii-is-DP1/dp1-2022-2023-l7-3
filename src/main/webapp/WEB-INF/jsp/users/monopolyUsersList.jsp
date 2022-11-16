@@ -8,28 +8,27 @@
 	
 	<div class="playersListMainBody">
 		
-		<div class="pagDiv">
+		<div class="headerButtons">
 		
-			<h1> List of all players</h1>
+			<h1 style="align-items: center; margin-top: 15px; margin-bottom: 15px;"> List of all players</h1>
 			
-			<form class ="form-inline" action = "/monopolyUsers/list" method = "get">
-				<div class= "form-group mx-sm-3 mb-2">
-					<input type = "text" name="username" class="form-control" id="username" value="${username}" placeholder="Search a player"> 
-
-				<input type="submit" id = "SubmitButton" value = "Search">
-				</div>
+			<form class = "searchPagination" action = "/monopolyUsers/list" method = "get">
+				<input type = "text" name="username" class="form-control" id="username" value="${username}" placeholder="Search a player"> 
+				<input type="submit" id = "SearchButton" value = "Search" >
 			</form> 
 
-			<div class="HeaderButtons">
-				<nav aria-label= "Pagination">
+			<div class="searchPagination">
+				<button class="paginationButton">+</button>
+				<nav class = "navClass"aria-label= "Pagination">
 					<ul class = "pagination justify-content-center">
 						<c:forEach items="${pages}" var="page">
 						<li><a href="/monopolyUsers/list?page=${page}&username=${username}">${page + 1}</a></li>
 						</c:forEach>						
 					</ul>
 				</nav>
+				<button class="paginationButton">-</button>
 			</div>
-			
+
 		</div>
 		
 		<c:forEach items="${monopolyUsers}" var="monopolyUser">
