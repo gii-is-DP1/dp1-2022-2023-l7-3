@@ -1,14 +1,13 @@
 package org.springframework.monopoly.game;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +18,9 @@ import javax.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,9 +32,11 @@ import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.user.User;
 import org.springframework.stereotype.Service;
 
+@ExtendWith(MockitoExtension.class)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(Service.class))
 public class GameServiceTests {
 	
+	@Mock
 	private GameRepository gameRepository = mock(GameRepository.class);
 	
 	@Autowired
@@ -94,7 +98,7 @@ public class GameServiceTests {
 		Optional<Game> game1 = this.gameService.findGame(1);
 		assertThat(game1.isPresent());
 		Game game = game1.get();
-		assertThat(game.getDate().toLocalDate()).isEqualTo(LocalDate.of(2022, 10,11));
+		assertThat(game.getDate().toLocalDate()).isEqualTo(LocalDate.of(2022,10,11));
 		assertThat(game.getDuration()).isEqualTo(Time.valueOf("1:47:00"));
 		assertThat(game.getNumCasas()).isEqualTo(0);
 	}
@@ -144,7 +148,7 @@ public class GameServiceTests {
 	@Transactional
 	public void getAllGamesAdminPagination() {
 		
-        when(gameRepository.findAll()).thenReturn(mockGames);
+        lenient().when(gameRepository.findAll()).thenReturn(mockGames);
         Pageable pageRequest = PageRequest.of(0, 2);
         Page<Game> page = gameService.getAll(pageRequest, "testAdmin");
 		assertThat(page.hasContent());
@@ -155,7 +159,7 @@ public class GameServiceTests {
 	@Transactional
 	public void getAllGamesUserPagination() {
 		
-		when(gameRepository.findAll()).thenReturn(mockGames);
+		lenient().when(gameRepository.findAll()).thenReturn(mockGames);
 	    Pageable pageRequest = PageRequest.of(0, 2);
 	    Page<Game> page = gameService.getAll(pageRequest, "testUser");
 	    assertThat(page.hasContent());
