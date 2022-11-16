@@ -16,11 +16,6 @@
 	padding: 10px 0px 10px 10px;
 }
 
-.secondColumn {
-	height: 100%;
-	width: 36%;
-}
-
 .thirdColumn {
 	height: 100%;
 	width: 32%;
@@ -100,7 +95,7 @@
 	padding: 10px;
 }
 
-.playerImg {
+.playerAvatar {
 	height: 70%;
 }
 
@@ -193,3 +188,21 @@
 	min-width: 40px;
 	margin: 15px 10px 15px 10px;
 }
+
+/* Canvas styles */
+
+.secondColumn {
+	height: 100%;
+	width: 36%;
+	
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.piece {
+	height: 30px;
+	width: 30px;
+}
+
+
