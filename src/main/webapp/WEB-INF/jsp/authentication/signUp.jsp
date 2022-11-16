@@ -11,7 +11,7 @@
 	        <div id="formDiv">
 	            <h2 id="formHeader">Enter your details below</h2>
 	
-	            <form:form modelAttribute="MonopolyUser" id="form" name="newUser" onsubmit="return validateForm()">
+	            <form:form modelAttribute="User" id="form" name="newUser" onsubmit="return validateForm()">
 	                <label for="username" class="formLabel">Username</label>
 	                <input type="text" id="username" class="inputText" name="username" placeholder="Your username.." required>
 	
