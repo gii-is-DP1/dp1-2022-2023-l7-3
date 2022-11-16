@@ -35,7 +35,7 @@
 			<div class="playerListItem"> 
 				
 				<p class="playerInfoLine"> <c:out value="${monopolyUser.username}"/> </p>
-            	<a href="/login">
+            	<a href="/users/${monopolyUser.id}">
                 <button id="EditButton">Edit <span class="glyphicon glyphicon-pencil"></span></button>
             	</a>
             	<c:if test="${monopolyUser.id!=0}">
