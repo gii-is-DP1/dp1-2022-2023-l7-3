@@ -18,16 +18,15 @@ package org.springframework.monopoly.user;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.player.Player;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -108,38 +107,33 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/users/{userId}")
-	public String getEditUser(@PathVariable(name = "userId") Integer id, Model model) {
-		User user = monopolyUserService.findUser(id).get();
-		List<Player> winnerPlayers = new ArrayList<Player>();// user.getPlayer().stream().filter(p -> p.getIsWinner()).collect(Collectors.toList());
-		Long gamesWon = 0l;
-		for(Player p : user.getPlayer()) {
-			if(p.getIsWinner()) {
-				winnerPlayers.add(p);
-			}
-		}
-		if(!winnerPlayers.isEmpty()) {
-			gamesWon = winnerPlayers.stream().map(p -> p.getGame()).count();
-		}
-		
-		Stream<Game> gamesStream = user.getPlayer().stream().map(p -> p.getGame());
-		Long games = 0l;
-		
-		if(gamesStream.findAny().isPresent()) {
-			games = gamesStream.count();
-		}
-		
-		Integer hoursPlayedSum = user.getPlayer().stream().mapToInt(p -> p.getGame().getDuration()).sum();
-		String hoursPlayed = "";
-		
-		hoursPlayed += hoursPlayedSum/60;
-		hoursPlayed += ":" + hoursPlayedSum%60;
-		
-		model.addAttribute("gamesWon", gamesWon);
-		model.addAttribute("gamesPlayed", games);
-		model.addAttribute("hoursPlayed", hoursPlayed);
-		model.addAttribute("user", user);
-		return VIEWS_EDIT_USER;
-	}
+    public String getEditUser(@PathVariable(name = "userId") Integer id, Model model) {
+        User user = monopolyUserService.findUser(id).get();
+        List<Player> winnerPlayers = new ArrayList<Player>();// user.getPlayer().stream().filter(p -> p.getIsWinner()).collect(Collectors.toList());
+        Set<Player> gamesList = user.getPlayer();
+        Integer hoursPlayedSum = 0;
+
+        for(Player p : user.getPlayer()) {
+            if(p.getIsWinner() != null && p.getIsWinner()) { 
+                winnerPlayers.add(p);
+            } 
+
+            if(p.getGame().getDuration() != null) {
+                hoursPlayedSum += p.getGame().getDuration();
+            }
+
+        }
+
+        String hoursPlayed = "";
+        hoursPlayed += hoursPlayedSum/60;
+        hoursPlayed += ":" + hoursPlayedSum%60;
+
+        model.addAttribute("gamesWon", winnerPlayers.size());
+        model.addAttribute("gamesPlayed", gamesList.size());
+        model.addAttribute("hoursPlayed", hoursPlayed);
+        model.addAttribute("user", user);
+        return VIEWS_EDIT_USER;
+    }
 	
 	@PostMapping(value = "/users/{userId}")
 	public String postEditUser(@PathVariable(name = "userId") Integer id, User user, BindingResult result, Model model) {
