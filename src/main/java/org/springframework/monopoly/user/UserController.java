@@ -60,6 +60,7 @@ public class UserController {
     public String showMonopolyUsersListing(@RequestParam Map<String, Object> params, Model model) {
 		int page = params.get("page") != null ? (Integer.valueOf(params.get("page").toString())) : 0;
 		String username = params.get("username") != null ? params.get("username").toString() : "";
+		model.addAttribute("currentPage", page);
 		Page<User> pageUser = null;
 		if (username.isEmpty()) {
 			pageUser = monopolyUserService.getAll(PageRequest.of(page, 5));
@@ -71,6 +72,7 @@ public class UserController {
 		
 		model.addAttribute("monopolyUsers", pageUser.getContent());
 		int totalPages = pageUser.getTotalPages();
+		model.addAttribute("totalPages", totalPages);
 		if(totalPages > 0) {
 			List<Integer> pages = IntStream.range(0, totalPages).boxed().collect(Collectors.toList());
 			model.addAttribute("pages", pages);
