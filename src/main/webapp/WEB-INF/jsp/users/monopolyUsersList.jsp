@@ -8,6 +8,7 @@
 	
 	<div class="playersListMainBody">
 		
+
 		<div class="headerButtons">
 		
 			<h1 style="align-items: center; margin-top: 15px; margin-bottom: 15px;"> List of all players</h1>
@@ -18,7 +19,11 @@
 			</form> 
 
 			<div class="searchPagination">
-				<button class="paginationButton">+</button>
+				<c:if test="${currentPage > 0}">
+				<a href = "/monopolyUsers/list?page=${currentPage - 1}&username=${username}">
+				<button class="paginationButton">&lt;</button>
+				</a>
+				</c:if>
 				<nav class = "navClass"aria-label= "Pagination">
 					<ul class = "pagination justify-content-center">
 						<c:forEach items="${pages}" var="page">
@@ -26,7 +31,12 @@
 						</c:forEach>						
 					</ul>
 				</nav>
-				<button class="paginationButton">-</button>
+								<c:if test="${currentPage < totalPages - 1}">
+				<a href="/monopolyUsers/list?page=${currentPage + 1}&username=${username}">
+				<button class="paginationButton">&gt;</button>
+				</a>
+				</c:if>
+
 			</div>
 
 		</div>
@@ -35,7 +45,7 @@
 			<div class="playerListItem"> 
 				
 				<p class="playerInfoLine"> <c:out value="${monopolyUser.username}"/> </p>
-            	<a href="/login">
+            	<a href="/users/${monopolyUser.id}">
                 <button id="EditButton">Edit <span class="glyphicon glyphicon-pencil"></span></button>
             	</a>
             	<c:if test="${monopolyUser.id!=0}">

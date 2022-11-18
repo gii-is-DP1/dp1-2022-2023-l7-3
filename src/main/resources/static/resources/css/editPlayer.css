@@ -1,0 +1,121 @@
+
+.mainEditProfileDiv {
+	height: 100%;
+	width: 60%;
+	display: flex;
+	flex-direction: row;
+}
+
+.editProfileData {
+	height: 100%;
+	width: 40%;
+	display: flex;
+	flex-direction: column;
+}
+
+.avatarDiv {
+	height: 40%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.changeAvatarButton {
+	width: 70%;
+    background-color: #47525e;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 10px;
+    justify-self: center;
+    cursor: pointer;
+    font-family: "Bree_Serif";
+    font-size: 20px;
+}
+
+.avatarImage {
+	height: 70%;
+}
+
+.currentProfileDiv {
+	height: 20%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.statisticsDiv {
+	height: 40%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.underline {
+	text-decoration: underline;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+
+.normalText {
+	font-size: 16px;
+}
+
+.editProfileMainFormDiv {
+	height: 100%;
+	width: 60%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	padding-left: 40px;
+}
+
+.editProfileFormTitle {
+	height: 15%;
+	width: 50%;
+	display: flex;
+	align-items: center;
+}
+
+.editProfileForm {
+	display: grid;
+	margin-top: 20px;
+}
+
+
+.profileFormDiv {
+	height: 85%;
+	width: 50%;
+	display: flex;
+	flex-direction: column;
+}
+
+.textCenter {
+	text-align: center;
+}
+
+#togglePassword{
+	justify-self: right;
+    margin-right: 8px;
+    margin-top: -42px;
+    cursor: pointer;
+}
+
+#togglePasswordConfirm{
+	justify-self: right;
+    margin-right: 8px;
+    margin-top: -42px;
+    cursor: pointer;
+}
+
+
+
+
+
+

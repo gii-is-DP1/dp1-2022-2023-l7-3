@@ -75,7 +75,7 @@ public class GameServiceTests {
 		Game g1 = new Game();
 		g1.setId(700);
 		g1.setDate(Date.valueOf("2022-11-14"));
-		g1.setDuration(Time.valueOf("01:00:00"));
+		g1.setDuration(60);
 		g1.setNumCasas(0);
 		Set<Player> pg1 = new HashSet<>();
 		pg1.add(p1);
@@ -83,7 +83,7 @@ public class GameServiceTests {
 		Game g2 = new Game();
 		g2.setId(701);
 		g2.setDate(Date.valueOf("2022-11-14"));
-		g2.setDuration(Time.valueOf("01:01:00"));
+		g2.setDuration(61);
 		g2.setNumCasas(0);
 		Set<Player> pg2 = new HashSet<>();
 		pg2.add(p2);
@@ -99,7 +99,7 @@ public class GameServiceTests {
 		assertThat(game1.isPresent());
 		Game game = game1.get();
 		assertThat(game.getDate().toLocalDate()).isEqualTo(LocalDate.of(2022,10,11));
-		assertThat(game.getDuration()).isEqualTo(Time.valueOf("1:47:00"));
+		assertThat(game.getDuration()).isEqualTo(107);
 		assertThat(game.getNumCasas()).isEqualTo(0);
 	}
 	
@@ -117,7 +117,7 @@ public class GameServiceTests {
 		
 		Game game = new Game();
 		game.setDate(Date.valueOf("2022-11-14"));
-		game.setDuration(Time.valueOf("01:00:00"));
+		game.setDuration(60);
 		game.setNumCasas(0);
 		
 		Set<Player> players = new HashSet<>(List.of(new Player(), new Player() ));
