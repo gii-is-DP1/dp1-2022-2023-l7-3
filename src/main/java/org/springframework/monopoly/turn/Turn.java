@@ -1,10 +1,6 @@
 package org.springframework.monopoly.turn;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -31,34 +27,38 @@ public class Turn extends BaseEntity{
 	//atributo nuevo boolean de si tira doble
 	//atributo para finalizado
 	
-	@ElementCollection
 	@Column(name= "action")
 	@Enumerated(EnumType.STRING)
-	private List<Action> actions = new ArrayList<Action>();
+	private Action action;
 	
-	@ElementCollection
-	@Column(name = "quantities")
-	private List<Integer> quantities = new ArrayList<Integer>();
-	
+	@Column(name = "quantity")
+	private Integer quantity;
 		
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
 	private Integer turnNumber;
 	
+	@Column(name = "roll")
 	@NotNull
 	private Integer roll;
+	
+	@Column(name = "is_doubles")
+	private Boolean isDoubles;
+	
+	@Column(name = "is_finished")
+	private Boolean isFinished;
+	
+	@Column(name = "actionCardId")
+	private Integer actionCardId;
 	
 	// Relations
 	
 	@Column(name = "initial_tile_id")
 	private Integer initial_tile;
 	
-	@ElementCollection
-	@Column(name = "mid_tiles")
-	private List<Integer> mid_tiles = new ArrayList<Integer>();
-
-	@Column(name = "final_tile_id")
-	private Integer final_tile;
+	public Integer getFinalTile() {
+		return getInitial_tile() + getRoll();
+	}
 	
 	@ManyToOne
 	@JoinColumn(name = "game_id", referencedColumnName = "id")
