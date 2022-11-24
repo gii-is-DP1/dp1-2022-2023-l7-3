@@ -46,6 +46,10 @@ public class PropertyService {
 		
 	}
 
+	//funcion que setea el turn
+
+	//funcion con el action seteado para que ejecute la funcion
+	
 
 	public Trio<Boolean, Boolean, Integer> hasOwner (Turn turn, Integer tileId, Integer tirada) {
 		Property property = (Property) getProperty(tileId, turn.getGame().getId());

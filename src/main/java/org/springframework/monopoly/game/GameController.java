@@ -192,6 +192,8 @@ public class GameController {
 		Collections.sort(players, c);
 		Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
 		
+
+		//esto se va al turn service como nexturn no se que
 		Turn nextTurn = new Turn();
 		Player nextPlayer = null;
 		
@@ -209,14 +211,31 @@ public class GameController {
 		model.addAttribute("Turn", null);
 		model.addAttribute("Players", players);
 		
+
+		//esto es una query de todos los nombre
 		List<List<Property>> properties = new ArrayList<List<Property>>();
 		for(Player p:players) {
 			properties.add(p.getProperties());
 		}
+
+		// public List<Property> getProperties() {
+		// 	List<Property> res = new ArrayList<Property>();
+		// 	for(Street s:this.getStreets()) {
+		// 		res.add((Property) s);
+		// 	}
+		// 	for(Company c:this.getCompanies()) {
+		// 		res.add((Property) c);
+		// 	}
+		// 	for(Station st:this.getStations()) {
+		// 		res.add((Property) st);
+		// 	}
+		// 	return res;
+		// }
 		    
 		model.addAttribute("Properties", properties);
 		    
 		// Street colors
+		// hacer esto de otra forma aparte
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
 			colors.add(streetService.getStreetsColors(p.getStreets()));
@@ -233,6 +252,7 @@ public class GameController {
 		
 	}
 	
+	//esto hay que mirarlo
 	@GetMapping(value = "/game/{gameId}/nextTurn")
 	public String calculateGameTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		

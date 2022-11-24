@@ -17,10 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TurnService {
-
-	private static final List<Integer> streets = List.of(1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39);
-	private static final List<Integer> companies = List.of(12,28);
-	private static final List<Integer> stations = List.of(5,15,25,35);
+	
 	private static Random random = new Random();
 	
 	private TurnRepository turnRepository;
@@ -46,6 +43,8 @@ public class TurnService {
 	public Optional<Turn> findLastTurn(Integer gameId) {
 		return turnRepository.findLastTurn(gameId);
 	}
+
+	//llamada a los dos cosos del set y luego a los dos cosos genericos pa que hagan funciones (chulitas)
 	
 	public Turn calculateTurn(Turn turn) {
 		Pair<Integer, Integer> roll1 = Pair.of(getRoll(), getRoll());
@@ -116,59 +115,10 @@ public class TurnService {
 		return turn;
 	}
 	
+	//el get roll devuelve un integer suma
+
 	private Integer getRoll() {
 		return random.ints(1, 7).findFirst().getAsInt();
 	}
-	
-	// TODO terminar de calcular cosas
-	public static Trio<String, Action, Integer> getTileAction(Turn turn, Integer id, Integer tirada) {
-		Property property =(Property) propertyService.getProperty(id, turn.getGame().getId());
-		Player player = turn.getPlayer();
-		Trio<String, Action, Integer> res = null;
-		if(streets.contains(id)) {
-			// Street
-			Trio<Boolean, Boolean, Integer> hasOwner = propertyService.hasOwner(turn, id, tirada);
-			if(hasOwner.getFirst()) {
-				// Has owner
-				res = Trio.of("OwnedStreet", Action.PAY, hasOwner.getThird());
-			} else {
-				// Ownerless
-				res = hasOwner.getSecond() ? Trio.of("Street", Action.PAY, hasOwner.getThird()) :
-											 Trio.of("Street", Action.AUCTION, hasOwner.getThird());
-			}
-			
-		} else if(companies.contains(id)) {
-			// Company
-			res = Trio.of("Company", Action.PAY, propertyService.payPropertyById(property, turn, tirada).getThird());
-			
-		} else if(stations.contains(id)) {
-			// Station
-			res = Trio.of("Station", Action.PAY, propertyService.payPropertyById(property, turn, tirada).getThird());
-			
-		} else if(id.equals(4) || id.equals(38)) {
-			// Taxes
-			res = Trio.of("Taxes", Action.PAY, null);
-			
-		} else if(id.equals(0)) {
-			// Start
-			res = Trio.of("Start", Action.RECEIVE, 200);
-			player.setMoney(player.getMoney() + 200);
-			
-		} else if(id.equals(10)) {
-			// Jail (Is in)
-			res = Trio.of("Jail", Action.NOTHING_HAPPENS, 0);
-			
-		} else if(id.equals(20)) {
-			// Parking
-			res = Trio.of("Parking", Action.NOTHING_HAPPENS, 0);
-			
-		} else if(id.equals(30)) {
-			// Go to jail
-			res = Trio.of("GoToJail", Action.GOTOJAIL, 0);
-			
-		}
-		return res;
-	}
-
-	
+		
 }
