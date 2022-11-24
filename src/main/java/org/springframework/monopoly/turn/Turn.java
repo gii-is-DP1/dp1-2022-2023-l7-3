@@ -27,6 +27,9 @@ import lombok.Setter;
 @Setter
 @Table(name = "turns")
 public class Turn extends BaseEntity{
+
+	//atributo nuevo boolean de si tira doble
+	//atributo para finalizado
 	
 	@ElementCollection
 	@Column(name= "action")

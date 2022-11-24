@@ -1,7 +1,5 @@
 package org.springframework.monopoly.player;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,7 +16,6 @@ import javax.persistence.Table;
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.property.Company;
-import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.turn.Turn;
@@ -77,19 +74,5 @@ public class Player extends BaseEntity {
 	@ManyToOne()
     @JoinColumn(name = "user_id", referencedColumnName = "id")
 	private User user;
-	
-	public List<Property> getProperties() {
-		List<Property> res = new ArrayList<Property>();
-		for(Street s:this.getStreets()) {
-			res.add((Property) s);
-		}
-		for(Company c:this.getCompanies()) {
-			res.add((Property) c);
-		}
-		for(Station st:this.getStations()) {
-			res.add((Property) st);
-		}
-		return res;
-	}
 	
 }
