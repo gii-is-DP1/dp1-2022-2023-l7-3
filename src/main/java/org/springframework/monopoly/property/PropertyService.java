@@ -33,7 +33,7 @@ public class PropertyService {
 	}
 	
 	public void setActionProperty (Turn turn) {
-		Property property = (Property) getProperty(turn.getFinal_tile(), turn.getGame().getId());
+		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		if(property !=null) {
 			if( property.getOwner() == null) {
 				if(turn.getPlayer().getMoney()>= property.getPrice()) {
@@ -52,7 +52,7 @@ public class PropertyService {
 	}
 
 	public void calculateActionProperty (Turn turn) {
-		Property property = (Property) getProperty(turn.getFinal_tile(), turn.getGame().getId());
+		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		switch (turn.getAction()) {
 			case BUY: buyPropertyById(property, turn);
 			case AUCTION: auctionPropertyById(property, turn);

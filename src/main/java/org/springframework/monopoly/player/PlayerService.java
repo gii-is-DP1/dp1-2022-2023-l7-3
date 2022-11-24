@@ -82,9 +82,9 @@ public class PlayerService {
 	
 	@Transactional
 	public void bankruptcy(Player player) { 
-		if(player.getMoney() < 0 && player.getProperties().isEmpty()) {
-			player.setIs_bankrupcy(true);
-		}
+//		if(player.getMoney() < 0 && player.getProperties().isEmpty()) {
+//			player.setIs_bankrupcy(true);
+//		}
 	}
 	
 	@Transactional

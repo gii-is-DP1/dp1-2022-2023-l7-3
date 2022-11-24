@@ -9,7 +9,7 @@
 <monopoly:layout screenTittle="Playing game">
 
 	<div class="mainGameDiv">
-		
+		 
 		<div class="firstColumn">
 		
 <!-- 		1, 5, 3; Player 1 -->
@@ -135,7 +135,9 @@
 		</div>
 		
 		<div class="secondColumn">
-			
+<!-- 		Delete this on completion -->
+			<button onclick="setTimeout(function() {window.requestAnimationFrame(movePiece);}, velocity)">Next frame</button>
+			<button onclick="if(!play){setTimeout(function() {play = true; window.requestAnimationFrame(movePiece);}, velocity)}else{play = false}">Play/Stop</button>
 <!-- 			<img src="/resources/images/board.png" class="canvasBackground"></img> -->
 			<canvas id="Board" width="600" height="600"></canvas>
 			
@@ -222,6 +224,8 @@
 				</c:if>
 			</div>
 			
+			<!-- Player 4 -->
+			
 			<div class="playerDiv" id="Player4">
 				<c:if test="${Players[3] != null}">
 					<div class="propertiesAndColors">
@@ -262,119 +266,241 @@
 			</div>
 		
 		</div>
-		
+		 
 	</div>
 	
 	<!-- 
 	
-	Aqui es donde van los layouts de los popups, con c:if para cargarlos solo cuando vayan a hacer falta
-	o ponerlos todos y que salgan solo los que se usen
+	Insert pop up layouts in this space here
 	
 	 -->
 	 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	
-	<script defer>
-		background = new Image();
-		background.src = "/resources/images/board2.png";
-		background.onload=start;
-		
-		p1Piece = new Image();
-		p1Piece.src = "/resources/images/PieceMockups/VerdePiece.png";
-		p1Piece.width = 30;
-		p1Piece.height = 30;
-		p1Piece.onload=start;
-		
-		var canvas = document.getElementById('Board'),
-		ctx = canvas.getContext('2d');
-		
-		var imgCount = 2;
+	<script>
 		function start() {
 			if(--imgCount > 0) {
 				return;
 			}
 			
 			ctx.drawImage(background, 0, 0);
-			ctx.drawImage(p1Piece, 550, 550);
-			
-			await new Promise(r => setTimeout(r, 2000));
-			piece = {
-				x: 550,
-				y: 550,
-				pos: 0,
-				tiles: 60
+			for(let i = 0; i < pieces.length; i++) {
+				let piece = pieces[i];
+				ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
 			}
-			getMovement(piece);
+			
+			const animationDelay = setTimeout(function() {
+				window.requestAnimationFrame(movePiece);
+			}, 1500);
+			
 		}
 		
 		function movePiece(pieceMov) {
 			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 			
 			ctx.drawImage(background, 0, 0);
-			ctx.drawImage(p1Piece, pieceMov.x, pieceMov.y)
+			
+			for(let i = 0; i < pieces.length; i++) {
+				let piece = pieces[i];
+				ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+				
+				if(i == movingPiece) {
+					moves--;
+					setMovement(piece);
+				}
+			}
+			
+			if(play && moves > 0) {
+				setTimeout(function() {
+					window.requestAnimationFrame(movePiece);
+				}, velocity);
+			}
+			
 		}
+		
+		function setMovement(piece) {
+			if(piece.y == 555) {
+				piece.x -= 50;
+				
+				if(piece.x < 100) {
+					piece.x = 35;
+					piece.y = 550;
+				}
+					
+			} else if(piece.x == 35) {
+				piece.y -= 50;
+					
+				if(piece.y < 100) {
+					piece.y = 35;
+					piece.x = 50;
+				}
+				
+			} else if(piece.y == 35) {
+				piece.x += 50;
+				
+				if(piece.x >= 550) {
+					piece.y = 50;
+					piece.x = 550;
+				}
+				
+			} else if(piece.x == 550) {
+				piece.y += 50;
+				
+				if(piece.y >= 550) {
+					piece.y = 555;
+					piece.x = 550;
+				}
+				
+			}
+		}
+
+	</script>
+	
+	<script defer>
+		let play = false;
+	
+		let background = new Image();
+		background.src = "/resources/images/board2.png";
+		background.width = 600;
+		background.height = 600;
+		background.onload=start;
+		
+		let imgCount = 1 + parseInt("${Players.size()}");
+		let pieces = [];
+		const movingPiece = parseInt("${Turn.player.turnOrder}"); // Player of the turn that is being played
+		const velocity = 300; // miliseconds between jumps
+		let moves = parseInt("${Turn.roll}");
+		
+		let piece = new Image();
+		piece.src = "/resources/images/PieceMockups/VerdePiece.png";
+		piece.width = 30;
+		piece.height = 30;
+		piece.onload = start;
+		
+		let pieceProp = {
+			img: piece,
+			x: 550,
+			offsetX: piece1.width/2,
+			y: 555,
+			offsetY: piece1.height/2
+		}
+		
+		pieces[0] = pieceProp;
+		
+		for(let i = 1; i < parseInt("${Players}"); i++) {
+			let pieceI = new Image();
+			let imgSrc = "";
+			switch (i) {
+			  case 1:
+				  imgSrc = "/resources/images/PieceMockups/AzulPiece.png";
+			  case 2:
+				  imgSrc = "/resources/images/PieceMockups/RosaPiece.png";
+			  case 3:
+				  imgSrc = "/resources/images/PieceMockups/NaranjaPiece.png";
+			  case 4:
+				  imgSrc = "/resources/images/PieceMockups/AmarilloPiece.png";
+			  case 5:
+				  imgSrc = "/resources/images/PieceMockups/CyanPiece.png";
+			  default:
+				  imgSrc = "/resources/images/PieceMockups/VerdePiece.png";
+			}
+			
+			pieceI.src = imgSrc;
+			pieceI.width = 30;
+			pieceI.height = 30;
+			pieceI.onload = start;
+			
+			let piecePropI = {
+				img: pieceI,
+				x: 550,
+				offsetX: pieceI.width/2,
+				y: 555,
+				offsetY: pieceI.height/2
+			}
+			
+			pieces.push(piecePropI);
+		}
+	
+		let canvas = document.getElementById('Board');
+		let ctx = canvas.getContext('2d');
 	</script>
 	
 	<script>
-		function getMovement(pieceMov) {
-			while(pieceMov.tiles > 0) {
-				if(pieceMov.pos < 10) {
-					pieceMov.x = pieceMov.x - 50;
-					ctx.drawImage(background, 0, 0);
-				}
-				
-				pieceMov.pos = (pieceMov.pos + 1) % 40;
-				pieceMov.tiles = pieceMov.tiles - 1;
+		function positionToCoords(pos) {
+			coords = {
+				x: 0,
+				y: 0
 			}
 			
-			return pieceMov.pos;
+			if(pos < 10) {
+				coords.x = 550 - (pos*50)
+				coords.y = 555
+			} else if(pos == 10) {
+				coords.x = 50
+				coords.y = 550
+			} else if(pos < 20) {
+				coords.x = 35
+				coords.y = 550 - (pos*50)
+			} else if(pos == 20) {
+				coords.x = 50
+				coords.y = 35
+			} else if(pos < 30) {
+				coords.x = 50 + (pos*50)
+				coords.y = 35
+			} else if(pos == 30) {
+				coords.x = 550
+				coords.y = 35
+			} else if(pos < 40) {
+				coords.x = 550
+				coords.y = 50 + (pos*50)
+			}
+			
+			return coords;
 		}
-	
-	
-		function getPosByTile(tile) {
-// 			0  -> 550, 550
-// 			1  -> 495, 555
-// 			2  -> 445, 555
-// 			3  -> 395, 555
-// 			4  -> 345, 555
-// 			5  -> 295, 555
-// 			6  -> 255, 555
-// 			7  -> 205, 555
+		
+// 			0  -> 550, 555			Salida
+// 			1  -> 500, 555
+// 			2  -> 450, 555
+// 			3  -> 400, 555
+// 			4  -> 350, 555
+// 			5  -> 300, 555
+// 			6  -> 250, 555
+// 			7  -> 200, 555
 // 			8  -> 150, 555
-// 			9  -> 105, 555
+// 			9  -> 100, 555
 // 			10 Carcel -> 50, 545
 // 			10 Visitas -> 5, 545
-// 			11 -> 35, 495
-// 			12 -> 35, 445
-// 			13 -> 35, 395
-// 			14 -> 35, 345
+//				35, 550
+// 			11 -> 35, 500
+// 			12 -> 35, 450
+// 			13 -> 35, 400
+// 			14 -> 35, 350
 // 			15 -> 35, 300
 // 			16 -> 35, 250
 // 			17 -> 35, 200
 // 			18 -> 35, 150
 // 			19 -> 35, 100
-// 			20 -> 40, 40          Salida
-// 			21 -> 105, 35
+// 			20 -> 35, 35          Parking
+//				50, 35
+// 			21 -> 100, 35
 // 			22 -> 150, 35
-// 			23 -> 205, 35
-// 			24 -> 255, 35
-// 			25 -> 295, 35
-// 			26 -> 345, 35
-// 			27 -> 395, 35
-// 			28 -> 445, 35
-// 			29 -> 495, 35
+// 			23 -> 200, 35
+// 			24 -> 250, 35
+// 			25 -> 300, 35
+// 			26 -> 350, 35
+// 			27 -> 400, 35
+// 			28 -> 450, 35
+// 			29 -> 500, 35
 // 			30 -> 550, 35        Go to jail
 // 			31 -> 550, 100
 // 			32 -> 550, 150
 // 			33 -> 550, 200
 // 			34 -> 550, 250
 // 			35 -> 550, 300
-// 			36 -> 550, 345
-// 			37 -> 550, 395
-// 			38 -> 550, 445
-// 			39 -> 550, 495
-		} 
-	
+// 			36 -> 550, 350
+// 			37 -> 550, 400
+// 			38 -> 550, 450
+// 			39 -> 550, 500
 	</script>	
 
 </monopoly:layout>

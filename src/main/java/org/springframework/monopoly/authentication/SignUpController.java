@@ -34,6 +34,7 @@ public class SignUpController {
 		if (result.hasErrors()) {
 			return VIEWS_SIGN_UP;
 		} else {
+			user.setEnabled(true);
 			this.userService.saveUser(user);
 			return "redirect:/";
 		}

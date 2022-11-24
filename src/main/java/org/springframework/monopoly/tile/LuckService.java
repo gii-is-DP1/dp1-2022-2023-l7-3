@@ -45,6 +45,6 @@ public class LuckService {
 	}
 	
 	public Luck findById(Turn turn) {
-		return luckRepository.findLuckByGameId(turn.getGame().getId(), turn.getFinal_tile());
+		return luckRepository.findLuckByGameId(turn.getGame().getId(), turn.getFinalTile());
 	}
 }
