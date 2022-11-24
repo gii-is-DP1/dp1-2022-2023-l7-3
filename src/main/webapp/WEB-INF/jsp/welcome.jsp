@@ -16,6 +16,9 @@
         <p>
         	<ul>
 		        <li><a href="/monopolyUsers/list">View Players</a></li>
+		        <li><a href="/games/list">View Games</a></li>
+		        <li><a href="/newGame">View new Game</a></li>
+		        <li><a href="/blankGame">BlankGame</a></li>
 	        </ul>
         </p>
         </div>
