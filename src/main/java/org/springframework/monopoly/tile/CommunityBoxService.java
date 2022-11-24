@@ -11,6 +11,7 @@ import org.springframework.monopoly.card.CardRepository;
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
+import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,16 +26,25 @@ public class CommunityBoxService {
 		this.cardRepository = cardRepository;
 	}
 	
-	public Card getCommunityCard(Game game) {
+	//Acción de turno
+	public Card getCommunityCard(Turn turn) {
 		Random rand = new Random();
-		List<Card> ls = cardRepository.findAllByCardType("COMMUNITY_CARD");
-		List<Card> ls2 = new ArrayList<Card>(ls);
-		for(Player p : game.getPlayers()) {
+		List<Card> communityCards = cardRepository.findAllByCardType("COMMUNITY_CARD");
+		for(Player p : turn.getGame().getPlayers()) {
 			if(p.getHasExitGate()) {
-				ls2 = ls.stream().filter(x-> !x.getAction().equals(Action.FREE)).collect(Collectors.toList());
+				communityCards = communityCards.stream().filter(x-> !x.getAction().equals(Action.FREE)).collect(Collectors.toList());
 			}
 		}
-		Card card =  ls2.get(rand.nextInt((ls2.size() - 0)));
+		Card card =  communityCards.get(rand.nextInt((communityCards.size())));
 		return card;
+	}
+	
+	
+	public List<CommunityBox> findAll(Turn turn){
+		return communityRepository.findAllCommunityBoxByGameId(turn.getGame().getId());
+	}
+	
+	public CommunityBox findById(Turn turn) {
+		return communityRepository.findCBByGameId(turn.getGame().getId(), turn.getFinal_tile());
 	}
 }

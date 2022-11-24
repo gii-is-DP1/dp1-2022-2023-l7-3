@@ -10,33 +10,33 @@ INSERT INTO users (id, username, password, enabled) VALUES (4, 'AnimeEnjoyer', '
 
 /* COMMUNITY BOX, LUCK AND TILES */
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (1,'LUCK', 'CHARGE', 50,'/resources/images/Luck1.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (2,'LUCK', 'PAY', 150, '/resources/images/Luck2.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (2,'LUCK', 'PAY_TAX', 150, '/resources/images/Luck2.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (3,'LUCK', 'REPAIR', 0, '/resources/images/Luck3.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (4,'LUCK', 'CHARGE', 150,'/resources/images/Luck4.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (5,'LUCK', 'PAY', 150,'/resources/images/Luck5.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (5,'LUCK', 'PAY_TAX', 150,'/resources/images/Luck5.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (6,'LUCK', 'MOVETO', 0,'/resources/images/Luck6.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (7,'LUCK', 'GOTOJAIL', 0,'/resources/images/Luck7.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (8,'LUCK', 'MOVETO',11,'/resources/images/Luck8.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (9,'LUCK', 'FREE', 0,'/resources/images/Luck9.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (10,'LUCK', 'MOVETO',24,'/resources/images/Luck10.PNG' );
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (11,'LUCK', 'MOVE', -3,'/resources/images/Luck11.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (12,'LUCK', 'PAY', 20,'/resources/images/Luck12.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (12,'LUCK', 'PAY_TAX', 20,'/resources/images/Luck12.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (13,'LUCK', 'CHARGE', 100,'/resources/images/Luck13.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (14,'LUCK', 'PAY', 15,'/resources/images/Luck14.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (14,'LUCK', 'PAY_TAX', 15,'/resources/images/Luck14.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (15,'LUCK', 'MOVETO', 39,'/resources/images/Luck15.PNG');
 
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (16,'COMMUNITY_CARD', 'GOTOJAIL', 0,'/resources/images/CB1.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (17,'COMMUNITY_CARD', 'CHARGE', 50,'/resources/images/CB2.PNG' );
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (18,'COMMUNITY_CARD', 'CHARGE_PLAYERS', 10,'/resources/images/CB3.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (19,'COMMUNITY_CARD', 'CHARGE', 20,'/resources/images/CB4.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (20,'COMMUNITY_CARD', 'PAY', 100,'/resources/images/CB5.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (20,'COMMUNITY_CARD', 'PAY_TAX', 100,'/resources/images/CB5.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (21,'COMMUNITY_CARD', 'CHARGE', 200,'/resources/images/CB6.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (22,'COMMUNITY_CARD', 'PAY', 50,'/resources/images/CB7.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (22,'COMMUNITY_CARD', 'PAY_TAX', 50,'/resources/images/CB7.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (23,'COMMUNITY_CARD', 'CHARGE', 100,'/resources/images/CB8.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (24,'COMMUNITY_CARD', 'CHARGE',25,'/resources/images/CB9.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (25,'COMMUNITY_CARD', 'MOVETO', 0,'/resources/images/CB10.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (26,'COMMUNITY_CARD', 'CHARGE', 100,'/resources/images/CB11.PNG');
-INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (27,'COMMUNITY_CARD', 'PAY', 50,'/resources/images/CB12.PNG');
+INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (27,'COMMUNITY_CARD', 'PAY_TAX', 50,'/resources/images/CB12.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (28,'COMMUNITY_CARD', 'CHARGE', 10,'/resources/images/CB13.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (29,'COMMUNITY_CARD', 'MOVETO', 1,'/resources/images/CB14.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (30,'COMMUNITY_CARD', 'FREE', 0,'/resources/images/CB15.PNG');
