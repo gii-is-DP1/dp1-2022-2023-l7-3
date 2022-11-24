@@ -19,5 +19,7 @@ public interface StreetRepository extends  CrudRepository<Street, Integer>{
 	
 	@Query("SELECT DISTINCT s.name FROM Street s WHERE s.color = :color")
 	List<String> findByColor(@Param("color")String color);
+
+	//añadir query que coja la lista de los colores del jugador
 	
 }

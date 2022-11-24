@@ -1,37 +1,23 @@
 package org.springframework.monopoly.property;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
-import org.springframework.monopoly.util.Trio;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PropertyService {
 
-	private PropertyRepository propertyRepository;
 	private StreetRepository streetRepository;
 	private CompanyRepository companyRepository;
 	private StationRepository stationRepository;
 	
-	
-	
 	@Autowired
-	public PropertyService(PropertyRepository propertyRepository, StreetRepository streetRepository, CompanyRepository companyRepository, 
-			StationRepository stationRepository) {
-		this.propertyRepository = propertyRepository;
+	public PropertyService(StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository) {
 		this.streetRepository = streetRepository;
 		this.companyRepository = companyRepository;
 		this.stationRepository = stationRepository;
-	}
-	
-
-	@Transactional
-	public void saveProperty(Property property) throws DataAccessException {
-		propertyRepository.save(property);
-		
-	}
+	}	
 
 	public Object getProperty(Integer idProperty, Integer idGame) {
 		if (streetRepository.findStreetById(idProperty, idGame) !=null ) {
@@ -41,55 +27,69 @@ public class PropertyService {
 		} else if (stationRepository.findStationById(idProperty, idGame) != null) {
 			return stationRepository.findStationById(idProperty, idGame);
 		}else {
-			return null;//Tenemos que poner una excepcion en lugar de un null
+			return null;
 		}
 		
 	}
-
-	//funcion que setea el turn
-
-	//funcion con el action seteado para que ejecute la funcion
 	
-
-	public Trio<Boolean, Boolean, Integer> hasOwner (Turn turn, Integer tileId, Integer tirada) {
-		Property property = (Property) getProperty(tileId, turn.getGame().getId());
+	public void setActionProperty (Turn turn) {
+		Property property = (Property) getProperty(turn.getFinal_tile(), turn.getGame().getId());
 		if(property !=null) {
 			if( property.getOwner() == null) {
-				return buyPropertyById(property, turn);
+				if(turn.getPlayer().getMoney()>= property.getPrice()) {
+					turn.setAction(Action.BUY);
+				} else {
+					turn.setAction(Action.AUCTION);
+				}
 			} else {
-				return payPropertyById(property, turn, tirada);
+				if (turn.getPlayer().getMoney() >= getRentalPrice(property)) {
+					turn.setAction(Action.PAY);
+				} else {
+					turn.setAction(Action.MORTAGE);
+				}
 			}
-		} else {
-			return null;
 		}
 	}
-	
-	public Trio<Boolean, Boolean, Integer> buyPropertyById(Property property, Turn turn) {	
-		if(turn.getPlayer().getMoney()>= property.getPrice()) {
+
+	public void calculateActionProperty (Turn turn) {
+		Property property = (Property) getProperty(turn.getFinal_tile(), turn.getGame().getId());
+		if(property !=null) {
+			if( property.getOwner() == null) {
+				if(turn.getPlayer().getMoney()>= property.getPrice()) {
+					buyPropertyById(property, turn);
+				} else {
+					auctionPropertyById(property, turn);
+				}
+			} else {
+				if (turn.getPlayer().getMoney() >= getRentalPrice(property)) {
+					payPropertyById(property, turn);
+				} else {
+					mortgageProperty(turn);
+				}
+			}
+		}
+	}
+
+	public void buyPropertyById(Property property, Turn turn) {	
 			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - property.getPrice());
 			property.setOwner(turn.getPlayer());
-			return Trio.of(false, true, property.getPrice());
-		} // si no es mayor se manda a subasta
-		return Trio.of(false, false, null); // temporal
 	}
-	
-	public Trio<Boolean, Boolean, Integer> payPropertyById(Property property, Turn turn, Integer tirada) {
+
+	public Integer getRentalPrice(Property property) {
 		Integer n =0;
 		if(streetRepository.findStreetById(property.getId(),property.getGame().getId()) != null) {
 			n = payStreet(property);	
 		}else if (stationRepository.findStationById(property.getId(),property.getGame().getId()) != null) {
 			n = payStation(property);
 		} else if (companyRepository.findCompanyById(property.getId(),property.getGame().getId()) != null) {
-			n = payCompany(property, tirada);
+			n = payCompany(property); //hay que hacer una tirada y pasarla como parametro
 		}
-		
-		if (turn.getPlayer().getMoney() >= n) {
-			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - n);
-			property.getOwner().setMoney(property.getOwner().getMoney() + n);
-		}
-		
-		return Trio.of(true, null, n); // Temporal
-		// si no, se hipoteca		
+		return n;
+	}
+	
+	public void payPropertyById(Property property, Turn turn) {
+			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - getRentalPrice(property));
+			property.getOwner().setMoney(property.getOwner().getMoney() + getRentalPrice(property));	
 	}
 
 	private Integer payStreet(Property property) {
@@ -118,14 +118,21 @@ public class PropertyService {
 		return station.getRentalPrice()*n;
 	}
 
-	private Integer payCompany(Property property, Integer tirada) {
+	private Integer payCompany(Property property) {
 		Company company = (Company) property;
 		Integer n = 4;
 		if (companyRepository.findByOwner(company.getOwner().getId(),company.getGame().getId()).stream().count() == 2.) n = 10;
-		return company.getRentalPrice() * n * tirada; // (Hecho) falta multiplicarlo por la tirada específica para las compañias
+		return company.getRentalPrice() * n; // falta multiplicarlo por la tirada específica para las compañias
 	}
 	
-	
+	//TODO
+	private void mortgageProperty(Turn turn) {
+
+	}
+	//TODO
+	private void auctionPropertyById(Property property, Turn turn) {
+
+	}
 
 }
 
