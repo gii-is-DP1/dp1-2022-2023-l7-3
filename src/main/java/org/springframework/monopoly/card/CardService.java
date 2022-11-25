@@ -1,6 +1,7 @@
 package org.springframework.monopoly.card;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -19,12 +20,17 @@ public class CardService {
 	}
 	
 	@Transactional
+	public Optional<Card> findCardById(Integer cardId) {
+        return cardRepository.findById(cardId) ;
+    }
+	
+	@Transactional
 	public List<Card> findTypeCards(String cardType) {
         return cardRepository.findAllByCardType(cardType) ;
     }
 	
 	@Transactional
-	public void pay(Card card, Player player) {
+	public void payTax(Card card, Player player) {
 		player.setMoney(player.getMoney() - card.getQuantity());
 	}
 	
@@ -58,7 +64,7 @@ public class CardService {
 		Integer newPos = player.getTile() + card.getQuantity();
 		
 		if (player.getTile() <= 39 && newPos > 39) { 
-			player.setTile(newPos - 40);
+			player.setTile(newPos%40);
 			player.setMoney(player.getMoney() + 200);
 		} else {
 			player.setTile(newPos);
@@ -72,9 +78,10 @@ public class CardService {
 	
 	@Transactional
 	public void repair(Player player) {
-		
-		Integer hotelMoney = 0 * 25; // Completar
-		Integer houseMoney = 0 * 100; 
+		Long numHotels = player.getStreets().stream().filter(street -> street.getHaveHotel()).count();
+		Integer numHouses = player.getStreets().stream().mapToInt(street -> street.getHouseNum()).sum();
+		Integer hotelMoney = numHotels.intValue() * 25;
+		Integer houseMoney = numHouses * 100; 
 		
 		player.setMoney(player.getMoney() - hotelMoney - houseMoney); 
 	}
