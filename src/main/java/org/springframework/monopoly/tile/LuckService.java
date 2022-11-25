@@ -11,6 +11,7 @@ import org.springframework.monopoly.card.CardRepository;
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
+import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,17 +26,25 @@ public class LuckService {
 		this.cardRepository = cardRepository;
 	}
 	
-	public Card getCommunityCard(Game game) {
+	//Acción de turno
+	public Card getCommunityCard(Turn turn) {
 		Random rand = new Random();
-		List<Card> ls = cardRepository.findAllByCardType("LUCK");
-		List<Card> ls2 = new ArrayList<Card>(ls);
-		for(Player p : game.getPlayers()) {
+		List<Card> luckCards = cardRepository.findAllByCardType("LUCK");
+		for(Player p : turn.getGame().getPlayers()) {
 			if(p.getHasExitGate()) {
-				ls2 = ls.stream().filter(x-> !x.getAction().equals(Action.FREE)).collect(Collectors.toList());
+				luckCards = luckCards.stream().filter(x-> !x.getAction().equals(Action.FREE)).collect(Collectors.toList());
 			}
 		}
-		Card card =  ls2.get(rand.nextInt((ls2.size() - 0)));
+		Card card =  luckCards.get(rand.nextInt((luckCards.size())));
 		return card;
-		
+	}
+	
+	
+	public List<Luck> findAll(Turn turn){
+		return luckRepository.findAllLuckByGameId(turn.getGame().getId());
+	}
+	
+	public Luck findById(Turn turn) {
+		return luckRepository.findLuckByGameId(turn.getGame().getId(), turn.getFinalTile());
 	}
 }

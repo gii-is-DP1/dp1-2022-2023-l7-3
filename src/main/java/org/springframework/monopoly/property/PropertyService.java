@@ -33,7 +33,7 @@ public class PropertyService {
 	}
 	
 	public void setActionProperty (Turn turn) {
-		Property property = (Property) getProperty(turn.getFinal_tile(), turn.getGame().getId());
+		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		if(property !=null) {
 			if( property.getOwner() == null) {
 				if(turn.getPlayer().getMoney()>= property.getPrice()) {
@@ -41,18 +41,20 @@ public class PropertyService {
 				} else {
 					turn.setAction(Action.AUCTION);
 				}
-			} else {
+			} else if(!turn.getPlayer().equals(property.getOwner())){
 				if (turn.getPlayer().getMoney() >= getRentalPrice(property)) {
 					turn.setAction(Action.PAY);
 				} else {
 					turn.setAction(Action.MORTGAGE);
 				}
+			}else {
+				turn.setAction(Action.NOTHING_HAPPENS);
 			}
 		}
 	}
 
 	public void calculateActionProperty (Turn turn) {
-		Property property = (Property) getProperty(turn.getFinal_tile(), turn.getGame().getId());
+		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		switch (turn.getAction()) {
 			case BUY: buyPropertyById(property, turn);
 			case AUCTION: auctionPropertyById(property, turn);
