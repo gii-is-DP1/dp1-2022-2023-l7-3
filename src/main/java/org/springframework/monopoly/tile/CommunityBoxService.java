@@ -45,6 +45,6 @@ public class CommunityBoxService {
 	}
 	
 	public CommunityBox findById(Turn turn) {
-		return communityRepository.findCBByGameId(turn.getGame().getId(), turn.getFinal_tile());
+		return communityRepository.findCBByGameId(turn.getGame().getId(), turn.getFinalTile());
 	}
 }
