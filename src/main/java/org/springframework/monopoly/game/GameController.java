@@ -196,6 +196,7 @@ public class GameController {
 		if(lastTurn != null) {
 			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
+				turn.setPlayer(nextPlayer);
 				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
 				turnService.calculateTurn(turn);
 			} else {
@@ -205,10 +206,9 @@ public class GameController {
 		} else {
 			// Esto se podría pasar al metodo de crear partida
 			nextPlayer = players.get(0);
-			if(nextPlayer.getUser().equals(requestUser)) {
-				turn.setTurnNumber(0);
-				turnService.calculateTurn(turn);
-			}
+			turn.setPlayer(nextPlayer);
+			turn.setTurnNumber(0);
+			turnService.calculateTurn(turn);
 			
 		}
 		
@@ -218,10 +218,10 @@ public class GameController {
 		
 
 		//esto es una query de todos los nombre
-//		List<List<Property>> properties = new ArrayList<List<Property>>();
-//		for(Player p:players) {
-//			properties.add(p.getProperties());
-//		}
+		List<List<String>> properties = new ArrayList<List<String>>();
+		for(Player p:players) {
+			properties.add(playerService.findPlayerPropertiesNames(p));
+		}
 
 		// public List<Property> getProperties() {
 		// 	List<Property> res = new ArrayList<Property>();
@@ -237,18 +237,18 @@ public class GameController {
 		// 	return res;
 		// }
 		    
-//		model.addAttribute("Properties", properties);
+		model.addAttribute("Properties", properties);
 		    
 		// Street colors
 		// hacer esto de otra forma aparte
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
-			colors.add(streetService.getStreetsColors(p.getStreets()));
+			colors.add(streetService.findPlayerColors(p));
 		}
  		model.addAttribute("Colors", colors);
    		
 		return GAME_MAIN;
-	}
+	} 
 	
 	@PostMapping(value = "/game/{gameId}/evalTurn")
 	public String evalTurn(@PathVariable("gameId") int gameId, Object turnForm /* Change class of this*/, Authentication auth, Model model) throws Exception {

@@ -19,7 +19,7 @@
 						<p> Properties </p>
 						<c:if test="${!Properties.get(0).isEmpty()}">
 							<c:forEach items="${Properties.get(0)}" var="property">
-								<span>${property.name}</span>
+								<span>${property}</span>
 							</c:forEach>
 						</c:if>
 					</div>
@@ -59,7 +59,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(4).isEmpty()}">
 								<c:forEach items="${Properties.get(4)}" var="property">
-									<span>${property.name}</span>
+									<span>${property}</span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -100,7 +100,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(2).isEmpty()}">
 								<c:forEach items="${Properties.get(2)}" var="property">
-									<span>${property.name}</span>
+									<span>${property}</span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -152,7 +152,7 @@
 						<p> Properties </p>
 						<c:if test="${!Properties.get(1).isEmpty()}">
 							<c:forEach items="${Properties.get(2)}" var="property">
-								<span>${property.name}</span>
+								<span>${property}</span>
 							</c:forEach>
 						</c:if>
 					</div>
@@ -192,7 +192,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(5).isEmpty()}">
 								<c:forEach items="${Properties.get(5)}" var="property">
-									<span>${property.name}</span>
+									<span>${property}</span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -233,7 +233,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(3).isEmpty()}">
 								<c:forEach items="${Properties.get(3)}" var="property">
-									<span>${property.name}</span>
+									<span>${property}</span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -295,25 +295,27 @@
 			
 		}
 		
-		function movePiece(pieceMov) {
-			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-			
-			ctx.drawImage(background, 0, 0);
-			
-			for(let i = 0; i < pieces.length; i++) {
-				let piece = pieces[i];
-				ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+		function movePiece() {
+			if(moves > 0) {
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				
-				if(i == movingPiece) {
-					moves--;
-					setMovement(piece);
+				ctx.drawImage(background, 0, 0);
+				
+				for(let i = 0; i < pieces.length; i++) {
+					let piece = pieces[i];
+					ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+					
+					if(i == movingPiece) {
+						moves--;
+						setMovement(piece);
+					}
 				}
-			}
-			
-			if(play && moves > 0) {
-				setTimeout(function() {
-					window.requestAnimationFrame(movePiece);
-				}, velocity);
+				
+				if(play) {
+					setTimeout(function() {
+						window.requestAnimationFrame(movePiece);
+					}, velocity);
+				}
 			}
 			
 		}
@@ -380,14 +382,14 @@
 		let pieceProp = {
 			img: piece,
 			x: 550,
-			offsetX: piece1.width/2,
+			offsetX: piece.width/2,
 			y: 555,
-			offsetY: piece1.height/2
+			offsetY: piece.height/2
 		}
 		
 		pieces[0] = pieceProp;
 		
-		for(let i = 1; i < parseInt("${Players}"); i++) {
+		for(let i = 1; i < parseInt("${Players.size()}"); i++) {
 			let pieceI = new Image();
 			let imgSrc = "";
 			switch (i) {

@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.monopoly.user.UserService;
+import org.springframework.monopoly.property.Color;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,11 +38,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class PlayerService {
 
 	private PlayerRepository playerRepository;	
-
-
-	
-	// @Autowired
-	// private AuthoritiesService authoritiesService;
 
 	@Autowired
 	public PlayerService(PlayerRepository playerRepository) {
@@ -65,12 +60,15 @@ public class PlayerService {
 		Optional<Player> result = playerRepository.findPlayerByUser(id);
 		return result.isPresent() ? result.get() : null;
 	}
+	
+	@Transactional(readOnly = true)
+	public List<String> findPlayerPropertiesNames(Player p) {
+		return playerRepository.findAllPropertyNamesByPlayer(p.getGame().getId(), p.getId());
+	}
 
 	@Transactional
 	public void savePlayer(Player player) throws DataAccessException {
 		playerRepository.save(player);		
-		
-		// authoritiesService.saveAuthorities(owner.getUser().getUsername(), "owner");
 	}	
 	
 	@Transactional

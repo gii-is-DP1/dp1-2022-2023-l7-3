@@ -16,6 +16,7 @@
 package org.springframework.monopoly.player;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -39,5 +40,11 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 	@Modifying
 	@Query(nativeQuery = true, value = "UPDATE player SET user_id = 0 WHERE user_id = :userId")
 	void updatePlayerRelation(@Param("userId") Integer id);
-
+	
+	@Query(nativeQuery = true, 
+		   value = "SELECT name FROM streets WHERE game_id = :gameId AND owner = :playerId UNION"
+		   		+ " SELECT name FROM companies WHERE game_id = :gameId AND owner = :playerId UNION"
+		   		+ " SELECT name FROM stations WHERE game_id = :gameId AND owner = :playerId")
+	List<String> findAllPropertyNamesByPlayer(@Param("gameId") Integer gameId, @Param("playerId") Integer playerId);
+	 
 }
