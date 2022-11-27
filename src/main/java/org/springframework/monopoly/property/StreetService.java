@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.monopoly.player.Player;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,12 @@ public class StreetService {
 		}
 		
 		return new ArrayList<Color>(colors);
+	}
+	
+	// New
+	@Transactional
+	public List<Color> findPlayerColors(Player player) {
+		return streetRepository.findPlayerColors(player.getGame().getId(), player.getId());
 	}
 
 }
