@@ -1,11 +1,10 @@
 package org.springframework.monopoly.tile;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
+import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,13 +17,14 @@ public class GenericService {
 		this.genericRepository = genericRepository;
 	}
 	
-	public void genericTile(Player p, Integer id) {
-		Optional<Generic> generic = genericRepository.findById(id);
+	public void genericTile(Turn turn) {
+		Optional<Generic> generic = genericRepository.findGenericByGameId(turn.getGame().getId(), turn.getFinalTile());
 		if(generic.isPresent()) {
-			Generic g = generic.get();
-			if(g.getGenericType().equals(GenericType.GOTOJAIL)) {
-				p.setIsJailed(true);
-				p.setTile(10);
+			Boolean goJail = generic.get().getGenericType().equals(GenericType.GOTOJAIL);
+			if(goJail) {
+				turn.setAction(Action.GOTOJAIL);
+			} else {
+				turn.setAction(Action.NOTHING_HAPPENS);
 			}
 		}
 	}
