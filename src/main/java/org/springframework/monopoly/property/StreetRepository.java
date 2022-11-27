@@ -22,4 +22,22 @@ public interface StreetRepository extends  CrudRepository<Street, Integer>{
 
 	//añadir query que coja la lista de los colores del jugador
 	
+	// ↓↓↓↓ Query que coge la lista de los colores del jugador:
+	// ↓↓↓↓ "Una query de su padre y de su madre con la que he triunfao" - Victor (probably)
+	@Query(nativeQuery = true, 
+			value="SELECT DISTINCT color "
+				+ "FROM (SELECT color, owner "
+				+ 		"FROM streets "
+				+ 		"WHERE game_id = :gameId) "
+				+ "WHERE owner = :playerId AND color IN "
+				+ 		"(SELECT color"
+				+ 		" FROM (SELECT color,count(color) AS count "
+				+ 				"FROM (SELECT color, owner "
+				+ 					  "FROM streets "
+				+ 					  "WHERE game_id = 2 "
+				+ 					  "GROUP BY color, owner) "
+				+ 				"GROUP BY color)"
+				+ 		" WHERE count = 1)")
+	List<Color> findPlayerColors(@Param("gameId") Integer gameId, @Param("playerId") Integer playerId);
+	
 }

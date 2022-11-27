@@ -22,17 +22,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "turns")
-public class Turn extends BaseEntity{
+public class Turn extends BaseEntity {
 
-	//atributo nuevo boolean de si tira doble
-	//atributo para finalizado
-	
 	@Column(name= "action")
 	@Enumerated(EnumType.STRING)
 	private Action action;
 	
-	@Column(name = "quantity")
-	private Integer quantity;
+//	@Column(name = "quantity")
+//	private Integer quantity;
 		
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
@@ -46,10 +43,10 @@ public class Turn extends BaseEntity{
 	private Boolean isDoubles;
 	
 	@Column(name = "is_finished")
-	private Boolean isFinished;
+	private Boolean isFinished = false;
 	
 	@Column(name = "actionCardId")
-	private Integer actionCardId;
+	private Integer actionCardId = null;
 	
 	// Relations
 	

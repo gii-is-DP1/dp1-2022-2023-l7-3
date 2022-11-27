@@ -21,7 +21,7 @@ public class LuckService {
 	public List<Luck> findAll(Turn turn){
 		return luckRepository.findAllLuckByGameId(turn.getGame().getId());
 	}
-	
+
 	public Optional<Luck> findById(Turn turn) {
 		return luckRepository.findLuckByGameId(turn.getGame().getId(), turn.getFinalTile());
 	}

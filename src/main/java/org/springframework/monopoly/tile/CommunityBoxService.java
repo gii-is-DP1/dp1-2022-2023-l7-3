@@ -21,7 +21,7 @@ public class CommunityBoxService {
 	public List<CommunityBox> findAll(Turn turn){
 		return communityRepository.findAllCommunityBoxByGameId(turn.getGame().getId());
 	}
-	
+
 	public Optional<CommunityBox> findById(Turn turn) {
 		return communityRepository.findCBByGameId(turn.getGame().getId(), turn.getFinalTile());
 	}
