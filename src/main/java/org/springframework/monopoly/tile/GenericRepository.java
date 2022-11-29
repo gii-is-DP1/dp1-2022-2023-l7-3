@@ -12,6 +12,6 @@ public interface GenericRepository extends CrudRepository<Generic, Integer> {
 	@Query("SELECT g FROM Generic g WHERE g.game.id = :gameId")
 	List<Generic> findAll(@Param("gameId") Integer gameId);
 	
-	@Query("SELECT g FROM Generic g WHERE g.game.id = :gameId AND g.id = id")
+	@Query("SELECT g FROM Generic g WHERE g.game.id = :gameId AND g.id = :id")
 	Optional<Generic> findGenericByGameId(@Param("gameId") Integer gameId, @Param("id") Integer id);
 }
