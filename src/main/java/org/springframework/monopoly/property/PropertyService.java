@@ -1,6 +1,10 @@
 package org.springframework.monopoly.property;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
@@ -57,7 +61,7 @@ public class PropertyService {
 		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		switch (turn.getAction()) {
 			case BUY: buyPropertyById(property, turn);
-			case AUCTION: auctionPropertyById(property, turn);
+			case AUCTION: auctionPropertyById(new Auction(0, turn.getGame().getPlayers().stream().collect(Collectors.toList()), 10, 0, property));
 			case PAY: payPropertyById(property, turn);
 			case MORTGAGE: mortgageProperty(turn);
 			default:;
@@ -123,10 +127,31 @@ public class PropertyService {
 	private void mortgageProperty(Turn turn) {
 
 	}
-	//TODO
-	private void auctionPropertyById(Property property, Turn turn) {
+			
 
+	private Auction auctionPropertyById(Auction auction) {
+		
+		Integer newBid = auction.getCurrentBid() + auction.getPlayerBid();
+		List<Player> newRemaining = auction.getRemainingPlayers();
+		
+		if (newRemaining.size() > 1) {
+			if (auction.getPlayerBid() == 0) {
+				newRemaining.remove(auction.getRemainingPlayers().get(auction.getPlayerIndex()));
+			} 
+			auction.setCurrentBid(newBid);
+			auction.setPlayerBid(0);
+			Integer newIndex = (auction.getPlayerIndex() + 1)%(newRemaining.size());
+			auction.setPlayerIndex(newIndex);
+			auction.setRemainingPlayers(newRemaining);
+			return auction;
+		} else {
+			Player auctionWinner = auction.getRemainingPlayers().get(0);
+			auctionWinner.setMoney(auctionWinner.getMoney() - auction.getCurrentBid());
+			auction.getProperty().setOwner(auctionWinner);
+			return null;
+		}
 	}
+
 
 }
 
