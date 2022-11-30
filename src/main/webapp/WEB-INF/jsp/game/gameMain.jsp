@@ -140,6 +140,11 @@
 			<button onclick="if(!play){setTimeout(function() {play = true; window.requestAnimationFrame(movePiece);}, velocity)}else{play = false}">Play/Stop</button>
 <!-- 			<img src="/resources/images/board.png" class="canvasBackground"></img> -->
 			<canvas id="Board" width="600" height="600"></canvas>
+			<c:if test="${isPlaying}">
+				<a href="/game/${Game.id}/endTurn">
+					<button id="endTurnButton" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
+				</a>
+			</c:if>
 			
 		</div>
 		
@@ -296,7 +301,7 @@
 		}
 		
 		function movePiece() {
-			if(moves > 0) {
+			if(moves >= 0) {
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				
 				ctx.drawImage(background, 0, 0);
@@ -306,8 +311,8 @@
 					ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
 					
 					if(i == movingPiece) {
-						moves--;
 						setMovement(piece);
+						moves--;
 					}
 				}
 				
@@ -315,6 +320,11 @@
 					setTimeout(function() {
 						window.requestAnimationFrame(movePiece);
 					}, velocity);
+				}
+			} else {
+				let endTurnButton = document.getElementById('endTurnButton');
+				if(endTurnButton != null) {
+					endTurnButton.disabled = "";
 				}
 			}
 			
@@ -358,8 +368,63 @@
 
 	</script>
 	
+	<script>
+		function positionToCoords(pos) {
+			coords = {
+				x: 0,
+				y: 0
+			}
+			if(pos < 10) {
+				coords.x = 550 - (pos*50)
+				coords.y = 555
+			} else if(pos == 10) {
+				coords.x = 50
+				coords.y = 550
+			} else if(pos < 20) {
+				coords.x = 35
+				coords.y = 550 - ((pos-10)*50)
+			} else if(pos == 20) {
+				coords.x = 50
+				coords.y = 35
+			} else if(pos < 30) {
+				coords.x = 50 + ((pos-20)*50)
+				coords.y = 35
+			} else if(pos == 30) {
+				coords.x = 550
+				coords.y = 35
+			} else if(pos < 40) {
+				coords.x = 550
+				coords.y = 50 + ((pos-30)*50)
+			}
+			
+			return coords;
+		}
+		
+		function coordsToPosition(coords) {
+			position = 0;
+			
+			if(coords.y == 555) {
+				position = 0 + (550-coords.x)/50;
+			} else if(coords.x == 50 && coords.y == 550) {
+				position = 10;
+			} else if(coords.x == 35) {
+				position = 10 + (550 - coords.y) / 50;
+			} else if(coords.x == 50 && coords.y == 35) {
+				position = 20;
+			} else if(coords.y == 35) {
+				position = 30 + (coords.x - 50) / 50; 
+			} else if(coords.x == 550 && coords.y == 35) {
+				position = 30;
+			} else if(coords.x = 550) {
+				position = 30 + (coords.y - 50) / 50;
+			}
+			
+			return position;
+		}
+	</script>
+	
 	<script defer>
-		let play = false;
+		let play = true;
 	
 		let background = new Image();
 		background.src = "/resources/images/board2.png";
@@ -372,37 +437,33 @@
 		const movingPiece = parseInt("${Turn.player.turnOrder}"); // Player of the turn that is being played
 		const velocity = 300; // miliseconds between jumps
 		let moves = parseInt("${Turn.roll}");
-		
-		let piece = new Image();
-		piece.src = "/resources/images/PieceMockups/VerdePiece.png";
-		piece.width = 30;
-		piece.height = 30;
-		piece.onload = start;
-		
-		let pieceProp = {
-			img: piece,
-			x: 550,
-			offsetX: piece.width/2,
-			y: 555,
-			offsetY: piece.height/2
-		}
-		
-		pieces[0] = pieceProp;
-		
-		for(let i = 1; i < parseInt("${Players.size()}"); i++) {
+	
+		let canvas = document.getElementById('Board');
+		let ctx = canvas.getContext('2d');
+	</script>
+	
+<c:forEach items="${Players}" varStatus="status">
+	<script defer>
+		(function () {
+			i = parseInt("${status.index}")
 			let pieceI = new Image();
 			let imgSrc = "";
 			switch (i) {
 			  case 1:
 				  imgSrc = "/resources/images/PieceMockups/AzulPiece.png";
+				  break;
 			  case 2:
 				  imgSrc = "/resources/images/PieceMockups/RosaPiece.png";
+				  break;
 			  case 3:
 				  imgSrc = "/resources/images/PieceMockups/NaranjaPiece.png";
+				  break;
 			  case 4:
 				  imgSrc = "/resources/images/PieceMockups/AmarilloPiece.png";
+				  break;
 			  case 5:
 				  imgSrc = "/resources/images/PieceMockups/CyanPiece.png";
+				  break;
 			  default:
 				  imgSrc = "/resources/images/PieceMockups/VerdePiece.png";
 			}
@@ -411,55 +472,26 @@
 			pieceI.width = 30;
 			pieceI.height = 30;
 			pieceI.onload = start;
-			
+			if("${Players[status.index] == Turn.player}" == "true") {
+				coords = positionToCoords(parseInt("${Turn.initial_tile}"))
+			} else {
+				coords = positionToCoords(parseInt("${Players[status.index].tile}"))
+			}
+				
 			let piecePropI = {
 				img: pieceI,
-				x: 550,
+				x: coords.x,
 				offsetX: pieceI.width/2,
-				y: 555,
+				y: coords.y,
 				offsetY: pieceI.height/2
 			}
 			
 			pieces.push(piecePropI);
-		}
-	
-		let canvas = document.getElementById('Board');
-		let ctx = canvas.getContext('2d');
+		})();
 	</script>
+</c:forEach>
 	
 	<script>
-		function positionToCoords(pos) {
-			coords = {
-				x: 0,
-				y: 0
-			}
-			
-			if(pos < 10) {
-				coords.x = 550 - (pos*50)
-				coords.y = 555
-			} else if(pos == 10) {
-				coords.x = 50
-				coords.y = 550
-			} else if(pos < 20) {
-				coords.x = 35
-				coords.y = 550 - (pos*50)
-			} else if(pos == 20) {
-				coords.x = 50
-				coords.y = 35
-			} else if(pos < 30) {
-				coords.x = 50 + (pos*50)
-				coords.y = 35
-			} else if(pos == 30) {
-				coords.x = 550
-				coords.y = 35
-			} else if(pos < 40) {
-				coords.x = 550
-				coords.y = 50 + (pos*50)
-			}
-			
-			return coords;
-		}
-		
 // 			0  -> 550, 555			Salida
 // 			1  -> 500, 555
 // 			2  -> 450, 555

@@ -128,42 +128,11 @@ public class GameController {
 	
 	@PostMapping(value = "/newGame")
 	public String processGameForm(GameForm gameForm, Map<String, Object> model, BindingResult result) {
-		Game game = new Game();
-		System.out.println(game.getNumCasas());
-		List<Integer> userIds = gameForm.getUsers();
-		List<User> users = new ArrayList<User>();
-		for(Integer i:userIds) {
-			users.add(userService.findUser(i).get());
-		}
-		
-		List<PieceColors> colors = playerService.getAllPieceTypes();
-		Collections.shuffle(colors);
-		List<Integer> turns = Stream.iterate(0, i-> i<users.size(), i -> ++i).collect(Collectors.toList());
-		Collections.shuffle(turns);
-		
-		List<Player> players = new ArrayList<Player>();
-		int i = 0;
-		for(User u : users) {
-			Player p = new Player();
-			p.setUser(u);
-			
-			p.setIsJailed(false);
-			p.setTile(0);
-			p.setMoney(1500);
-			p.setPiece(colors.get(i));
-			p.setHasExitGate(false);
-			p.setTurnOrder(turns.get(i++));
-			p.setGame(game);
-			p.setIs_bankrupcy(false);
-			
-			playerService.savePlayer(p);
-			players.add(p);
-		} 
-		
-		game.setPlayers(new HashSet<Player>(players));
 		Game savedGame;
 		try {
+			Game game = gameService.setUpNewGame(gameForm);
 			savedGame = gameService.saveGame(game);
+			gameService.setProperties(savedGame);
 		} catch (InvalidNumberOfPLayersException e) {
 			result.rejectValue("Users[0]", "Not enough players", "There are not enough players to start");
 			return VIEWS_NEW_GAME;
@@ -191,22 +160,31 @@ public class GameController {
 		Turn turn = new Turn();
 		turn.setGame(game);
 		Player nextPlayer;
+		Boolean isPlaying = false;
 		
 		// Calculating next turn result
 		if(lastTurn != null) {
 			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
 				turn.setPlayer(nextPlayer);
+				turn.setInitial_tile(nextPlayer.getTile());
 				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
 				turnService.calculateTurn(turn);
+				isPlaying = nextPlayer.getUser().equals(requestUser);
+			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
+				isPlaying = nextPlayer.getUser().equals(requestUser);
+				turn = lastTurn;
 			} else {
+				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
 				turn = lastTurn;
 			}
 			
 		} else {
 			// Esto se podría pasar al metodo de crear partida
 			nextPlayer = players.get(0);
+			isPlaying = nextPlayer.getUser().equals(requestUser);
 			turn.setPlayer(nextPlayer);
+			turn.setInitial_tile(nextPlayer.getTile());
 			turn.setTurnNumber(0);
 			turnService.calculateTurn(turn);
 			
@@ -215,6 +193,9 @@ public class GameController {
 		model.addAttribute("Game", game);
 		model.addAttribute("Turn", turn);
 		model.addAttribute("Players", players);
+		
+		// To show the end turn button
+		model.addAttribute("isPlaying", isPlaying);
 		
 
 		//esto es una query de todos los nombre
@@ -250,8 +231,8 @@ public class GameController {
 		return GAME_MAIN;
 	} 
 	
-	@PostMapping(value = "/game/{gameId}/evalTurn")
-	public String evalTurn(@PathVariable("gameId") int gameId, Object turnForm /* Change class of this*/, Authentication auth, Model model) throws Exception {
+	@GetMapping(value = "/game/{gameId}/evalTurn")
+	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {
 		
 		// Get user that made the request
 		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
@@ -260,7 +241,7 @@ public class GameController {
 		User turnUser = null;
 		try {
 			Turn lastTurn = turnService.findLastTurn(gameId).get();
-			 turnUser = lastTurn.getPlayer().getUser();
+			turnUser = lastTurn.getPlayer().getUser();
 		} catch (Exception e) {
 			return "redirect:/game/" + gameId;
 		}
@@ -278,9 +259,21 @@ public class GameController {
 	}
 	
 	// TODO start thinking on this
-	@PostMapping(value = "/game/{gameId}/endTurn")
+	@GetMapping(value = "/game/{gameId}/endTurn")
 	public String endTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
-		return null;
+		Turn turn = turnService.findLastTurn(gameId).get();
+		User requestUser = userService.findUserByName(auth.getName());
+		
+		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
+			turn.setIsFinished(true);
+			
+			turn.getPlayer().setTile(turn.getInitial_tile()+turn.getRoll());
+			playerService.savePlayer(turn.getPlayer());
+			
+			turnService.saveTurn(turn);
+		}
+		
+		return "redirect:/game/" + gameId;
 //		// Find all details needed to show to users
 //		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
 //		
