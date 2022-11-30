@@ -59,9 +59,15 @@ public class TileService {
 
 	public void calculateActionTile (Turn turn, Integer decision) {
 		switch (turn.getAction()) {
-			case PAY_TAX: taxesService.payTaxes(turn);
-			case DRAW_CARD: cardAction(turn);
-			case FREE: genericService.free(turn, decision);
+			case PAY_TAX: 
+				taxesService.payTaxes(turn);
+				break;
+			case DRAW_CARD: 
+				cardAction(turn);
+				break;
+			case FREE: 
+				genericService.free(turn, decision);
+				break;
 			default:;
 		}
 	}
@@ -76,15 +82,33 @@ public class TileService {
 		if (cardOpt.isPresent()) {
 			Card card = cardOpt.get();
 			switch (card.getAction()) {
-			case PAY_TAX: cardService.payTax(card, player);
-			case PAY_PLAYERS: cardService.payPlayers(card, player, players);
-			case CHARGE: cardService.charge(card, player);
-			case CHARGE_PLAYERS: cardService.chargePlayers(card, player, players);
-			case MOVE: cardService.move(card, player);
-			case MOVETO: cardService.moveTo(card, player);
-			case REPAIR: cardService.repair(player);
-			case GOTOJAIL: cardService.gotoJail(player);
-			case SAVE_FREE: cardService.saveFree(player);
+			case PAY_TAX: 
+				cardService.payTax(card, player);
+				break;
+			case PAY_PLAYERS: 
+				cardService.payPlayers(card, player, players);
+				break;
+			case CHARGE: 
+				cardService.charge(card, player);
+				break;
+			case CHARGE_PLAYERS: 
+				cardService.chargePlayers(card, player, players);
+				break;
+			case MOVE: 
+				cardService.move(card, player);
+				break;
+			case MOVETO: 
+				cardService.moveTo(card, player);
+				break;
+			case REPAIR: 
+				cardService.repair(player);
+				break;
+			case GOTOJAIL: 
+				cardService.gotoJail(player);
+				break;
+			case SAVE_FREE: 
+				cardService.saveFree(player);
+				break;
 			default:;
 			
 			}
