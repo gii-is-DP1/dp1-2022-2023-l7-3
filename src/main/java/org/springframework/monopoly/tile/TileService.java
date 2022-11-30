@@ -5,6 +5,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.card.Card;
 import org.springframework.monopoly.card.CardService;
@@ -36,6 +38,7 @@ public class TileService {
 		this.cardService = cardService;
 	}
 	
+	@Transactional
 	public void setActionTile (Turn turn) {
 		Integer gameId = turn.getGame().getId();
 		Integer tileId = turn.getFinalTile();
@@ -53,21 +56,23 @@ public class TileService {
 			turn.setAction(Action.PAY_TAX);
 		} 
 	}
-	
 
-	public void calculateActionTile (Turn turn) {
+	public void calculateActionTile (Turn turn, Integer decision) {
 		switch (turn.getAction()) {
 			case PAY_TAX: taxesService.payTaxes(turn);
 			case DRAW_CARD: cardAction(turn);
+			case FREE: genericService.free(turn, decision);
 			default:;
 		}
 	}
 	
-
+	@Transactional
 	private void cardAction(Turn turn) {
+		
 		Optional<Card> cardOpt = cardService.findCardById(turn.getActionCardId());
 		Player player = turn.getPlayer();
 		List<Player> players = turn.getGame().getPlayers().stream().filter(p -> !p.equals(player)).collect(Collectors.toList());
+		
 		if (cardOpt.isPresent()) {
 			Card card = cardOpt.get();
 			switch (card.getAction()) {
@@ -80,13 +85,10 @@ public class TileService {
 			case REPAIR: cardService.repair(player);
 			case GOTOJAIL: cardService.gotoJail(player);
 			case SAVE_FREE: cardService.saveFree(player);
-			case FREE: cardService.useFree(player);
 			default:;
 			
 			}
 		}
-
-		
 	}
 
 	public Card getCard(Turn turn, String type) {
