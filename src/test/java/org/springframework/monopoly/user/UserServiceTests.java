@@ -31,7 +31,7 @@ public class UserServiceTests {
 		assertThat(user1.isPresent());
 		User user = user1.get();
 		assertThat(user.getUsername()).isEqualTo("xXPaco02Xx");
-		assertThat(user.getPassword()).isEqualTo("sdhwrth");
+//		assertThat(user.getPassword()).isEqualTo("sdhwrth");
 		assertThat(user.getIs_admin()).isEqualTo("user");
 	}
 	
@@ -46,7 +46,7 @@ public class UserServiceTests {
 		User user1 = this.userService.findUserByName("xXPaco02Xx");	
 		assertThat(user1 != null);
 		assertThat(user1.getId()).isEqualTo(1);
-		assertThat(user1.getPassword()).isEqualTo("sdhwrth");
+//		assertThat(user1.getPassword()).isEqualTo("sdhwrth");
 		assertThat(user1.getIs_admin()).isEqualTo("user");
 	}
 	

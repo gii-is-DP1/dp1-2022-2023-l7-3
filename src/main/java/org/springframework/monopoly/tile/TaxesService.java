@@ -21,7 +21,7 @@ public class TaxesService {
 	@Transactional
 	public void payTaxes(Turn turn) {
 		Player p = turn.getPlayer();
-		Optional<Taxes> taxes = taxesRepository.findById(turn.getGame().getId(), turn.getFinalTile());
+		Optional<Taxes> taxes = taxesRepository.findTaxesByGameId(turn.getGame().getId(), turn.getFinalTile());
 		if(taxes.isPresent()) {
 			p.setMoney(p.getMoney() - taxes.get().getPrice());
 		}
@@ -29,11 +29,16 @@ public class TaxesService {
 	
 	@Transactional(readOnly = true)
 	public Integer getTaxValue(Turn turn) {
-		Optional<Taxes> taxes = taxesRepository.findById(turn.getGame().getId(), turn.getFinalTile());
+		Optional<Taxes> taxes = taxesRepository.findTaxesByGameId(turn.getGame().getId(), turn.getFinalTile());
 		Integer res = null;
 		if(taxes.isPresent()) {
 			res = taxes.get().getPrice();
 		}
 		return res;
+	}
+	
+	@Transactional
+	public Optional<Taxes> findTaxesByGameId(Integer gameId, Integer tileId) {
+		return taxesRepository.findTaxesByGameId(gameId, tileId);
 	}
 }

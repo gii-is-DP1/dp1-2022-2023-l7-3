@@ -12,6 +12,6 @@ public interface TaxesRepository extends CrudRepository<Taxes, Integer>{
 	@Query("SELECT t FROM Taxes t WHERE t.game.id = :gameId")
 	List<Taxes> findAll(@Param("gameId") Integer gameId);
 	
-	@Query("SELECT t FROM Taxes t WHERE t.game.id = :gameId AND t.id = id")
-	Optional<Taxes> findById(@Param("gameId") Integer gameId, @Param("id") Integer id);
+	@Query("SELECT t FROM Taxes t WHERE t.game.id = :gameId AND t.id = :id")
+	Optional<Taxes> findTaxesByGameId(@Param("gameId") Integer gameId, @Param("id") Integer id);
 }

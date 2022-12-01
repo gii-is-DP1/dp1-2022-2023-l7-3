@@ -3,10 +3,10 @@ INSERT INTO game (id) VALUES (0);
 
 /* USERS */
 INSERT INTO users (id, username, password, enabled, is_admin) VALUES (0, 'admin', 'admin', 1, 'admin'); 
-INSERT INTO users (id, username, password, enabled) VALUES (1, 'xXPaco02Xx', 'sdhwrth', 1);
-INSERT INTO users (id, username, password, enabled, is_admin) VALUES (2, 'CryptoBro64', 'sdhwasfdrth', 1, 'admin');
-INSERT INTO users (id, username, password, enabled) VALUES (3, 'TuAndreita98', 'asfsdafsdhwrth', 1);
-INSERT INTO users (id, username, password, enabled) VALUES (4, 'AnimeEnjoyer', 'sdhwrvldsfnglth', 1);
+INSERT INTO users (id, username, password, enabled) VALUES (1, 'xXPaco02Xx', 'paco', 1);
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (2, 'CryptoBro64', 'cryptobro', 1, 'admin');
+INSERT INTO users (id, username, password, enabled) VALUES (3, 'TuAndreita98', 'andreita', 1);
+INSERT INTO users (id, username, password, enabled) VALUES (4, 'AnimeEnjoyer', 'anime', 1);
 
 /* COMMUNITY BOX, LUCK AND TILES */
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (1,'LUCK', 'CHARGE', 50,'/resources/images/Luck1.PNG');

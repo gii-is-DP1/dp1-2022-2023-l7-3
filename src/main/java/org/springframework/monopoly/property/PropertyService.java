@@ -1,6 +1,9 @@
 package org.springframework.monopoly.property;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
@@ -53,16 +56,25 @@ public class PropertyService {
 		}
 	}
 
-	public void calculateActionProperty (Turn turn) {
+	public void calculateActionProperty (Turn turn, Auction auction) {
 		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		switch (turn.getAction()) {
-			case BUY: buyPropertyById(property, turn);
-			case AUCTION: auctionPropertyById(property, turn);
-			case PAY: payPropertyById(property, turn);
-			case MORTGAGE: mortgageProperty(turn);
+			case BUY: 
+				buyPropertyById(property, turn);
+				break;
+			case AUCTION: 
+				setAuctionWinner(auction);
+				break;
+			case PAY: 
+				payPropertyById(property, turn);
+				break;
+			case MORTGAGE: 
+				mortgageProperty(turn);
+				break;
 			default:;
 		}
 	}
+
 
 	public void buyPropertyById(Property property, Turn turn) {	
 			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - property.getPrice());
@@ -123,11 +135,33 @@ public class PropertyService {
 	private void mortgageProperty(Turn turn) {
 
 	}
-	//TODO
-	private void auctionPropertyById(Property property, Turn turn) {
+			
 
+	public Auction auctionPropertyById(Auction auction) {
+		Integer newBid = auction.getCurrentBid() + auction.getPlayerBid();
+		List<Player> newRemaining = auction.getRemainingPlayers();
+		if (newRemaining.size() > 1) {
+			if (auction.getPlayerBid() == 0) {
+				newRemaining.remove(auction.getRemainingPlayers().get(auction.getPlayerIndex()));
+			} 
+			auction.setCurrentBid(newBid);
+			auction.setPlayerBid(0);
+			Integer newIndex = (auction.getPlayerIndex() + 1)%(newRemaining.size());
+			auction.setPlayerIndex(newIndex);
+			auction.setRemainingPlayers(newRemaining);
+			return auction;
+		} else {
+			return null;
+		}
 	}
-
+	
+	private void setAuctionWinner(Auction auction) {
+		Player auctionWinner = auction.getRemainingPlayers().get(0);
+		auctionWinner.setMoney(auctionWinner.getMoney() - auction.getCurrentBid());
+		auction.getProperty().setOwner(auctionWinner);
+		
+	}
+	
 }
 
 

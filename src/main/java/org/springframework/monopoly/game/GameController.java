@@ -13,7 +13,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
@@ -21,7 +20,6 @@ import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Color;
-import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.turn.Turn;
@@ -45,9 +43,6 @@ public class GameController {
 	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
 	public static final String GAMES_LISTING="game/GameList";
-	
-	public static User currentUser;
-	private static String currentUserLocation;
 	
 	private GameService gameService;
 	private PlayerService playerService;
@@ -133,42 +128,11 @@ public class GameController {
 	
 	@PostMapping(value = "/newGame")
 	public String processGameForm(GameForm gameForm, Map<String, Object> model, BindingResult result) {
-		Game game = new Game();
-		System.out.println(game.getNumCasas());
-		List<Integer> userIds = gameForm.getUsers();
-		List<User> users = new ArrayList<User>();
-		for(Integer i:userIds) {
-			users.add(userService.findUser(i).get());
-		}
-		
-		List<PieceColors> colors = playerService.getAllPieceTypes();
-		Collections.shuffle(colors);
-		List<Integer> turns = Stream.iterate(0, i-> i<users.size(), i -> ++i).collect(Collectors.toList());
-		Collections.shuffle(turns);
-		
-		List<Player> players = new ArrayList<Player>();
-		int i = 0;
-		for(User u : users) {
-			Player p = new Player();
-			p.setUser(u);
-			
-			p.setIsJailed(false);
-			p.setTile(0);
-			p.setMoney(1500);
-			p.setPiece(colors.get(i));
-			p.setHasExitGate(false);
-			p.setTurnOrder(turns.get(i++));
-			p.setGame(game);
-			p.setIs_bankrupcy(false);
-			
-			playerService.savePlayer(p);
-			players.add(p);
-		} 
-		
-		game.setPlayers(new HashSet<Player>(players));
 		Game savedGame;
 		try {
+			Game game = gameService.setUpNewGame(gameForm);
 			savedGame = gameService.saveGame(game);
+			gameService.setProperties(savedGame);
 		} catch (InvalidNumberOfPLayersException e) {
 			result.rejectValue("Users[0]", "Not enough players", "There are not enough players to start");
 			return VIEWS_NEW_GAME;
@@ -182,7 +146,7 @@ public class GameController {
 		Optional<Game> gameOptional = gameService.findGame(gameId);
 		if(gameOptional.isEmpty()) {
 			throw new Exception("Game doesn't exist");
-		} 
+		}  
 		Game game = gameOptional.get();
 		 
 		User requestUser = userService.findUserByName(auth.getName());
@@ -190,32 +154,54 @@ public class GameController {
 		List<Player> players = new ArrayList<Player>(game.getPlayers());
 		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 		Collections.sort(players, c);
-		Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
-		
 
 		//esto se va al turn service como nexturn no se que
-		Turn nextTurn = new Turn();
-		Player nextPlayer = null;
+		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
+		Turn turn = new Turn();
+		turn.setGame(game);
+		Player nextPlayer;
+		Boolean isPlaying = false;
 		
 		// Calculating next turn result
-		if(lastTurnOpt.isPresent()) {
-			Turn lastTurn = lastTurnOpt.get();
-			nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+		if(lastTurn != null) {
 			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
+				turn.setPlayer(nextPlayer);
+				turn.setInitial_tile(nextPlayer.getTile());
+				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+				turnService.calculateTurn(turn);
+				isPlaying = nextPlayer.getUser().equals(requestUser);
+			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
+				isPlaying = nextPlayer.getUser().equals(requestUser);
+				turn = lastTurn;
+			} else {
+				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
+				turn = lastTurn;
+			}
+			
 		} else {
-			nextTurn.setTurnNumber(0);
+			// Esto se podría pasar al metodo de crear partida
 			nextPlayer = players.get(0);
+			isPlaying = nextPlayer.getUser().equals(requestUser);
+			turn.setPlayer(nextPlayer);
+			turn.setInitial_tile(nextPlayer.getTile());
+			turn.setTurnNumber(0);
+			turnService.calculateTurn(turn);
+			
 		}
 		
 		model.addAttribute("Game", game);
-		model.addAttribute("Turn", null);
+		model.addAttribute("Turn", turn);
 		model.addAttribute("Players", players);
+		
+		// To show the end turn button
+		model.addAttribute("isPlaying", isPlaying);
 		
 
 		//esto es una query de todos los nombre
-		List<List<Property>> properties = new ArrayList<List<Property>>();
+		List<List<String>> properties = new ArrayList<List<String>>();
 		for(Player p:players) {
-			properties.add(p.getProperties());
+			properties.add(playerService.findPlayerPropertiesNames(p));
 		}
 
 		// public List<Property> getProperties() {
@@ -238,68 +224,103 @@ public class GameController {
 		// hacer esto de otra forma aparte
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
-			colors.add(streetService.getStreetsColors(p.getStreets()));
+			colors.add(streetService.findPlayerColors(p));
 		}
  		model.addAttribute("Colors", colors);
    		
-		if(currentUser == null && requestUser.equals(nextPlayer.getUser())) {
-			currentUser = requestUser;
-			return "redirect:/game/" + gameId + "/nextTurn";
-		} else {
-			return GAME_MAIN;
-		}
-		
-		
-	}
+		return GAME_MAIN;
+	} 
 	
-	//esto hay que mirarlo
-	@GetMapping(value = "/game/{gameId}/nextTurn")
-	public String calculateGameTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
+	@GetMapping(value = "/game/{gameId}/evalTurn")
+	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {
 		
-		// Find all details needed to show to users
+		// Get user that made the request
 		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
 		
-		if(currentUser.getId().equals(requestUserId)) {
+		// Get the user of the turn that is being played
+		User turnUser = null;
+		try {
+			Turn lastTurn = turnService.findLastTurn(gameId).get();
+			turnUser = lastTurn.getPlayer().getUser();
+		} catch (Exception e) {
+			return "redirect:/game/" + gameId;
+		}
+		
+		// If the user is the turn user continue
+		if(requestUserId == turnUser.getId()) {
+			// Calcultate turn results
 			
-			Optional<Game> gameOptional = gameService.findGame(gameId);
-			if(gameOptional.isEmpty()) {
-				throw new Exception("Game doesn't exist");
-			} 
-			Game game = gameOptional.get();
+			// Load model with everything necessary
 			
-			List<Player> players = new ArrayList<Player>(game.getPlayers());
-			Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
-			Collections.sort(players, c);
-			Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
-			
-			Turn nextTurn = new Turn();
-			Player nextPlayer = null;
-			
-			// Calculating next turn result
-			if(lastTurnOpt.isPresent()) {
-				Turn lastTurn = lastTurnOpt.get();
-				nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
-				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
-			} else {
-				nextTurn.setTurnNumber(0);
-				nextPlayer = players.get(0);
-			} 
-			
-			nextTurn.setGame(game);
-			nextTurn.setPlayer(nextPlayer);
-			nextTurn.setInitial_tile(nextPlayer.getTile());
-			nextTurn = turnService.calculateTurn(nextTurn);
-			
-			turnService.saveTurn(nextTurn);
-			
-			model.addAttribute("Game", game);
-			model.addAttribute("Turn", nextTurn);
-			model.addAttribute("Players", game.getPlayers());
-	
-			return GAME_MAIN;
+			return loadGame(gameId, auth, model);
 		} else {
 			return "redirect:/game/" + gameId;
 		}
+	}
+	
+	// TODO start thinking on this
+	@GetMapping(value = "/game/{gameId}/endTurn")
+	public String endTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
+		Turn turn = turnService.findLastTurn(gameId).get();
+		User requestUser = userService.findUserByName(auth.getName());
+		
+		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
+			turn.setIsFinished(true);
+			
+			turn.getPlayer().setTile(turn.getInitial_tile()+turn.getRoll());
+			playerService.savePlayer(turn.getPlayer());
+			
+			turnService.saveTurn(turn);
+		}
+		
+		return "redirect:/game/" + gameId;
+//		// Find all details needed to show to users
+//		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
+//		
+//		// Get the user of the turn that 
+//		
+//		
+//		if(currentUser.getId().equals(requestUserId)) {
+//			
+//			Optional<Game> gameOptional = gameService.findGame(gameId);
+//			if(gameOptional.isEmpty()) {
+//				throw new Exception("Game doesn't exist");
+//			} 
+//			Game game = gameOptional.get();
+//			
+//			List<Player> players = new ArrayList<Player>(game.getPlayers());
+//			Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
+//			Collections.sort(players, c);
+//			Optional<Turn> lastTurnOpt = turnService.findLastTurn(gameId);
+//			
+//			Turn nextTurn = new Turn();
+//			Player nextPlayer = null;
+//			
+//			// Calculating next turn result
+//			if(lastTurnOpt.isPresent()) {
+//				Turn lastTurn = lastTurnOpt.get();
+//				nextTurn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+//				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+//			} else {
+//				nextTurn.setTurnNumber(0);
+//				nextPlayer = players.get(0);
+//			} 
+//			
+//			nextTurn.setGame(game);
+//			nextTurn.setPlayer(nextPlayer);
+//			nextTurn.setInitial_tile(nextPlayer.getTile());
+//			nextTurn = turnService.calculateTurn(nextTurn);
+//			
+//			turnService.saveTurn(nextTurn);
+//			
+//			model.addAttribute("Game", game);
+//			model.addAttribute("Turn", nextTurn);
+//			model.addAttribute("Players", game.getPlayers());
+//	
+//			return GAME_MAIN;
+//		} else {
+//			return "redirect:/game/" + gameId;
+//		}
 	}
 		
     @GetMapping("/games/list")
