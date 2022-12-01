@@ -99,7 +99,7 @@ public class PropertyService {
 
 	private Integer payStreet(Property property) {
 		Street street = (Street)property;
-		Boolean b = streetRepository.findStreetByColor(street.getColor().toString(), street.getGame().getId()).stream().allMatch(x -> x.getOwner() == street.getOwner());
+		Boolean b = streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream().allMatch(x -> x.getOwner() == street.getOwner());
 		if(b) {
 			if(street.getHaveHotel()) {
 				return street.getRentalHotel();

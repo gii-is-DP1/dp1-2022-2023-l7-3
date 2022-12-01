@@ -15,7 +15,7 @@ public interface StreetRepository extends  CrudRepository<Street, Integer>{
 	List<String> findAllColor();
 
 	@Query("SELECT s FROM Street s WHERE s.color = :color AND s.game.id = :idgame")
-	List<Street> findStreetByColor(@Param("color")String color,@Param("idgame") Integer idgame);
+	List<Street> findStreetByColor(@Param("color")Color color,@Param("idgame") Integer idgame);
 	
 	@Query("SELECT DISTINCT s.name FROM Street s WHERE s.color = :color")
 	List<String> findByColor(@Param("color")String color);
