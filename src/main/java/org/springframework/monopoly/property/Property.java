@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.player.Player;
@@ -21,27 +21,27 @@ import lombok.Setter;
 public abstract class Property extends Tile {
 	
 	@Column(name = "name")
-	@NotBlank
+	@NotNull
 	private String name;
 	
 	@Column(name = "price")
-	@NotBlank
+	@NotNull
 	private Integer price;
 
 	@Column(name = "rental_price")
-	@NotBlank
+	@NotNull
 	private Integer rentalPrice;
 
 	@Column(name = "mortage_price")
-	@NotBlank
+	@NotNull
 	private Integer mortagePrice;
 
 	@Column(name = "is_mortage")
-	@NotBlank
+	@NotNull
 	private Boolean isMortage;
 	
 	@Column(name = "badge_Image")
-	@NotBlank
+	@NotNull
 	private String badgeImage;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
