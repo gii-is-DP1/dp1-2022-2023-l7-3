@@ -32,60 +32,40 @@ public class PropertyService {
 		}else {
 			return null;
 		}
-		
 	}
 	
 	public void setActionProperty (Turn turn) {
-		Object object =  getProperty(turn.getFinalTile(), turn.getGame().getId());
-		if(object !=null) {
-			if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-				Street street = (Street) object;
-				if( street.getOwner() == null) {
-					if(turn.getPlayer().getMoney() >= street.getPrice()) {
-						turn.setAction(Action.BUY);
-					} else {
-						turn.setAction(Action.AUCTION);
-					}
-				} else if(!turn.getPlayer().equals(street.getOwner())){
-					if (turn.getPlayer().getMoney() >= getCalculateRentalPrice(turn)) {
-						turn.setAction(Action.PAY);
-					} else {
-						turn.setAction(Action.MORTGAGE);
-					}
-				}else {
-					turn.setAction(Action.NOTHING_HAPPENS);
+		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
+		if(property !=null) {
+			if( property.getOwner() == null) {
+				if(turn.getPlayer().getMoney()>= property.getPrice()) {
+					turn.setAction(Action.BUY);
+				} else {
+					turn.setAction(Action.AUCTION);
 				}
-			} else {
-				Property property = (Property) object;
-				if( property.getOwner() == null) {
-					if(turn.getPlayer().getMoney() >= property.getPrice()) {
-						turn.setAction(Action.BUY);
-					} else {
-						turn.setAction(Action.AUCTION);
-					}
-				} else if(!turn.getPlayer().equals(property.getOwner())){
-					if (turn.getPlayer().getMoney() >= getCalculateRentalPrice(turn)) {
-						turn.setAction(Action.PAY);
-					} else {
-						turn.setAction(Action.MORTGAGE);
-					}
-				}else {
-					turn.setAction(Action.NOTHING_HAPPENS);
+			} else if(!turn.getPlayer().equals(property.getOwner())){
+				if (turn.getPlayer().getMoney() >= getRentalPrice(property)) {
+					turn.setAction(Action.PAY);
+				} else {
+					turn.setAction(Action.MORTGAGE);
 				}
+			}else {
+				turn.setAction(Action.NOTHING_HAPPENS);
 			}
 		}
 	}
 
 	public void calculateActionProperty (Turn turn, Auction auction) {
+		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		switch (turn.getAction()) {
 			case BUY: 
-				buyPropertyById(turn);
+				buyPropertyById(property, turn);
 				break;
 			case AUCTION: 
 				setAuctionWinner(auction);
 				break;
 			case PAY: 
-				payPropertyById(turn);
+				payPropertyById(property, turn);
 				break;
 			case MORTGAGE: 
 				mortgageProperty(turn);
@@ -94,93 +74,60 @@ public class PropertyService {
 		}
 	}
 
-	public Integer getCalculateRentalPrice (Turn turn) {
-		Object property = getProperty(turn.getFinalTile(), turn.getGame().getId());
+
+	public void buyPropertyById(Property property, Turn turn) {	
+			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - property.getPrice());
+			property.setOwner(turn.getPlayer());
+	}
+
+	public Integer getRentalPrice(Property property) {
 		Integer n =0;
-		if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			n = payStreet(property, turn);
-		}else if (stationRepository.findStationById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			n = payStation(property, turn);
-		} else if (companyRepository.findCompanyById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			n = payCompany(property, turn); //hay que hacer una tirada y pasarla como parametro
+		if(streetRepository.findStreetById(property.getId(),property.getGame().getId()) != null) {
+			n = payStreet(property);	
+		}else if (stationRepository.findStationById(property.getId(),property.getGame().getId()) != null) {
+			n = payStation(property);
+		} else if (companyRepository.findCompanyById(property.getId(),property.getGame().getId()) != null) {
+			n = payCompany(property); //hay que hacer una tirada y pasarla como parametro
 		}
 		return n;
 	}
-
-	public void buyPropertyById(Turn turn) {	
-		Object property = getProperty(turn.getFinalTile(), turn.getGame().getId());
-		if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			Street street = (Street)property;
-			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - street.getPrice());
-			street.setOwner(turn.getPlayer());
-		}else if (stationRepository.findStationById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			Station station = (Station)property;
-			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - station.getPrice());
-			station.setOwner(turn.getPlayer());
-		} else if (companyRepository.findCompanyById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			Company company = (Company)property;
-			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - company.getPrice());
-			company.setOwner(turn.getPlayer());
-		}
-	}
 	
-	public void payPropertyById(Turn turn) {
-		Integer n = 0;
-		Object property = getProperty(turn.getFinalTile(), turn.getGame().getId());
-		if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			n = payStreet(property, turn);
-			Street street = (Street)property;
-			street.getOwner().setMoney(street.getOwner().getMoney() + n);	
-		}else if (stationRepository.findStationById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			n = payStation(property, turn);
-			Station station = (Station) property;
-			station.getOwner().setMoney(station.getOwner().getMoney() + n);
-		} else if (companyRepository.findCompanyById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			n = payCompany(property, turn); //hay que hacer una tirada y pasarla como parametro
-			Company company = (Company) property;
-			company.getOwner().setMoney(company.getOwner().getMoney() + n);
-		}
-		turn.getPlayer().setMoney(turn.getPlayer().getMoney() - n);
+	public void payPropertyById(Property property, Turn turn) {
+			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - getRentalPrice(property));
+			property.getOwner().setMoney(property.getOwner().getMoney() + getRentalPrice(property));	
 	}
 
-	private Integer payStreet(Object property, Turn turn) {
+	private Integer payStreet(Property property) {
 		Street street = (Street)property;
 		Boolean b = streetRepository.findStreetByColor(street.getColor().toString(), street.getGame().getId()).stream().allMatch(x -> x.getOwner() == street.getOwner());
-		Integer n = 0;
 		if(b) {
 			if(street.getHaveHotel()) {
-				n =street.getRentalHotel();
+				return street.getRentalHotel();
 			}else {
 				switch (street.getHouseNum()) {
-					case 1: n = street.getRental1House();
-						break;
-					case 2: n = street.getRental2House();
-						break;
-					case 3: n = street.getRental3House();
-						break;
-					case 4: n =  street.getRental4House();
-						break;
-					default: n = street.getRentalPrice()*2;
-						break;
+					case 1: return street.getRental1House();
+					case 2: return street.getRental2House();
+					case 3: return street.getRental3House();
+					case 4: return street.getRental4House();
+					default: return street.getRentalPrice()*2;
 				}
 			}			
 		} else {
-			n = street.getRentalPrice();
-		}	
-		return n;	
+			return street.getRentalPrice();
+		}		
 	}
 
-	private Integer payStation(Object property, Turn turn) {
+	private Integer payStation(Property property) {
 		Station station = (Station) property;
 		Integer n = (int) stationRepository.findByOwner(station.getOwner().getId(),station.getGame().getId()).stream().count();
-		return station.getRentalPrice()*n;	
+		return station.getRentalPrice()*n;
 	}
 
-	private Integer payCompany(Object property, Turn turn) {
+	private Integer payCompany(Property property) {
 		Company company = (Company) property;
-		Integer n = 4; //llamar a roll aquí
+		Integer n = 4;
 		if (companyRepository.findByOwner(company.getOwner().getId(),company.getGame().getId()).stream().count() == 2.) n = 10;
-		return company.getRentalPrice() * n;
+		return company.getRentalPrice() * n; // falta multiplicarlo por la tirada específica para las compañias
 	}
 	
 	//TODO
@@ -188,6 +135,7 @@ public class PropertyService {
 
 	}
 			
+
 	public Auction auctionPropertyById(Auction auction) {
 		Integer newBid = auction.getCurrentBid() + auction.getPlayerBid();
 		List<Player> newRemaining = auction.getRemainingPlayers();
@@ -209,6 +157,7 @@ public class PropertyService {
 	private void setAuctionWinner(Auction auction) {
 		Player auctionWinner = auction.getRemainingPlayers().get(0);
 		auctionWinner.setMoney(auctionWinner.getMoney() - auction.getCurrentBid());
-		auction.getProperty().setOwner(auctionWinner);	
-	}	
+		auction.getProperty().setOwner(auctionWinner);
+		
+	}
 }
