@@ -4,23 +4,21 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
-import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.PropertyService;
+import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
@@ -67,7 +65,7 @@ public class GameController {
 	@GetMapping(value = "/blankGame")
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
 		Integer idProperty = 12;
-		Integer idGame = 2;	
+		Integer idGame = 2;	 
 		model.put("property", propertyService.getProperty(idProperty, idGame));
 		
 		
@@ -130,9 +128,16 @@ public class GameController {
 	public String processGameForm(GameForm gameForm, Map<String, Object> model, BindingResult result) {
 		Game savedGame;
 		try {
-			Game game = gameService.setUpNewGame(gameForm);
-			savedGame = gameService.saveGame(game);
-			gameService.setProperties(savedGame);
+			savedGame = gameService.setUpNewGame(gameForm);
+//			gameService.saveGame(savedGame);
+			savedGame = gameService.setUpNewGamePlayers(gameForm.getUsers(), savedGame);
+//			savedGame = gameService.saveGame(savedGame);
+			savedGame = gameService.setProperties(savedGame);
+			savedGame = gameService.saveGame(savedGame);
+			
+			Street s = savedGame.getStreets().stream().findFirst().orElse(null);
+			streetService.findStreet(s.equals(null) ? null : s.getId(), savedGame.getId());
+			
 		} catch (InvalidNumberOfPLayersException e) {
 			result.rejectValue("Users[0]", "Not enough players", "There are not enough players to start");
 			return VIEWS_NEW_GAME;
@@ -177,7 +182,7 @@ public class GameController {
 			} else {
 				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
 				turn = lastTurn;
-			}
+			} 
 			
 		} else {
 			// Esto se podría pasar al metodo de crear partida
@@ -194,7 +199,10 @@ public class GameController {
 		model.addAttribute("Turn", turn);
 		model.addAttribute("Players", players);
 		
-		// To show the end turn button
+		// Temporal for debugging purposes
+		isPlaying = true; 
+		
+		// To show the end turn button and popups if there is any
 		model.addAttribute("isPlaying", isPlaying);
 		
 
