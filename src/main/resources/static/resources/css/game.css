@@ -60,6 +60,9 @@
 }
 
 .popUpOverlay1 {
+	height: 100vh;
+	width: 100vw;
+	
 	position: fixed;
   	top: 0;
   	bottom: 0;
@@ -84,13 +87,28 @@
   	left: 25%;
   	right: 25%;
   	position: relative;
-/*   	transition: all 5s ease-in-out; */
+	transition: all 5s ease-in-out;
   	
   	max-height: 700px;
   	
   	display: flex;
 	flex-direction: column;
 	overflow: auto;
+	
+	justify-content: center;
+	align-items: center;
+}
+
+.popUpFormDiv {
+	height: 100%;
+	width: 100%;
+	
+	display: flex;
+	flex-direction: column;
+	overflow: auto;
+	
+	justify-content: center;
+	align-items: center;
 }
 
 .addPlayerPopUp1 {

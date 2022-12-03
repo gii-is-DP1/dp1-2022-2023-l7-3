@@ -1,11 +1,11 @@
 package org.springframework.monopoly.game;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,16 +39,16 @@ public class Game extends BaseEntity {
     @Column(name = "num_casas")
     protected Integer numCasas;
     
-    @OneToMany(mappedBy = "game")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game")
     protected Set<Player> players;
     
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.EAGER)
     protected Set<Company> companies;
     
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.EAGER)
     protected Set<Station> stations;
 
-    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.EAGER)
     protected Set<Street> streets;
 
 
