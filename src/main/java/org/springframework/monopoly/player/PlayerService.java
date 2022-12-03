@@ -67,8 +67,8 @@ public class PlayerService {
 	}
 
 	@Transactional
-	public void savePlayer(Player player) throws DataAccessException {
-		playerRepository.save(player);		
+	public Player savePlayer(Player player) throws DataAccessException {
+		return playerRepository.save(player);		
 	}	
 	
 	@Transactional

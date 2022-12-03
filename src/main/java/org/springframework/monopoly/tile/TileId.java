@@ -3,21 +3,31 @@ package org.springframework.monopoly.tile;
 import java.io.Serializable;
 import java.util.Objects;
 
-import org.springframework.monopoly.game.Game;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class TileId implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4159228973454437019L;
 	private Integer id;
-	private Game game;
+	private Integer game;
 	
 	public TileId() {
 		
 	}
 	
-	public TileId(Integer id, Game game) {
-		super();
+	public TileId(Integer id, Integer game) {
 		this.id = id;
 		this.game = game;
+	}
+	
+	public boolean isNew() {
+		return this.id == null;
 	}
 
 	@Override

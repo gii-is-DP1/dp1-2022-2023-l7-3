@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,15 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class StreetService {
 	
 	private StreetRepository streetRepository;
-
+	
+	@PersistenceContext
+	private EntityManager em;
+	
 	@Autowired
 	public StreetService(StreetRepository streetRepository) {
 		this.streetRepository = streetRepository;
 	}
 
 	@Transactional
-	public void saveStreet(Street street) throws DataAccessException {
-		streetRepository.save(street);
+	public Street saveStreet(Street street) throws DataAccessException {
+		return streetRepository.save(street);
 	}
 	
 	@Transactional
@@ -31,6 +39,7 @@ public class StreetService {
 		return streetRepository.findStreetById(id,idgame);
 	}
 	
+	@Transactional(readOnly = true)
 	public List<Color> getStreetsColors(Set<Street> streets) {
 		Set<Color> colors = new HashSet<Color>();
 		
@@ -47,4 +56,9 @@ public class StreetService {
 		return streetRepository.findPlayerColors(player.getGame().getId(), player.getId());
 	}
 
+	@Transactional(readOnly = true)
+	public Set<Street> getBlankStreets() {
+		return streetRepository.getBlankStreets(/*gameId*/);
+	}
+	
 }
