@@ -65,7 +65,7 @@ public class PropertyService {
 				buyPropertyById(property, turn);
 				break;
 			case AUCTION: 
-				setAuctionWinner(auction);
+				setAuctionWinner(auction, turn);
 				break;
 			case PAY: 
 				payPropertyById(property, turn);
@@ -155,7 +155,7 @@ public class PropertyService {
 
 	public Auction auctionPropertyById(Auction auction) {
 		Integer newBid = auction.getCurrentBid() + auction.getPlayerBid();
-		List<Player> newRemaining = auction.getRemainingPlayers();
+		List<Integer> newRemaining = auction.getRemainingPlayers();
 		if (newRemaining.size() > 1) {
 			if (auction.getPlayerBid() == 0) {
 				newRemaining.remove(auction.getRemainingPlayers().get(auction.getPlayerIndex()));
@@ -171,10 +171,11 @@ public class PropertyService {
 		}
 	}
 	
-	private void setAuctionWinner(Auction auction) {
-		Player auctionWinner = auction.getRemainingPlayers().get(0);
+	private void setAuctionWinner(Auction auction, Turn turn) {
+		Player auctionWinner = playerRepository.findPlayerById( auction.getRemainingPlayers().get(0));
 		auctionWinner.setMoney(auctionWinner.getMoney() - auction.getCurrentBid());
-		auction.getProperty().setOwner(auctionWinner);
+		Property property = (Property) getProperty(auction.getPropertyId(), turn.getGame().getId());
+		property.setOwner(auctionWinner);
 		
 	}
 }

@@ -1,9 +1,6 @@
 package org.springframework.monopoly.property;
 
 import java.util.List;
-
-import org.springframework.monopoly.player.Player;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,17 +9,17 @@ import lombok.Setter;
 public class Auction {
 	
 	private Integer playerIndex;
-	private List<Player> remainingPlayers;
+	private List<Integer> remainingPlayers;
 	private Integer currentBid;
 	private Integer playerBid;
-	private Property property;
+	private Integer propertyId;
 	
-	public Auction(Integer playerIndex, List<Player> remainingPlayers, Integer currentBid, Integer playerBid, Property property) {
+	public Auction(Integer playerIndex, List<Integer> remainingPlayers, Integer currentBid, Integer playerBid, Integer property) {
 		this.playerIndex = playerIndex;
 		this.remainingPlayers = remainingPlayers;
 		this.currentBid = currentBid;
 		this.playerBid = playerBid;
-		this.property = property;
+		this.propertyId = property;
 	}
 	
 }

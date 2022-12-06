@@ -11,6 +11,6 @@ public interface CardRepository extends CrudRepository<Card, Integer> {
 	List<Card> findAll();
 
     @Query("SELECT c FROM Card c WHERE c.cardType = :cardType")
-    List<Card> findAllByCardType(@Param("cardType") String cardType);
+    List<Card> findAllByCardType(@Param("cardType") CardType cardType);
 		
 }

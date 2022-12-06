@@ -25,7 +25,7 @@ public class CardService {
     }
 	
 	@Transactional
-	public List<Card> findTypeCards(String cardType) {
+	public List<Card> findTypeCards(CardType cardType) {
         return cardRepository.findAllByCardType(cardType) ;
     }
 	

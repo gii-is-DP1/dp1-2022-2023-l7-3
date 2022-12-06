@@ -218,6 +218,23 @@
     font-size: 20px;
     font-weight: bold;
 	display: table-cell;
+	margin-right: 2px;
+	margin-left: 2px;
+}
+
+.popUpDangerButton {
+    height: 50px;
+    width: 170px;
+    background-color: #c70008;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+	display: table-cell;
+	margin-right: 2px;
+	margin-left: 2px;
 }
 
 .popUpSampleButton{
