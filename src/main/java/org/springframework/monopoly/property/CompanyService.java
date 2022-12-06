@@ -1,5 +1,7 @@
 package org.springframework.monopoly.property;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,18 @@ public class CompanyService {
 	}
 
 	@Transactional
-	public void saveCompany(Company company) throws DataAccessException {
-		companyRepository.save(company);
+	public Company saveCompany(Company company) throws DataAccessException {
+		return companyRepository.save(company);
 	}
 	
 	@Transactional
 	public Company findCompany(Integer id, Integer idgame) {
 		return companyRepository.findCompanyById(id,idgame);
 	}
+	
+	@Transactional
+	public Set<Company> getBlankCompanies() {
+		return companyRepository.getBlankCompanies();
+	}
+	
 }

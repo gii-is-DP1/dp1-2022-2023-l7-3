@@ -23,5 +23,8 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 	@Query(nativeQuery=true, value = "SELECT * FROM game g JOIN player p ON g.id = p.game_id WHERE p.user_id = :userId")
 	Page<Game> findUserGames(@Param("userId") Integer userId, Pageable pageable);
 	Page<Game> findAll(Pageable pageable);
-		
+	
+	@Query(nativeQuery = true,
+           value = "SELECT TOP 1 g.id FROM Game g ORDER BY g.id DESC")
+	Integer findLastId();
 }

@@ -3,10 +3,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
-<spring:url value="/resources/css/game.css" var="gameCss" />
-<link href="${gameCss}" rel="stylesheet" />
-
-<monopoly:layout screenTittle="Playing game">
+<monopoly:layout screenTittle="Playing on game ${Game.id}">
 
 	<div class="mainGameDiv">
 		 
@@ -140,11 +137,14 @@
 			<button onclick="if(!play){setTimeout(function() {play = true; window.requestAnimationFrame(movePiece);}, velocity)}else{play = false}">Play/Stop</button>
 <!-- 			<img src="/resources/images/board.png" class="canvasBackground"></img> -->
 			<canvas id="Board" width="600" height="600"></canvas>
-			<c:if test="${isPlaying}">
-				<a href="/game/${Game.id}/endTurn">
-					<button id="endTurnButton" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
-				</a>
-			</c:if>
+			<div>
+				<c:if test="${isPlaying}">
+					<a href="/game/${Game.id}/endTurn">
+						<button id="endTurnButton" class="mainButtonStyle" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
+					</a>
+				</c:if>
+				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '${Turn.action}')" disabled="disabled"> Show turn action </button>
+			</div>
 			
 		</div>
 		
@@ -265,7 +265,7 @@
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Naranja.png" />
 						<p>${Players[3].user.username}</p>
-						<p>${Players[3].money}  M </p>
+						<p>${Players[3].money}  M </p> 
 					</div>
 				</c:if>
 			</div>
@@ -279,6 +279,102 @@
 	Insert pop up layouts in this space here
 	
 	 -->
+	 <c:if test="${Turn.action == 'PAY'}">
+		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="pay">
+		 	<monopoly:haveToPay/>
+		 </monopoly:popup>
+	 </c:if>
+
+	 <c:if test="${Turn.action == 'BUY'}">
+		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="buy">
+		 	<monopoly:buyBuildings/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'BUILD'}">
+		 <monopoly:popup popUpId="wantToBuildPopUp" gameId="${Game.id}">
+		 	<monopoly:wantToBuild/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'BUILD'}">
+		 <monopoly:popup popUpId="buildBuildingsPopUp" gameId="${Game.id}" popUpPostFormAction="build">
+		 	<monopoly:buildBuildings/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'AUCTION'}">
+		 <monopoly:popup popUpId="auctionBuilding" gameId="${Game.id}" popUpPostFormAction="auction">
+		 	<monopoly:auctionBuilding/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <!-- Action for this thing ? -->
+	 <c:if test="${Turn.action == 'NOTHING_HAPPENS'}">
+		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
+		 	<monopoly:mergeBuilding/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 
+	 <script>
+	 	function parsePopUp(showOrHide = true, inputAction) {
+	 		let action = null;
+	 		if(inputAction == null || inputAction == undefined) {
+	 			action = "${Turn.action}";
+	 		} else {
+	 			action = inputAction;
+	 		}
+	 		
+	 		const result = showOrHide ? showPopUp : hidePopUp; 
+	 		
+	 		switch(action){
+	 		case "PAY":
+	 			result("haveToPay");
+	 			break;
+	 		case "BUY":
+	 			result("buyPopUp");
+	 			break;
+	 		case "BUILD":
+	 			result("wantToBuildPopUp");
+	 			break;
+	 		case "AUCTION":
+	 			result("auctionBuilding");
+	 			break;
+	 		case "NOTHING_HAPPENS":
+	 			break;
+	 		default:
+	 			console.error("Could not parse turn action");
+	 		}
+	 	}
+	 
+		function showPopUp(id) {
+			let overlay = document.getElementById(id);
+			
+			if(overlay != null) {
+				overlay.style.visibility = "visible";
+				overlay.style.opacity = 1;
+			} else {
+				console.error("Could not find popup with id: " + id);
+			}
+		}
+		
+		function hidePopUp(id) {
+			let overlay = document.getElementById(id);
+			
+			if(overlay != null) {
+				overlay.style.visibility = "hidden";
+				overlay.style.opacity = 0;
+			} else {
+				console.error("Could not find popup with id: " + id);
+			}
+		}
+		
+		function closeOpenPopUp(id1, id2) {
+			hidePopUp(id1);
+			showPopUp(id2);
+		}
+	 </script>
 	 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	
@@ -322,9 +418,17 @@
 					}, velocity);
 				}
 			} else {
+				parsePopUp(true);
+				
 				let endTurnButton = document.getElementById('endTurnButton');
+				let showActionButton = document.getElementById('showActionButton');
+				
 				if(endTurnButton != null) {
 					endTurnButton.disabled = "";
+				}
+				
+				if(showActionButton != null) {
+					showActionButton.disabled = "";
 				}
 			}
 			

@@ -42,9 +42,9 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 	void updatePlayerRelation(@Param("userId") Integer id);
 	
 	@Query(nativeQuery = true, 
-		   value = "SELECT name FROM streets WHERE game_id = :gameId AND owner = :playerId UNION"
-		   		+ " SELECT name FROM companies WHERE game_id = :gameId AND owner = :playerId UNION"
-		   		+ " SELECT name FROM stations WHERE game_id = :gameId AND owner = :playerId")
+		   value = "SELECT name FROM streets WHERE game = :gameId AND owner = :playerId UNION"
+		   		+ " SELECT name FROM companies WHERE game = :gameId AND owner = :playerId UNION"
+		   		+ " SELECT name FROM stations WHERE game = :gameId AND owner = :playerId")
 	List<String> findAllPropertyNamesByPlayer(@Param("gameId") Integer gameId, @Param("playerId") Integer playerId);
 	 
 }

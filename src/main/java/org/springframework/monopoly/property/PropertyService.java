@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,14 @@ public class PropertyService {
 	private StreetRepository streetRepository;
 	private CompanyRepository companyRepository;
 	private StationRepository stationRepository;
+	private PlayerRepository playerRepository;
 	
 	@Autowired
-	public PropertyService(StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository) {
+	public PropertyService(StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository , PlayerRepository playerRepository) {
 		this.streetRepository = streetRepository;
 		this.companyRepository = companyRepository;
 		this.stationRepository = stationRepository;
+		this.playerRepository = playerRepository;
 	}	
 
 	public Object getProperty(Integer idProperty, Integer idGame) {
@@ -99,7 +102,7 @@ public class PropertyService {
 
 	private Integer payStreet(Property property) {
 		Street street = (Street)property;
-		Boolean b = streetRepository.findStreetByColor(street.getColor().toString(), street.getGame().getId()).stream().allMatch(x -> x.getOwner() == street.getOwner());
+		Boolean b = streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream().allMatch(x -> x.getOwner() == street.getOwner());
 		if(b) {
 			if(street.getHaveHotel()) {
 				return street.getRentalHotel();
@@ -130,9 +133,23 @@ public class PropertyService {
 		return company.getRentalPrice() * n; // falta multiplicarlo por la tirada específica para las compañias
 	}
 	
-	//TODO
-	private void mortgageProperty(Turn turn) {
 
+	private void mortgageProperty(Turn turn) {
+		Integer buildingMoney = 0;
+		if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
+			Street street = (Street)streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId());	
+		if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(street.getName())) {
+			if(street.getHaveHotel()) {
+				buildingMoney += street.getBuildingPrice();
+			}else if(street.getHouseNum() > 0) {
+				buildingMoney += street.getBuildingPrice() * street.getHouseNum();
+			}
+			
+			turn.getPlayer().setMoney(turn.getPlayer().getMoney() + street.getMortagePrice() + buildingMoney);
+			street.setIsMortage(true);
+			street.setPrice(street.getMortagePrice());
+		}
+	}
 	}
 			
 
