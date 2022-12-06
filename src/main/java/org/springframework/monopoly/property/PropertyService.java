@@ -2,7 +2,10 @@ package org.springframework.monopoly.property;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
@@ -24,6 +27,20 @@ public class PropertyService {
 		this.stationRepository = stationRepository;
 		this.playerRepository = playerRepository;
 	}	
+	
+	@Transactional
+	public void saveProperty(Object property) throws DataAccessException {
+		Property p = (Property) property;
+		Integer idProperty = p.getId();
+		Integer idGame = p.getGame().getId();
+		if (streetRepository.findStreetById(idProperty, idGame) !=null ) {
+			streetRepository.save((Street) p);
+		} else if(companyRepository.findCompanyById(idProperty, idGame) != null) {
+			companyRepository.save((Company) p);
+		} else if (stationRepository.findStationById(idProperty, idGame) != null) {
+			stationRepository.save((Station) p);
+		}
+	}
 
 	public Object getProperty(Integer idProperty, Integer idGame) {
 		if (streetRepository.findStreetById(idProperty, idGame) !=null ) {
@@ -81,6 +98,9 @@ public class PropertyService {
 	public void buyPropertyById(Property property, Turn turn) {	
 			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - property.getPrice());
 			property.setOwner(turn.getPlayer());
+			saveProperty(property);
+			playerRepository.save(turn.getPlayer());
+
 	}
 
 	public Integer getRentalPrice(Property property) {
@@ -97,7 +117,9 @@ public class PropertyService {
 	
 	public void payPropertyById(Property property, Turn turn) {
 			turn.getPlayer().setMoney(turn.getPlayer().getMoney() - getRentalPrice(property));
-			property.getOwner().setMoney(property.getOwner().getMoney() + getRentalPrice(property));	
+			property.getOwner().setMoney(property.getOwner().getMoney() + getRentalPrice(property));
+			playerRepository.save(turn.getPlayer());
+			playerRepository.save(property.getOwner());
 	}
 
 	private Integer payStreet(Property property) {
@@ -138,18 +160,18 @@ public class PropertyService {
 		Integer buildingMoney = 0;
 		if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
 			Street street = (Street)streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId());	
-		if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(street.getName())) {
-			if(street.getHaveHotel()) {
-				buildingMoney += street.getBuildingPrice();
-			}else if(street.getHouseNum() > 0) {
-				buildingMoney += street.getBuildingPrice() * street.getHouseNum();
+			if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(street.getName())) {
+				if(street.getHaveHotel()) {
+					buildingMoney += street.getBuildingPrice();
+				}else if(street.getHouseNum() > 0) {
+					buildingMoney += street.getBuildingPrice() * street.getHouseNum();
+				}
+				
+				turn.getPlayer().setMoney(turn.getPlayer().getMoney() + street.getMortagePrice() + buildingMoney);
+				street.setIsMortage(true);
+				street.setPrice(street.getMortagePrice());
 			}
-			
-			turn.getPlayer().setMoney(turn.getPlayer().getMoney() + street.getMortagePrice() + buildingMoney);
-			street.setIsMortage(true);
-			street.setPrice(street.getMortagePrice());
 		}
-	}
 	}
 			
 
