@@ -21,27 +21,21 @@ import lombok.Setter;
 public abstract class Property extends Tile {
 	
 	@Column(name = "name")
-	@NotBlank
 	private String name;
 	
 	@Column(name = "price")
-	@NotBlank
 	private Integer price;
 
 	@Column(name = "rental_price")
-	@NotBlank
 	private Integer rentalPrice;
 
 	@Column(name = "mortage_price")
-	@NotBlank
 	private Integer mortagePrice;
 
 	@Column(name = "is_mortage")
-	@NotBlank
 	private Boolean isMortage;
 	
 	@Column(name = "badge_Image")
-	@NotBlank
 	private String badgeImage;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
