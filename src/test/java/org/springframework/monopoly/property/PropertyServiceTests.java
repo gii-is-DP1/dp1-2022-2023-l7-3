@@ -61,7 +61,7 @@ public class PropertyServiceTests {
 	void shouldBuyProperty() {
 		this.propertyService.setActionProperty(turn);
 		assertThat(turn.getAction()).isEqualTo(Action.BUY);
-		this.propertyService.calculateActionProperty(turn);
+		this.propertyService.calculateActionProperty(turn, null);
 		assertThat(turn.getPlayer().getMoney()).isEqualTo(477);
 		Property property = (Property)this.propertyService.getProperty(turn.getFinalTile(), 2);
 		assertThat(property.getOwner()).isEqualTo(turn.getPlayer());
