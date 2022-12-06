@@ -12,6 +12,9 @@ import org.springframework.monopoly.player.Player;
 
 public interface GameRepository extends CrudRepository<Game, Integer> {
 
+	@Query("SELECT g FROM Game g WHERE g.id = :idparam")
+	Game findGameById(@Param("idparam")Integer id);
+
 	@Query(nativeQuery = true,
 			value = "SELECT * FROM "
 			+ "(SELECT players from game where id = :gameId) "
