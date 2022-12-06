@@ -96,11 +96,5 @@ public class CardService {
 	public void saveFree(Player player) {
 		player.setHasExitGate(true);
 	}
-	
-	@Transactional
-	public void useFree(Player player) {
-		player.setIsJailed(false);
-		player.setHasExitGate(false);
-	}
 		
 }

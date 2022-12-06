@@ -36,7 +36,8 @@ public class TaxesService {
 		}
 		return res;
 	}
-
+	
+	@Transactional
 	public Optional<Taxes> findTaxesByGameId(Integer gameId, Integer tileId) {
 		return taxesRepository.findTaxesByGameId(gameId, tileId);
 	}

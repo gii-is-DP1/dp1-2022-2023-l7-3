@@ -77,7 +77,7 @@ public class TurnService {
 	
 	//el get roll devuelve un integer suma
 
-	private Pair<Integer, Boolean> getRoll() {
+	public Pair<Integer, Boolean> getRoll() {
 		Integer roll1 = random.ints(1, 7).findFirst().getAsInt();
 		Integer roll2 = random.ints(1, 7).findFirst().getAsInt();
 		return Pair.of(roll1 + roll2, roll1.equals(roll2));
