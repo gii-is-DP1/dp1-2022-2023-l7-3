@@ -29,12 +29,18 @@
 	<div class="gamePopUp" id="mergeBuilding">
 		<monopoly:mergeBuilding/>
 	</div>
+	
+	<div class="gamePopUp" id="exitJail">
+		<monopoly:exitJail/>
+	</div>
+	
 	<a class="popUpButtons">
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;buyPopUp&quot)">Sample comprar Propiedad</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;wantToBuildPopUp&quot)">Sample construir</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;haveToPay&quot)">Sample tener que pagar</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;auctionBuilding&quot)">Sample subasta</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;mergeBuilding&quot)">Sample hipoteca</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;exitJail&quot)">Sample salir carcel</button>
 	</a>
 </monopoly:layout>
 
