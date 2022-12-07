@@ -22,6 +22,8 @@ import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
+import org.springframework.monopoly.tile.TaxesService;
+import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.tile.ExitGateForm;
 import org.springframework.monopoly.tile.TileService;
 import org.springframework.monopoly.turn.Turn;
@@ -52,18 +54,19 @@ public class GameController {
 	private TurnService turnService;
 	private StreetService streetService;
 	private PropertyService propertyService;
+	private TaxesService taxesService;
 	private TileService tileService;
- 	
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService, PropertyService propertyService, TileService tileService) {
+			StreetService streetService, PropertyService propertyService, TaxesService taxesService, TileService tileService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
 		this.streetService = streetService;
 		this.propertyService = propertyService;
+		this.taxesService = taxesService;
 		this.tileService = tileService;
 	}
 
@@ -179,6 +182,7 @@ public class GameController {
 //			savedGame = gameService.saveGame(savedGame);
 			savedGame = gameService.setProperties(savedGame);
 			savedGame = gameService.saveGame(savedGame);
+			gameService.setTiles(savedGame); // Caution: Saves new tiles directly to database
 			
 			Street s = savedGame.getStreets().stream().findFirst().orElse(null);
 			streetService.findStreet(s.equals(null) ? null : s.getId(), savedGame.getId());
@@ -242,35 +246,26 @@ public class GameController {
 		
 		model.addAttribute("Game", game);
 		model.addAttribute("Turn", turn);
-		model.addAttribute("Players", players);
+		model.addAttribute("Players", players); 
+		 
+		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
+		if(turn.getAction().equals(Action.PAY_TAX)) {
+			model.addAttribute("taxes", taxesService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
+		} 
 		
 		// Temporal for debugging purposes
-		isPlaying = true; 
+//		isPlaying = true; 
 		
 		// To show the end turn button and popups if there is any
-		model.addAttribute("isPlaying", isPlaying);
+		model.addAttribute("isPlaying", isPlaying); 
 		
 
 		//esto es una query de todos los nombre
 		List<List<String>> properties = new ArrayList<List<String>>();
 		for(Player p:players) {
 			properties.add(playerService.findPlayerPropertiesNames(p));
-		}
+		} 
 
-		// public List<Property> getProperties() {
-		// 	List<Property> res = new ArrayList<Property>();
-		// 	for(Street s:this.getStreets()) {
-		// 		res.add((Property) s);
-		// 	}
-		// 	for(Company c:this.getCompanies()) {
-		// 		res.add((Property) c);
-		// 	}
-		// 	for(Station st:this.getStations()) {
-		// 		res.add((Property) st);
-		// 	}
-		// 	return res;
-		// }
-		    
 		model.addAttribute("Properties", properties);
 		    
 		// Street colors
@@ -282,7 +277,7 @@ public class GameController {
  		model.addAttribute("Colors", colors);
    		
 		return GAME_MAIN;
-	} 
+	}  
 	
 	@GetMapping(value = "/game/{gameId}/evalTurn")
 	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {

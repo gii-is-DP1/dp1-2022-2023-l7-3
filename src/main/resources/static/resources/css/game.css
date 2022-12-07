@@ -87,7 +87,7 @@
   	left: 25%;
   	right: 25%;
   	position: relative;
-	transition: all 5s ease-in-out;
+	transition: visibility 5s ease-in-out, opacity 5s ease-in-out;
   	
   	max-height: 700px;
   	
@@ -182,16 +182,11 @@
 
 .propertyTxt{
 	padding:10px;
-	display: inherit;
+	/* display: inherit; */
 	margin: inherit;
 	text-align: center;
-}
-
-.propertyTxt2{
-	padding:0px;
-	display: inherit;
-	margin: inherit;
-	text-align: center;
+	
+	display: block;
 }
 
 .propertyImg{
@@ -199,13 +194,6 @@
 	display: inherit;
 	margin: inherit;
 	scale: 90%;
-}
-
-.propertyImg2{
-	padding:10px;
-	display: inherit;
-	margin: inherit;
-	scale: 70%;
 }
 
 .constructorImg{
@@ -232,38 +220,6 @@
     font-size: 20px;
     font-weight: bold;
 	display: table-cell;
-	margin-right: 2px;
-	margin-left: 2px;
-}
-
-.popUpButton2 {
-    height: 50px;
-    width: 170px;
-    background-color: #47525e;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
-	display: table-cell;
-	margin-right: 2px;
-	margin-left: 2px;
-}
-
-.popUpDangerButton {
-    height: 50px;
-    width: 170px;
-    background-color: #c70008;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: bold;
-	display: table-cell;
-	margin-right: 2px;
-	margin-left: 2px;
 }
 
 .popUpSampleButton{

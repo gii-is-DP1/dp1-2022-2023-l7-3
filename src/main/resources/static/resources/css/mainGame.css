@@ -194,6 +194,10 @@
 .secondColumn {
 	height: 100%;
 	width: 36%;
+	overflow: auto;
+	
+	min-height: 600px;
+	min-width: 600px;
 	
 	display: flex;
 	flex-direction: column;
@@ -206,4 +210,22 @@
 	width: 30px;
 }
 
+.boardTextDiv {
+	overflow: auto;
+	padding-bottom: 20px;
+}
+
+#boardText {
+	font-size: 24px;
+}
+
+.boardButtons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+.monodolarEmote {
+	height: 14px;
+}
 
