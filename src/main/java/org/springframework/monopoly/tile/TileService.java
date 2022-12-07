@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.card.Card;
 import org.springframework.monopoly.card.CardService;
+import org.springframework.monopoly.card.CardType;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
@@ -43,13 +44,13 @@ public class TileService {
 		Integer gameId = turn.getGame().getId();
 		Integer tileId = turn.getFinalTile();
 		if (cBoxRepository.findCBByGameId(gameId, tileId).isPresent()) {
-			Card card = getCard(turn, "COMMUNITY_BOX");
+			Card card = getCard(turn, CardType.COMMUNITY_CARD);
 			turn.setAction(Action.DRAW_CARD);
 			turn.setActionCardId(card.getId());
 		} else if (gRepository.findGenericByGameId(gameId, tileId).isPresent()) {
 			this.genericService.genericTile(turn);
 		} else if (luckRepository.findLuckByGameId(gameId, tileId).isPresent()) {
-			Card card = getCard(turn, "LUCK");
+			Card card = getCard(turn, CardType.LUCK);
 			turn.setAction(Action.DRAW_CARD);
 			turn.setActionCardId(card.getId());
 		} else if (taxesService.findTaxesByGameId(gameId, tileId).isPresent()) {
@@ -115,7 +116,7 @@ public class TileService {
 		}
 	}
 
-	public Card getCard(Turn turn, String type) {
+	public Card getCard(Turn turn, CardType type) {
 		Random rand = new Random();
 		List<Card> communityCards = cardService.findTypeCards(type);
 		for(Player p : turn.getGame().getPlayers()) {
