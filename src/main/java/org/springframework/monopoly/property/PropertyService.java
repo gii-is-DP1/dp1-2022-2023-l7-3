@@ -44,6 +44,16 @@ public class PropertyService {
 		}
 	}
 
+	@Transactional()
+	public List<Color> findPlayerColors(Integer gameId, Integer playerId) throws DataAccessException {
+		return streetRepository.findPlayerColors(gameId, playerId);
+	}
+
+	@Transactional()
+	public List<Street> findStreetByColor(Color color, Integer gameId) throws DataAccessException {
+		return streetRepository.findStreetByColor(color, gameId);
+	}
+
 	public Object getProperty(Integer idProperty, Integer idGame) {
 		if (streetRepository.findStreetById(idProperty, idGame) !=null ) {
 			return streetRepository.findStreetById(idProperty, idGame);
