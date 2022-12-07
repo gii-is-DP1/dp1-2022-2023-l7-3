@@ -19,6 +19,7 @@ import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
 import org.springframework.monopoly.property.AuctionForm;
 import org.springframework.monopoly.property.Color;
+import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
@@ -68,10 +69,18 @@ public class GameController {
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
 		Integer idProperty = 12;
 		Integer idGame = 2;
+		Integer idPlayer = 5;
 		Object property = propertyService.getProperty(idProperty, idGame);
 		List<Integer> players = gameService.findGame(idGame).get().getPlayers().stream().map(p-> p.getId()).collect(Collectors.toList());
 		Player player = playerService.findPlayerById(players.get(0));
 		Auction auction = new Auction(0, players, 10, 0, idProperty); 
+		List<Color> colors= propertyService.findPlayerColors(idGame, idPlayer);
+		List<Property> properties= new ArrayList<>();
+		for (Color c: colors) {
+			propertyService.findStreetByColor(c, idGame).forEach(x -> properties.add(x));;
+		}
+
+		model.put("properties", properties );
 		model.put("property", property );
 		model.put("auction", auction);
 		model.put("player", player);
