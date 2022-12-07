@@ -17,7 +17,6 @@ import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
-import org.springframework.monopoly.property.AuctionForm;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
@@ -89,20 +88,21 @@ public class GameController {
 	}
 	
 	@PostMapping(value = "/blankGame")
-	public String auction( AuctionForm auction, Map<String, Object> model, Authentication authentication) {
+	public String auction( Auction auction, Map<String, Object> model, Authentication authentication) {
 		Integer idGame = 2;
 		Object property = propertyService.getProperty(auction.getPropertyId(), idGame);
-		Auction oldAuction = new Auction(auction.getPlayerIndex(), auction.getRemainingPlayers(), auction.getCurrentBid(), auction.getPlayerBid(), auction.getPropertyId());
-		Auction newAuction = propertyService.auctionPropertyById(oldAuction);
-		if(newAuction == null) {
+		Auction newAuction = propertyService.auctionPropertyById(auction);
+		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
+			//propertyService.setAuctionWinner(newAuction, turnService.findLastTurn(idGame).get());
 			return GAMES_LISTING;
 		}
 		model.put("property", property );
 		model.put("auction", newAuction);
-		model.put("player", playerService.findPlayerById(newAuction.getPlayerIndex()));
+		model.put("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
 		
 		return BLANK_GAME;
 	}
+
 	
 	@GetMapping(value = "/newGame")
 	public String newGame(Map<String, Object> model, Authentication authentication) {
