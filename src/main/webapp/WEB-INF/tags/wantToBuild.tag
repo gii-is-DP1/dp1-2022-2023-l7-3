@@ -13,5 +13,5 @@
 
 	<a class="popUpButtons">
 		<button type="button" onclick="closeOpenPopUp(&quot;wantToBuildPopUp&quot, &quot;buildBuildingsPopUp&quot)" class="popUpButton">Yes</button>
-		<!-- <button onclick="hidePopUp(&quot;wantToBuildPopUp&quot)" class="popUpButton">No</button> -->
+		<button onclick="hidePopUp(&quot;wantToBuildPopUp&quot)" class="popUpButton">No</button>
 	</a>
