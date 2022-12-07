@@ -427,3 +427,10 @@
 	width: 10vh;
 }
 
+.JailImg{
+	padding: 10px;
+	display: inherit;
+	margin: inherit;
+	scale: 50%;
+}
+

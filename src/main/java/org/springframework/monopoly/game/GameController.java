@@ -22,6 +22,8 @@ import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
+import org.springframework.monopoly.tile.ExitGateForm;
+import org.springframework.monopoly.tile.TileService;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
@@ -50,17 +52,19 @@ public class GameController {
 	private TurnService turnService;
 	private StreetService streetService;
 	private PropertyService propertyService;
-	
+	private TileService tileService;
+ 	
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService, PropertyService propertyService) {
+			StreetService streetService, PropertyService propertyService, TileService tileService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
 		this.streetService = streetService;
 		this.propertyService = propertyService;
+		this.tileService = tileService;
 	}
 
 	//PROVISIONAL
@@ -78,12 +82,12 @@ public class GameController {
 		for (Color c: colors) {
 			propertyService.findStreetByColor(c, idGame).forEach(x -> properties.add(x));;
 		}
-
+		
 		model.put("properties", properties );
 		model.put("property", property );
 		model.put("auction", auction);
 		model.put("player", player);
-		
+
 		return BLANK_GAME;
 	}
 	
@@ -101,6 +105,15 @@ public class GameController {
 		model.put("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
 		
 		return BLANK_GAME;
+	}
+	
+	@PostMapping(value = "/exitGate")
+	public String getOutOfJail(ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
+		
+		Integer option = exitGateForm.getOption();
+		tileService.calculateActionTile(null, option);
+		
+		return GAMES_LISTING;
 	}
 
 	
