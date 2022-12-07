@@ -347,3 +347,83 @@
 	
 }
 
+.color2BROWN {
+	background-color: #804000;
+	border-style: solid;
+	border-color: #402000;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2BLUE {
+	background-color: blue;
+	border-style: solid;
+	border-color: #0000d5;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2GREEN {
+	background-color: green;
+	border-style: solid;
+	border-color: #005500;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2LIGHTBLUE {
+	background-color: #00ffff;
+	border-style: solid;
+	border-color: #008080;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2ORANGE {
+	background-color: orange;
+	border-style: solid;
+	border-color: #aa6f00;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2PINK {
+	background-color: pink;
+	border-style: solid;
+	border-color: #ff6a85;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2RED {
+	background-color: red;
+	border-style: solid;
+	border-color: #800000;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+
+.color2YELLOW {
+	background-color: yellow;
+	border-style: solid;
+	border-color: #808000;
+	border-width: 5px;
+	margin: auto;
+	height:3vh;
+	width: 10vh;
+}
+

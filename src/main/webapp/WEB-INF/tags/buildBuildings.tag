@@ -10,19 +10,26 @@
 	    <table id="propertiesTable" class="table table-striped">
         <thead>
         <tr>
-            <th>Color</th>
-            <th>Name</th>
+            <th style="font-size: 20px; text-align: center;">COLOR</th>
+            <th style="font-size: 20px; text-align: center;">NAME</th>
+            <th style="font-size: 20px; text-align: center;">NUM_HOUSE</th>
+            <th style="font-size: 20px; text-align: center;">HOTEL?</th>
         </tr>
         </thead>
         <tbody>
         <c:forEach items="${properties}" var="property">
             <tr>
                 <td>
-                    <c:out value="${property.color}"/>
-                    
+                    <div class="color2${property.color}">   </div>                    
                 </td>
                 <td>
-                <c:out value="${property.name}"/>  
+                    <c:out value="${property.name}"/>  
+                </td>
+                <td>
+                    <c:out value="${property.houseNum}"/>  
+                </td>
+                <td>
+                    <c:out value="${property.haveHotel}"/>  
                 </td>
             </tr>
         </c:forEach>
