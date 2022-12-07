@@ -28,9 +28,6 @@ public class Turn extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Action action;
 	
-//	@Column(name = "quantity")
-//	private Integer quantity;
-		
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
 	private Integer turnNumber;

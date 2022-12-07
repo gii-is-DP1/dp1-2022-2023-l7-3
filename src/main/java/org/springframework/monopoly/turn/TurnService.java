@@ -1,6 +1,7 @@
 package org.springframework.monopoly.turn;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.util.Pair;
 import org.springframework.monopoly.property.PropertyService;
+import org.springframework.monopoly.tile.TileService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +19,14 @@ public class TurnService {
 	private static Random random = new Random();
 	
 	private TurnRepository turnRepository;
-	private static PropertyService propertyService;
+	private PropertyService propertyService;
+	private TileService tileService;
 
 	@Autowired
-	public TurnService(TurnRepository turnRepository, PropertyService propertyService) {
+	public TurnService(TurnRepository turnRepository, PropertyService propertyService, TileService tileService) {
 		this.turnRepository = turnRepository;
-		TurnService.propertyService = propertyService;
+		this.propertyService = propertyService;
+		this.tileService = tileService;
 	}
 
 	@Transactional
@@ -48,12 +52,20 @@ public class TurnService {
 		turn.setRoll(roll.getFirst());
 		turn.setIsDoubles(roll.getSecond());
 		
+		// TEMP
+//		turn.setRoll(7);
+		if(!List.of(2,7,17,22,33,36).contains(turn.getFinalTile())) {
+		
 		// Llamada al metodo de property
-//		propertyService.setActionProperty(turn);
+		propertyService.setActionProperty(turn);
 		
 		// Llamada al metodo del resto de las tiles
 		if(turn.getAction() == null) {
-			
+			tileService.setActionTile(turn);
+		}
+		
+		} else {
+			turn.setAction(Action.DRAW_CARD);
 		}
 		
 		saveTurn(turn);
