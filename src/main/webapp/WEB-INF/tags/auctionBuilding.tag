@@ -6,8 +6,8 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-	<h1 class="propertyTxt">Do you want to bid <c:out value = "${player.user.username}"></c:out> ?</h1>
-	<h1 class="propertyTxt">Current Bid: <c:out value = "${auction.currentBid}"></c:out> M </h1>
+	<h1 class="propertyTxt2">Do you want to bid <c:out value = "${player.user.username}"></c:out> ?</h1>
+	<h1 class="propertyTxt2">Current Bid: <c:out value = "${auction.currentBid}"></c:out> M </h1>
 
 	
 	<a  class="propertyImg">
