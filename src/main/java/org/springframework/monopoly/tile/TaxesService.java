@@ -1,6 +1,7 @@
 package org.springframework.monopoly.tile;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.Player;
@@ -40,5 +41,15 @@ public class TaxesService {
 	@Transactional
 	public Optional<Taxes> findTaxesByGameId(Integer gameId, Integer tileId) {
 		return taxesRepository.findTaxesByGameId(gameId, tileId);
+	}
+	
+	@Transactional(readOnly = true)
+	public Set<Taxes> getBlankTaxes() {
+		return taxesRepository.findBlankTaxes();
+	}
+
+	@Transactional
+	public Taxes save(Taxes newTax) {
+		return taxesRepository.save(newTax);
 	}
 }

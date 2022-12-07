@@ -1,16 +1,16 @@
 package org.springframework.monopoly.tile;
 
 import java.util.Optional;
-
-import javax.transaction.Transactional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.stereotype.Service;
-import org.springframework.data.util.Pair;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GenericService {
@@ -35,6 +35,16 @@ public class GenericService {
 				turn.setAction(Action.NOTHING_HAPPENS);
 			}
 		}
+	}
+	
+	@Transactional(readOnly = true)
+	public Set<Generic> getBlankGenerics() {
+		return genericRepository.findBlankGenerics();
+	}
+
+	@Transactional
+	public Generic save(Generic newGeneric) {
+		return genericRepository.save(newGeneric);
 	}
 	
 	@Transactional
