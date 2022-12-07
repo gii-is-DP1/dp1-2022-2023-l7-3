@@ -88,7 +88,7 @@ public class PropertyService {
 		}
 	}
 
-	public void calculateActionProperty (Turn turn, Auction auction) {
+	public void calculateActionProperty (Turn turn) {
 		Property property = (Property) getProperty(turn.getFinalTile(), turn.getGame().getId());
 		switch (turn.getAction()) {
 			case BUY: 
@@ -214,5 +214,7 @@ public class PropertyService {
 		Property property = (Property) getProperty(auction.getPropertyId(), turn.getGame().getId());
 		property.setOwner(auctionWinner);
 		
+		playerRepository.save(auctionWinner);
+		saveProperty(property);
 	}
 }

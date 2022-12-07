@@ -62,7 +62,7 @@ public class PropertyServiceTests {
 		turn.setRoll(11);
 		this.propertyService.setActionProperty(turn);
 		assertThat(turn.getAction()).isEqualTo(Action.BUY);
-		this.propertyService.calculateActionProperty(turn, null);
+		this.propertyService.calculateActionProperty(turn);
 		assertThat(turn.getPlayer().getMoney()).isEqualTo(437);
 		Property property = (Property)this.propertyService.getProperty(turn.getFinalTile(), 2);
 		assertThat(property.getOwner()).isEqualTo(turn.getPlayer());
@@ -81,7 +81,7 @@ public class PropertyServiceTests {
 		turn.setRoll(8);
 		this.propertyService.setActionProperty(turn);
 		assertThat(turn.getAction()).isEqualTo(Action.PAY);
-		this.propertyService.calculateActionProperty(turn, null);
+		this.propertyService.calculateActionProperty(turn);
 		assertThat(turn.getPlayer().getMoney()).isEqualTo(487);
 		Property property = (Property)this.propertyService.getProperty(turn.getFinalTile(), 2);
 		assertThat(property.getOwner().getMoney()).isEqualTo(1583);
