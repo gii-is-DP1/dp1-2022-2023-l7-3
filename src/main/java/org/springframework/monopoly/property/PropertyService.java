@@ -10,6 +10,7 @@ import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.turn.TurnService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,9 +20,10 @@ public class PropertyService {
 	private CompanyRepository companyRepository;
 	private StationRepository stationRepository;
 	private PlayerRepository playerRepository;
+	private static TurnService turnService;
 	
 	@Autowired
-	public PropertyService(StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository , PlayerRepository playerRepository) {
+	public PropertyService( StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository , PlayerRepository playerRepository) {
 		this.streetRepository = streetRepository;
 		this.companyRepository = companyRepository;
 		this.stationRepository = stationRepository;
@@ -110,7 +112,7 @@ public class PropertyService {
 		}else if (stationRepository.findStationById(property.getId(),property.getGame().getId()) != null) {
 			n = payStation(property);
 		} else if (companyRepository.findCompanyById(property.getId(),property.getGame().getId()) != null) {
-			n = payCompany(property); //hay que hacer una tirada y pasarla como parametro
+			n = payCompany(property);
 		}
 		return n;
 	}
@@ -152,7 +154,7 @@ public class PropertyService {
 		Company company = (Company) property;
 		Integer n = 4;
 		if (companyRepository.findByOwner(company.getOwner().getId(),company.getGame().getId()).stream().count() == 2.) n = 10;
-		return company.getRentalPrice() * n; // falta multiplicarlo por la tirada específica para las compañias
+		return n * turnService.getRoll().getFirst();
 	}
 	
 

@@ -52,19 +52,47 @@ public class PropertyServiceTests {
 		turn.setId(10003);
 		turn.setPlayer(player);
 		turn.setInitial_tile(0);
-		turn.setRoll(6);
+		turn.setRoll(null);
 		
 		turn.setGame(game);
 	}
 	
 	@Test
 	void shouldBuyProperty() {
+		turn.setRoll(11);
 		this.propertyService.setActionProperty(turn);
 		assertThat(turn.getAction()).isEqualTo(Action.BUY);
 		this.propertyService.calculateActionProperty(turn, null);
-		assertThat(turn.getPlayer().getMoney()).isEqualTo(477);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(437);
 		Property property = (Property)this.propertyService.getProperty(turn.getFinalTile(), 2);
 		assertThat(property.getOwner()).isEqualTo(turn.getPlayer());
+	}
+
+	@Test
+	void shouldNotBuyProperty() {
+		turn.setRoll(11);
+		player.setMoney(2);
+		this.propertyService.setActionProperty(turn);
+		assertThat(turn.getAction()).isEqualTo(Action.AUCTION); //the player has no money so the property is auctioned
+	}
+
+	@Test
+	void shouldPayProperty() {
+		turn.setRoll(8);
+		this.propertyService.setActionProperty(turn);
+		assertThat(turn.getAction()).isEqualTo(Action.PAY);
+		this.propertyService.calculateActionProperty(turn, null);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(487);
+		Property property = (Property)this.propertyService.getProperty(turn.getFinalTile(), 2);
+		assertThat(property.getOwner().getMoney()).isEqualTo(1583);
+	}
+
+	@Test
+	void shouldNotPayProperty() {
+		turn.setRoll(6);
+		player.setMoney(2);
+		this.propertyService.setActionProperty(turn);
+		assertThat(turn.getAction()).isEqualTo(Action.MORTGAGE); //the player has no money so the property is mortgaged
 	}
 	
 	
