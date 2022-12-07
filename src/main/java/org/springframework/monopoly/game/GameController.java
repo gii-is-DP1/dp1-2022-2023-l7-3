@@ -17,13 +17,15 @@ import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
-import org.springframework.monopoly.property.AuctionForm;
 import org.springframework.monopoly.property.Color;
+import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.tile.TaxesService;
 import org.springframework.monopoly.turn.Action;
+import org.springframework.monopoly.tile.ExitGateForm;
+import org.springframework.monopoly.tile.TileService;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
@@ -53,11 +55,11 @@ public class GameController {
 	private StreetService streetService;
 	private PropertyService propertyService;
 	private TaxesService taxesService;
-	
+	private TileService tileService;
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService, PropertyService propertyService, TaxesService taxesService) {
+			StreetService streetService, PropertyService propertyService, TaxesService taxesService, TileService tileService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
@@ -65,6 +67,7 @@ public class GameController {
 		this.streetService = streetService;
 		this.propertyService = propertyService;
 		this.taxesService = taxesService;
+		this.tileService = tileService;
 	}
 
 	//PROVISIONAL
@@ -72,32 +75,50 @@ public class GameController {
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
 		Integer idProperty = 12;
 		Integer idGame = 2;
+		Integer idPlayer = 5;
 		Object property = propertyService.getProperty(idProperty, idGame);
 		List<Integer> players = gameService.findGame(idGame).get().getPlayers().stream().map(p-> p.getId()).collect(Collectors.toList());
 		Player player = playerService.findPlayerById(players.get(0));
 		Auction auction = new Auction(0, players, 10, 0, idProperty); 
+		List<Color> colors= propertyService.findPlayerColors(idGame, idPlayer);
+		List<Property> properties= new ArrayList<>();
+		for (Color c: colors) {
+			propertyService.findStreetByColor(c, idGame).forEach(x -> properties.add(x));;
+		}
+		
+		model.put("properties", properties );
 		model.put("property", property );
 		model.put("auction", auction);
 		model.put("player", player);
-		
+
 		return BLANK_GAME;
 	}
 	
 	@PostMapping(value = "/blankGame")
-	public String auction( AuctionForm auction, Map<String, Object> model, Authentication authentication) {
+	public String auction( Auction auction, Map<String, Object> model, Authentication authentication) {
 		Integer idGame = 2;
 		Object property = propertyService.getProperty(auction.getPropertyId(), idGame);
-		Auction oldAuction = new Auction(auction.getPlayerIndex(), auction.getRemainingPlayers(), auction.getCurrentBid(), auction.getPlayerBid(), auction.getPropertyId());
-		Auction newAuction = propertyService.auctionPropertyById(oldAuction);
-		if(newAuction == null) {
+		Auction newAuction = propertyService.auctionPropertyById(auction);
+		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
+			//propertyService.setAuctionWinner(newAuction, turnService.findLastTurn(idGame).get());
 			return GAMES_LISTING;
 		}
 		model.put("property", property );
 		model.put("auction", newAuction);
-		model.put("player", playerService.findPlayerById(newAuction.getPlayerIndex()));
+		model.put("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
 		
 		return BLANK_GAME;
 	}
+	
+	@PostMapping(value = "/exitGate")
+	public String getOutOfJail(ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
+		
+		Integer option = exitGateForm.getOption();
+		tileService.calculateActionTile(null, option);
+		
+		return GAMES_LISTING;
+	}
+
 	
 	@GetMapping(value = "/newGame")
 	public String newGame(Map<String, Object> model, Authentication authentication) {
