@@ -155,7 +155,7 @@
 					<div class="properties">
 						<p> Properties </p>
 						<c:if test="${!Properties.get(1).isEmpty()}">
-							<c:forEach items="${Properties.get(2)}" var="property">
+							<c:forEach items="${Properties.get(1)}" var="property">
 								<span>${property}</span>
 							</c:forEach>
 						</c:if>
@@ -279,13 +279,13 @@
 	
 	 -->
 	 <c:if test="${Turn.action == 'PAY'}">
-		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="pay">
+		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="property">
 		 	<monopoly:haveToPay/>
 		 </monopoly:popup>
 	 </c:if>
 
 	 <c:if test="${Turn.action == 'BUY'}">
-		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="buy" formModelAttribute="Boolean">
+		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="property">
 		 	<monopoly:buyBuildings/>
 		 </monopoly:popup>
 	 </c:if>
@@ -431,7 +431,7 @@
 					}, velocity);
 				}
 			} else {
-				if('${isPlaying}' == 'true') {
+				if('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false') {
 					parsePopUp(true);
 					
 					let showActionButton = document.getElementById('showActionButton');
@@ -447,6 +447,7 @@
 					endTurnButton.disabled = "";
 				}
 				
+				ajaxStartScanningForChanges();
 			}
 			
 		}
@@ -643,6 +644,21 @@
 				
 				cardImg.addEventListener("click", cardZoomListener);
 			}
+		}
+	</script>
+	
+	<script>
+		function ajaxStartScanningForChanges() {
+			var auto_refresh = setInterval(
+				  function() {
+				    $.get('/game/${Game.id}/version').done(function(reply) {
+				    	console.log(reply);
+				        if (reply <= parseInt("${Version}")) {
+				            return;
+				        }
+				        location.reload();
+				    });
+				  }, 2000);
 		}
 	</script>
 	

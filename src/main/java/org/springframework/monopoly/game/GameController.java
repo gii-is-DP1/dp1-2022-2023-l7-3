@@ -247,6 +247,7 @@ public class GameController {
 		model.addAttribute("Game", game);
 		model.addAttribute("Turn", turn);
 		model.addAttribute("Players", players); 
+		model.addAttribute("Version", game.getVersion());
 		 
 		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
 		if(turn.getAction().equals(Action.PAY_TAX)) {
@@ -277,46 +278,67 @@ public class GameController {
  		model.addAttribute("Colors", colors);
    		
 		return GAME_MAIN;
-	}  
+	} 
 	
-	@GetMapping(value = "/game/{gameId}/evalTurn")
-	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {
+	// Temporarily commented just in case
+	
+//	@GetMapping(value = "/game/{gameId}/evalTurn")
+//	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {
+//		
+//		// Get user that made the request
+//		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
+//		
+//		// Get the user of the turn that is being played
+//		User turnUser = null;
+//		try {
+//			Turn lastTurn = turnService.findLastTurn(gameId).get();
+//			turnUser = lastTurn.getPlayer().getUser();
+//		} catch (Exception e) {
+//			return "redirect:/game/" + gameId;
+//		}
+//		
+//		// If the user is the turn user continue
+//		if(requestUserId == turnUser.getId()) {
+//			// Calcultate turn results
+//			
+//			// Load model with everything necessary
+//			
+//			return loadGame(gameId, auth, model);
+//		} else {
+//			return "redirect:/game/" + gameId;
+//		}
+//	}
+	
+	@PostMapping(value = "/game/{gameId}/property")
+	public String evalTurnActionProperty(@PathVariable("gameId") int gameId, Boolean formValue, Authentication auth, Model model) throws Exception {
+		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		
-		// Get user that made the request
-		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
-		
-		// Get the user of the turn that is being played
-		User turnUser = null;
-		try {
-			Turn lastTurn = turnService.findLastTurn(gameId).get();
-			turnUser = lastTurn.getPlayer().getUser();
-		} catch (Exception e) {
-			return "redirect:/game/" + gameId;
+		if(lastTurn != null) {
+			turnService.evaluateTurn(lastTurn, formValue);
 		}
 		
-		// If the user is the turn user continue
-		if(requestUserId == turnUser.getId()) {
-			// Calcultate turn results
-			
-			// Load model with everything necessary
-			
-			return loadGame(gameId, auth, model);
-		} else {
-			return "redirect:/game/" + gameId;
-		}
-	}
+		return "redirect:/game/" + gameId;
+	} 
 	
-	// TODO start thinking on this
 	@GetMapping(value = "/game/{gameId}/endTurn")
 	public String endTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		Turn turn = turnService.findLastTurn(gameId).get();
 		User requestUser = userService.findUserByName(auth.getName());
+		Game game = gameService.findGame(gameId).get();
 		
 		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
+			
+			if(!turn.getIsActionEvaluated()) {
+				turnService.evaluateTurn(turn, false);
+			}
+			
 			turn.setIsFinished(true);
 			
-			turn.getPlayer().setTile(turn.getInitial_tile()+turn.getRoll());
+			turn.getPlayer().setTile(turn.getFinalTile());
 			playerService.savePlayer(turn.getPlayer());
+			
+			game.setVersion(game.getVersion() + 1);
+			gameService.saveGame(game);
 			
 			turnService.saveTurn(turn);
 		}
