@@ -4,6 +4,6 @@
 
 
 <h1 class="propertyTxt">Oh no...! It's "${property.owner}'s" property, you have to pay... </h1>
-<a  class="propertyImg">
+<div  class="propertyImg">
 <img id="cardImg" alt="Card image" src="${property.badgeImage}">
-</a>
+</div>
