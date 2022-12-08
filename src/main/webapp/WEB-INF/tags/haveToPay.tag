@@ -3,8 +3,6 @@
 <%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags"%>
 
 
-<h1 class="propertyTxt">Oh no...! It's PLAYER's property, you have to pay... </h1>
+<h1 class="propertyTxt">Oh no...! It's "${property.owner}'s" property, you have to pay... </h1>
 
-<a  class="propertyImg" href="${cardUrl}">
-	<img  alt="Card image" src="/resources/images/00.png">
-</a>
+<img id="cardImg" alt="Card image" src="${property.badgeImage}">
