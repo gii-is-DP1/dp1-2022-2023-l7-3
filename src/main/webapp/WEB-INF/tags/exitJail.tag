@@ -11,7 +11,7 @@
 	<a  class="JailImg" href="${cardUrl}">
 		<img  alt="Jail image" src="/resources/images/Jail.png">	
 	</a>
-	
+
 	<form:form modelAttribute="exitGate" id = "ExitGateForm" action = "/exitGate">
 		<input type="hidden" name="option" value="${0}"/>
 	
