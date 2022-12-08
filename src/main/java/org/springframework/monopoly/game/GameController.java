@@ -13,6 +13,8 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.monopoly.card.Card;
+import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
@@ -22,10 +24,10 @@ import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
-import org.springframework.monopoly.tile.TaxesService;
-import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.tile.ExitGateForm;
+import org.springframework.monopoly.tile.TaxesService;
 import org.springframework.monopoly.tile.TileService;
+import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
@@ -56,10 +58,12 @@ public class GameController {
 	private PropertyService propertyService;
 	private TaxesService taxesService;
 	private TileService tileService;
+	private CardService cardService;
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService, PropertyService propertyService, TaxesService taxesService, TileService tileService) {
+			StreetService streetService, PropertyService propertyService, TaxesService taxesService, TileService tileService,
+			CardService cardService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
@@ -68,6 +72,7 @@ public class GameController {
 		this.propertyService = propertyService;
 		this.taxesService = taxesService;
 		this.tileService = tileService;
+		this.cardService = cardService;
 	}
 
 	//PROVISIONAL
@@ -248,20 +253,23 @@ public class GameController {
 		model.addAttribute("Turn", turn);
 		model.addAttribute("Players", players); 
 		model.addAttribute("Version", game.getVersion());
+		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
+		
 		 
 		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
 		if(turn.getAction().equals(Action.PAY_TAX)) {
 			model.addAttribute("taxes", taxesService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
-		} 
-		
-		// Temporal for debugging purposes
-//		isPlaying = true; 
+		} else if(turn.getAction().equals(Action.DRAW_CARD)) {
+			Card card = cardService.findCardById(turn.getActionCardId()).orElse(null);
+			if(card != null) {
+				model.addAttribute("drawCardSource", card.getBadgeImage());
+			} 
+		}
 		
 		// To show the end turn button and popups if there is any
 		model.addAttribute("isPlaying", isPlaying); 
-		
 
-		//esto es una query de todos los nombre
+		// Query the names of the properties of every player 
 		List<List<String>> properties = new ArrayList<List<String>>();
 		for(Player p:players) {
 			properties.add(playerService.findPlayerPropertiesNames(p));
@@ -269,8 +277,7 @@ public class GameController {
 
 		model.addAttribute("Properties", properties);
 		    
-		// Street colors
-		// hacer esto de otra forma aparte
+		// Complete street colors
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
 			colors.add(streetService.findPlayerColors(p));
@@ -309,8 +316,8 @@ public class GameController {
 //		}
 //	}
 	
-	@PostMapping(value = "/game/{gameId}/property")
-	public String evalTurnActionProperty(@PathVariable("gameId") int gameId, Boolean formValue, Authentication auth, Model model) throws Exception {
+	@PostMapping(value = "/game/{gameId}/tileAction")
+	public String evalTurnAction(@PathVariable("gameId") int gameId, Boolean formValue, Authentication auth, Model model) throws Exception {
 		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		
 		if(lastTurn != null) {

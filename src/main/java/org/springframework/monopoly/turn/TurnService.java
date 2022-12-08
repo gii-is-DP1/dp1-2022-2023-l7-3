@@ -85,8 +85,6 @@ public class TurnService {
 		saveTurn(turn);
 	}
 	
-	//el get roll devuelve un integer suma
-
 	public Pair<Integer, Boolean> getRoll() {
 		Integer roll1 = random.ints(1, 7).findFirst().getAsInt();
 		Integer roll2 = random.ints(1, 7).findFirst().getAsInt();

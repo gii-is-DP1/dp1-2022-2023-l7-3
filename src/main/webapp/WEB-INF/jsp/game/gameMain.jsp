@@ -133,6 +133,7 @@
 		
 		<div class="secondColumn">
 			<div class="boardTextDiv">
+				<p> It's ${CurrentUser}'s turn </p>
 				<p id="boardText"></p>
 			</div>
 			<canvas id="Board" width="600" height="600"></canvas>
@@ -279,13 +280,13 @@
 	
 	 -->
 	 <c:if test="${Turn.action == 'PAY'}">
-		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="property">
+		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:haveToPay/>
 		 </monopoly:popup>
 	 </c:if>
 
 	 <c:if test="${Turn.action == 'BUY'}">
-		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="property">
+		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:buyBuildings/>
 		 </monopoly:popup>
 	 </c:if>
@@ -309,9 +310,15 @@
 	 </c:if>
 	 
 	 <!-- Action for this thing ? -->
-	 <c:if test="${Turn.action == 'NOTHING_HAPPENS'}">
+	 <c:if test="${Turn.action == 'MORTGAGE'}">
 		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
 		 	<monopoly:mergeBuilding/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'DRAW_CARD'}">
+		 <monopoly:popup popUpId="drawCard" gameId="${Game.id}" popUpPostFormAction="tileAction">
+		 	<monopoly:showCard/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -332,6 +339,7 @@
 	 		switch(action){
 	 		// Property actions
 	 		case "PAY":
+	 			setCardZoomListener();
 	 			result("haveToPay");
 	 			break;
 	 		case "BUY":
@@ -349,7 +357,8 @@
 	 			setBoardText("You landed on a taxes tile so you pay ${taxes.price} " + monodolarEmote + " .");
 	 			break;
 	 		case "DRAW_CARD":
-	 			console.log(action + " still not implemented");
+	 			setCardZoomListener();
+	 			result("drawCard");
 	 			break;
 	 		case "NOTHING_HAPPENS":
 	 			break;
@@ -431,7 +440,7 @@
 					}, velocity);
 				}
 			} else {
-				if('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false') {
+				if('${Turn.action}' == 'DRAW_CARD' || ('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
 					parsePopUp(true);
 					
 					let showActionButton = document.getElementById('showActionButton');

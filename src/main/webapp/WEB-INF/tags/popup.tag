@@ -35,8 +35,8 @@
 		</c:choose>
 		
 		<c:choose>
-			<c:when test="${popUpId == 'haveToPay'}">
-				<button class="mainButtonStyle" type="button" onclick="setFormInput('true')"> Pay </button>
+			<c:when test="${popUpId == 'haveToPay' || (popUpId == 'drawCard' && '${isPlaying}' == 'true')}">
+				<button class="mainButtonStyle" type="button" onclick="setFormInput('true')"> Close </button>
 			</c:when>
 			
 			<c:otherwise>
