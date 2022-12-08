@@ -182,10 +182,10 @@
 
 .propertyTxt{
 	padding:0px;
-	display: inherit;
+	/*display: inherit;*/
 	margin: inherit;
 	text-align: center;
-	/*display: block;*/
+	display: block;
 }
 
 .propertyTxt2{

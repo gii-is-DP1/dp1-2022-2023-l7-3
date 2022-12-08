@@ -133,6 +133,7 @@
 		
 		<div class="secondColumn">
 			<div class="boardTextDiv">
+				<p> It's ${CurrentUser}'s turn </p>
 				<p id="boardText"></p>
 			</div>
 			<canvas id="Board" width="600" height="600"></canvas>
@@ -155,7 +156,7 @@
 					<div class="properties">
 						<p> Properties </p>
 						<c:if test="${!Properties.get(1).isEmpty()}">
-							<c:forEach items="${Properties.get(2)}" var="property">
+							<c:forEach items="${Properties.get(1)}" var="property">
 								<span>${property}</span>
 							</c:forEach>
 						</c:if>
@@ -279,13 +280,13 @@
 	
 	 -->
 	 <c:if test="${Turn.action == 'PAY'}">
-		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="pay">
+		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:haveToPay/>
 		 </monopoly:popup>
 	 </c:if>
 
 	 <c:if test="${Turn.action == 'BUY'}">
-		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="buy" formModelAttribute="Boolean">
+		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:buyBuildings/>
 		 </monopoly:popup>
 	 </c:if>
@@ -309,9 +310,15 @@
 	 </c:if>
 	 
 	 <!-- Action for this thing ? -->
-	 <c:if test="${Turn.action == 'NOTHING_HAPPENS'}">
+	 <c:if test="${Turn.action == 'MORTGAGE'}">
 		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
 		 	<monopoly:mergeBuilding/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'DRAW_CARD'}">
+		 <monopoly:popup popUpId="drawCard" gameId="${Game.id}" popUpPostFormAction="tileAction">
+		 	<monopoly:showCard/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -332,6 +339,7 @@
 	 		switch(action){
 	 		// Property actions
 	 		case "PAY":
+	 			setCardZoomListener();
 	 			result("haveToPay");
 	 			break;
 	 		case "BUY":
@@ -349,7 +357,8 @@
 	 			setBoardText("You landed on a taxes tile so you pay ${taxes.price} " + monodolarEmote + " .");
 	 			break;
 	 		case "DRAW_CARD":
-	 			console.log(action + " still not implemented");
+	 			setCardZoomListener();
+	 			result("drawCard");
 	 			break;
 	 		case "NOTHING_HAPPENS":
 	 			break;
@@ -431,7 +440,7 @@
 					}, velocity);
 				}
 			} else {
-				if('${isPlaying}' == 'true') {
+				if('${Turn.action}' == 'DRAW_CARD' || ('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
 					parsePopUp(true);
 					
 					let showActionButton = document.getElementById('showActionButton');
@@ -447,6 +456,7 @@
 					endTurnButton.disabled = "";
 				}
 				
+				ajaxStartScanningForChanges();
 			}
 			
 		}
@@ -643,6 +653,21 @@
 				
 				cardImg.addEventListener("click", cardZoomListener);
 			}
+		}
+	</script>
+	
+	<script>
+		function ajaxStartScanningForChanges() {
+			var auto_refresh = setInterval(
+				  function() {
+				    $.get('/game/${Game.id}/version').done(function(reply) {
+				    	console.log(reply);
+				        if (reply <= parseInt("${Version}")) {
+				            return;
+				        }
+				        location.reload();
+				    });
+				  }, 2000);
 		}
 	</script>
 	

@@ -13,6 +13,6 @@
 	</a>
 
 	<a class="popUpButtons">
-		<button class="popUpButton">Yes</button>
-		<button onclick="closePopUp(&quot;buyPopUp&quot)" class="popUpButton">No</button>
+		<button type="button" class="popUpButton" onclick="setFormInput('true')">Yes</button>
+		<button type="button" onclick="setFormInput('false')" class="popUpButton">No</button>
 	</a>
