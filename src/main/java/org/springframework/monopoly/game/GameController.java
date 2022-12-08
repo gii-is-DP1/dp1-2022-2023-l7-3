@@ -13,16 +13,21 @@ import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.monopoly.card.Card;
+import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
-import org.springframework.monopoly.property.AuctionForm;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
+import org.springframework.monopoly.tile.ExitGateForm;
+import org.springframework.monopoly.tile.TaxesService;
+import org.springframework.monopoly.tile.TileService;
+import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
@@ -51,17 +56,23 @@ public class GameController {
 	private TurnService turnService;
 	private StreetService streetService;
 	private PropertyService propertyService;
-	
+	private TaxesService taxesService;
+	private TileService tileService;
+	private CardService cardService;
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService, PropertyService propertyService) {
+			StreetService streetService, PropertyService propertyService, TaxesService taxesService, TileService tileService,
+			CardService cardService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
 		this.streetService = streetService;
 		this.propertyService = propertyService;
+		this.taxesService = taxesService;
+		this.tileService = tileService;
+		this.cardService = cardService;
 	}
 
 	//PROVISIONAL
@@ -79,30 +90,40 @@ public class GameController {
 		for (Color c: colors) {
 			propertyService.findStreetByColor(c, idGame).forEach(x -> properties.add(x));;
 		}
-
+		
 		model.put("properties", properties );
 		model.put("property", property );
 		model.put("auction", auction);
 		model.put("player", player);
-		
+
 		return BLANK_GAME;
 	}
 	
 	@PostMapping(value = "/blankGame")
-	public String auction( AuctionForm auction, Map<String, Object> model, Authentication authentication) {
+	public String auction( Auction auction, Map<String, Object> model, Authentication authentication) {
 		Integer idGame = 2;
 		Object property = propertyService.getProperty(auction.getPropertyId(), idGame);
-		Auction oldAuction = new Auction(auction.getPlayerIndex(), auction.getRemainingPlayers(), auction.getCurrentBid(), auction.getPlayerBid(), auction.getPropertyId());
-		Auction newAuction = propertyService.auctionPropertyById(oldAuction);
-		if(newAuction == null) {
+		Auction newAuction = propertyService.auctionPropertyById(auction);
+		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
+			//propertyService.setAuctionWinner(newAuction, turnService.findLastTurn(idGame).get());
 			return GAMES_LISTING;
 		}
 		model.put("property", property );
 		model.put("auction", newAuction);
-		model.put("player", playerService.findPlayerById(newAuction.getPlayerIndex()));
+		model.put("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
 		
 		return BLANK_GAME;
 	}
+	
+	@PostMapping(value = "/exitGate")
+	public String getOutOfJail(ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
+		
+		Integer option = exitGateForm.getOption();
+		tileService.calculateActionTile(null, option);
+		
+		return GAMES_LISTING;
+	}
+
 	
 	@GetMapping(value = "/newGame")
 	public String newGame(Map<String, Object> model, Authentication authentication) {
@@ -166,6 +187,7 @@ public class GameController {
 //			savedGame = gameService.saveGame(savedGame);
 			savedGame = gameService.setProperties(savedGame);
 			savedGame = gameService.saveGame(savedGame);
+			gameService.setTiles(savedGame); // Caution: Saves new tiles directly to database
 			
 			Street s = savedGame.getStreets().stream().findFirst().orElse(null);
 			streetService.findStreet(s.equals(null) ? null : s.getId(), savedGame.getId());
@@ -229,39 +251,33 @@ public class GameController {
 		
 		model.addAttribute("Game", game);
 		model.addAttribute("Turn", turn);
-		model.addAttribute("Players", players);
+		model.addAttribute("Players", players); 
+		model.addAttribute("Version", game.getVersion());
+		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
 		
-		// Temporal for debugging purposes
-		isPlaying = true; 
+		 
+		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
+		if(turn.getAction().equals(Action.PAY_TAX)) {
+			model.addAttribute("taxes", taxesService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
+		} else if(turn.getAction().equals(Action.DRAW_CARD)) {
+			Card card = cardService.findCardById(turn.getActionCardId()).orElse(null);
+			if(card != null) {
+				model.addAttribute("drawCardSource", card.getBadgeImage());
+			} 
+		}
 		
 		// To show the end turn button and popups if there is any
-		model.addAttribute("isPlaying", isPlaying);
-		
+		model.addAttribute("isPlaying", isPlaying); 
 
-		//esto es una query de todos los nombre
+		// Query the names of the properties of every player 
 		List<List<String>> properties = new ArrayList<List<String>>();
 		for(Player p:players) {
 			properties.add(playerService.findPlayerPropertiesNames(p));
-		}
+		} 
 
-		// public List<Property> getProperties() {
-		// 	List<Property> res = new ArrayList<Property>();
-		// 	for(Street s:this.getStreets()) {
-		// 		res.add((Property) s);
-		// 	}
-		// 	for(Company c:this.getCompanies()) {
-		// 		res.add((Property) c);
-		// 	}
-		// 	for(Station st:this.getStations()) {
-		// 		res.add((Property) st);
-		// 	}
-		// 	return res;
-		// }
-		    
 		model.addAttribute("Properties", properties);
 		    
-		// Street colors
-		// hacer esto de otra forma aparte
+		// Complete street colors
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
 			colors.add(streetService.findPlayerColors(p));
@@ -271,44 +287,65 @@ public class GameController {
 		return GAME_MAIN;
 	} 
 	
-	@GetMapping(value = "/game/{gameId}/evalTurn")
-	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {
-		
-		// Get user that made the request
-		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
-		
-		// Get the user of the turn that is being played
-		User turnUser = null;
-		try {
-			Turn lastTurn = turnService.findLastTurn(gameId).get();
-			turnUser = lastTurn.getPlayer().getUser();
-		} catch (Exception e) {
-			return "redirect:/game/" + gameId;
-		}
-		
-		// If the user is the turn user continue
-		if(requestUserId == turnUser.getId()) {
-			// Calcultate turn results
-			
-			// Load model with everything necessary
-			
-			return loadGame(gameId, auth, model);
-		} else {
-			return "redirect:/game/" + gameId;
-		}
-	}
+	// Temporarily commented just in case
 	
-	// TODO start thinking on this
+//	@GetMapping(value = "/game/{gameId}/evalTurn")
+//	public String evalTurn(@PathVariable("gameId") int gameId, /* Object turnForm Make individual methods,*/ Authentication auth, Model model) throws Exception {
+//		
+//		// Get user that made the request
+//		Integer requestUserId = userService.findUserByName(auth.getName()).getId();
+//		
+//		// Get the user of the turn that is being played
+//		User turnUser = null;
+//		try {
+//			Turn lastTurn = turnService.findLastTurn(gameId).get();
+//			turnUser = lastTurn.getPlayer().getUser();
+//		} catch (Exception e) {
+//			return "redirect:/game/" + gameId;
+//		}
+//		
+//		// If the user is the turn user continue
+//		if(requestUserId == turnUser.getId()) {
+//			// Calcultate turn results
+//			
+//			// Load model with everything necessary
+//			
+//			return loadGame(gameId, auth, model);
+//		} else {
+//			return "redirect:/game/" + gameId;
+//		}
+//	}
+	
+	@PostMapping(value = "/game/{gameId}/tileAction")
+	public String evalTurnAction(@PathVariable("gameId") int gameId, Boolean formValue, Authentication auth, Model model) throws Exception {
+		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
+		
+		if(lastTurn != null) {
+			turnService.evaluateTurn(lastTurn, formValue);
+		}
+		
+		return "redirect:/game/" + gameId;
+	} 
+	
 	@GetMapping(value = "/game/{gameId}/endTurn")
 	public String endTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		Turn turn = turnService.findLastTurn(gameId).get();
 		User requestUser = userService.findUserByName(auth.getName());
+		Game game = gameService.findGame(gameId).get();
 		
 		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
+			
+			if(!turn.getIsActionEvaluated()) {
+				turnService.evaluateTurn(turn, false);
+			}
+			
 			turn.setIsFinished(true);
 			
-			turn.getPlayer().setTile(turn.getInitial_tile()+turn.getRoll());
+			turn.getPlayer().setTile(turn.getFinalTile());
 			playerService.savePlayer(turn.getPlayer());
+			
+			game.setVersion(game.getVersion() + 1);
+			gameService.saveGame(game);
 			
 			turnService.saveTurn(turn);
 		}

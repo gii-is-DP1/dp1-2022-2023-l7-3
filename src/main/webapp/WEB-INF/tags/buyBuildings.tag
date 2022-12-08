@@ -5,14 +5,14 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-	<h1 class="propertyTxt">Do you want to buy this property for <c:out value = "${property.price}"></c:out> M ?</h1>
+	<h1 class="propertyTxt">Do you want to buy this property for <c:out value = "${property.price}"></c:out> <img style="height: 22px" src="/resources/images/Monodolar.png"/> ?</h1>
 
 	
 	<a  class="propertyImg">
-		<img  alt="Card image" src="${property.badgeImage}">
+		<img id="cardImg" alt="Card image" src="${property.badgeImage}">
 	</a>
 
 	<a class="popUpButtons">
-		<button class="popUpButton">Yes</button>
-		<button onclick="closePopUp(&quot;buyPopUp&quot)" class="popUpButton">No</button>
+		<button type="button" class="popUpButton" onclick="setFormInput('true')">Yes</button>
+		<button type="button" onclick="setFormInput('false')" class="popUpButton">No</button>
 	</a>

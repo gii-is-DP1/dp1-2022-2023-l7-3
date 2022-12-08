@@ -50,7 +50,9 @@ public class Game extends BaseEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "game", fetch = FetchType.EAGER)
     protected Set<Street> streets;
-
+    
+    @Column(name = "version")
+    protected Integer version = 0;
 
 	@Override
 	public int hashCode() {

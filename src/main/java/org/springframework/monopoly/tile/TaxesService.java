@@ -1,9 +1,11 @@
 package org.springframework.monopoly.tile;
 
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,10 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaxesService {
 	
 	private TaxesRepository taxesRepository;
+	private PlayerRepository playerRepository;
 
 	@Autowired
-	public TaxesService(TaxesRepository taxesRepository) {
+	public TaxesService(TaxesRepository taxesRepository, PlayerRepository playerRepository) {
 		this.taxesRepository = taxesRepository;
+		this.playerRepository = playerRepository;
 	}
 	
 	@Transactional
@@ -25,6 +29,7 @@ public class TaxesService {
 		if(taxes.isPresent()) {
 			p.setMoney(p.getMoney() - taxes.get().getPrice());
 		}
+		playerRepository.save(p);
 	}
 	
 	@Transactional(readOnly = true)
@@ -40,5 +45,15 @@ public class TaxesService {
 	@Transactional
 	public Optional<Taxes> findTaxesByGameId(Integer gameId, Integer tileId) {
 		return taxesRepository.findTaxesByGameId(gameId, tileId);
+	}
+	
+	@Transactional(readOnly = true)
+	public Set<Taxes> getBlankTaxes() {
+		return taxesRepository.findBlankTaxes();
+	}
+
+	@Transactional
+	public Taxes save(Taxes newTax) {
+		return taxesRepository.save(newTax);
 	}
 }

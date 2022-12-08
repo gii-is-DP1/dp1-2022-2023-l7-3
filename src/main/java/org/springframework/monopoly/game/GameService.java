@@ -24,6 +24,14 @@ import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.StationService;
 import org.springframework.monopoly.property.Street;
 import org.springframework.monopoly.property.StreetService;
+import org.springframework.monopoly.tile.CommunityBox;
+import org.springframework.monopoly.tile.CommunityBoxService;
+import org.springframework.monopoly.tile.Generic;
+import org.springframework.monopoly.tile.GenericService;
+import org.springframework.monopoly.tile.Luck;
+import org.springframework.monopoly.tile.LuckService;
+import org.springframework.monopoly.tile.Taxes;
+import org.springframework.monopoly.tile.TaxesService;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserRepository;
 import org.springframework.monopoly.user.UserService;
@@ -42,11 +50,16 @@ public class GameService {
 	private StationService stationService;
 	private UserService userService;
 	private PlayerService playerService;
+	private CommunityBoxService cbService;
+	private LuckService luckService;
+	private TaxesService taxService;
+	private GenericService genericService;
 	
 	@Autowired
 	public GameService(GameRepository gameRepository, UserRepository userRepository, StreetService streetService,
 			CompanyService companyService, StationService stationService, UserService userService,
-			PlayerService playerService) {
+			PlayerService playerService, CommunityBoxService cbService, LuckService luckService, TaxesService taxService,
+			GenericService genericService) {
 		this.gameRepository = gameRepository;
 		this.userRepository = userRepository;
 		this.streetService = streetService;
@@ -54,6 +67,10 @@ public class GameService {
 		this.companyService = companyService;
 		this.userService = userService;
 		this.playerService = playerService;
+		this.cbService = cbService;
+		this.luckService = luckService;
+		this.taxService = taxService;
+		this.genericService = genericService;
 	}
 	
 	@Transactional
@@ -152,6 +169,41 @@ public class GameService {
 		game.setStations(savedStations);
 		
 		return game;
+	}
+	
+	public void setTiles(Game game) {
+		Set<CommunityBox> blankCommunityBoxes = cbService.getBlankCB();
+		for(CommunityBox cb:blankCommunityBoxes) {
+			CommunityBox newCB= new CommunityBox();
+			BeanUtils.copyProperties(cb, newCB);
+			newCB.setGame(game);
+			cbService.save(newCB);
+		}
+		
+		Set<Luck> blankLuck = luckService.getBlankLuck();
+		for(Luck l:blankLuck) {
+			Luck newLuck = new Luck();
+			BeanUtils.copyProperties(l, newLuck);
+			newLuck.setGame(game);
+			luckService.save(newLuck);
+			
+		}
+		
+		Set<Generic> blankGenerics = genericService.getBlankGenerics();
+		for(Generic g:blankGenerics) {
+			Generic newGeneric = new Generic();
+			BeanUtils.copyProperties(g, newGeneric);
+			newGeneric.setGame(game);
+			genericService.save(newGeneric);
+		}
+		
+		Set<Taxes> blankTaxes = taxService.getBlankTaxes();
+		for(Taxes t:blankTaxes) {
+			Taxes newTax = new Taxes();
+			BeanUtils.copyProperties(t, newTax);
+			newTax.setGame(game);
+			taxService.save(newTax);
+		}
 	}
 	
 	public List<Player> getPlayersOrderedByTurn(Integer gameId) {

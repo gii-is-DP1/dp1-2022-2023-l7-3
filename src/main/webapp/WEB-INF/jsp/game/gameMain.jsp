@@ -43,7 +43,7 @@
 				<div class="playerAndMoney">
 					<img class="playerAvatar" src="/resources/images/Verde.png" />
 					<p>${Players[0].user.username}</p>
-					<p>${Players[0].money}  M </p>
+					<p>${Players[0].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 				</div>
 			</div>
 			
@@ -83,7 +83,7 @@
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Amarillo.png" />
 						<p>${Players[4].user.username}</p>
-						<p>${Players[4].money}  M </p>
+						<p>${Players[4].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 					</div>
 				</c:if>
 			</div>
@@ -124,7 +124,7 @@
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Rosa.png" />
 						<p>${Players[2].user.username}</p>
-						<p>${Players[2].money}  M </p>
+						<p>${Players[2].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 					</div>
 				</c:if>
 			</div>
@@ -132,12 +132,12 @@
 		</div>
 		
 		<div class="secondColumn">
-<!-- 		Delete this on completion -->
-			<button onclick="setTimeout(function() {window.requestAnimationFrame(movePiece);}, velocity)">Next frame</button>
-			<button onclick="if(!play){setTimeout(function() {play = true; window.requestAnimationFrame(movePiece);}, velocity)}else{play = false}">Play/Stop</button>
-<!-- 			<img src="/resources/images/board.png" class="canvasBackground"></img> -->
+			<div class="boardTextDiv">
+				<p> It's ${CurrentUser}'s turn </p>
+				<p id="boardText"></p>
+			</div>
 			<canvas id="Board" width="600" height="600"></canvas>
-			<div>
+			<div class="boardButtons">
 				<c:if test="${isPlaying}">
 					<a href="/game/${Game.id}/endTurn">
 						<button id="endTurnButton" class="mainButtonStyle" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
@@ -156,7 +156,7 @@
 					<div class="properties">
 						<p> Properties </p>
 						<c:if test="${!Properties.get(1).isEmpty()}">
-							<c:forEach items="${Properties.get(2)}" var="property">
+							<c:forEach items="${Properties.get(1)}" var="property">
 								<span>${property}</span>
 							</c:forEach>
 						</c:if>
@@ -184,7 +184,7 @@
 				<div class="playerAndMoney">
 					<img class="playerAvatar" src="/resources/images/Azul.png" />
 					<p>${Players[1].user.username}</p>
-					<p>${Players[1].money}  M </p>
+					<p>${Players[1].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 				</div>
 			</div>
 			
@@ -224,7 +224,7 @@
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Cyan.png" />
 						<p>${Players[5].user.username}</p>
-						<p>${Players[5].money}  M </p>
+						<p>${Players[5].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 					</div>
 				</c:if>
 			</div>
@@ -265,7 +265,7 @@
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Naranja.png" />
 						<p>${Players[3].user.username}</p>
-						<p>${Players[3].money}  M </p> 
+						<p>${Players[3].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p> 
 					</div>
 				</c:if>
 			</div>
@@ -280,13 +280,13 @@
 	
 	 -->
 	 <c:if test="${Turn.action == 'PAY'}">
-		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="pay">
+		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:haveToPay/>
 		 </monopoly:popup>
 	 </c:if>
 
 	 <c:if test="${Turn.action == 'BUY'}">
-		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="buy">
+		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:buyBuildings/>
 		 </monopoly:popup>
 	 </c:if>
@@ -310,15 +310,23 @@
 	 </c:if>
 	 
 	 <!-- Action for this thing ? -->
-	 <c:if test="${Turn.action == 'NOTHING_HAPPENS'}">
+	 <c:if test="${Turn.action == 'MORTGAGE'}">
 		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
 		 	<monopoly:mergeBuilding/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'DRAW_CARD'}">
+		 <monopoly:popup popUpId="drawCard" gameId="${Game.id}" popUpPostFormAction="tileAction">
+		 	<monopoly:showCard/>
 		 </monopoly:popup>
 	 </c:if>
 	 
 	 
 	 <script>
 	 	function parsePopUp(showOrHide = true, inputAction) {
+	 		let monodolarEmote = "<img style='height: 24px' src='/resources/images/Monodolar.png'/>";
+	 		
 	 		let action = null;
 	 		if(inputAction == null || inputAction == undefined) {
 	 			action = "${Turn.action}";
@@ -329,10 +337,13 @@
 	 		const result = showOrHide ? showPopUp : hidePopUp; 
 	 		
 	 		switch(action){
+	 		// Property actions
 	 		case "PAY":
+	 			setCardZoomListener();
 	 			result("haveToPay");
 	 			break;
 	 		case "BUY":
+	 			setCardZoomListener();
 	 			result("buyPopUp");
 	 			break;
 	 		case "BUILD":
@@ -341,10 +352,18 @@
 	 		case "AUCTION":
 	 			result("auctionBuilding");
 	 			break;
+	 		// Tile actions
+	 		case "PAY_TAX":
+	 			setBoardText("You landed on a taxes tile so you pay ${taxes.price} " + monodolarEmote + " .");
+	 			break;
+	 		case "DRAW_CARD":
+	 			setCardZoomListener();
+	 			result("drawCard");
+	 			break;
 	 		case "NOTHING_HAPPENS":
 	 			break;
 	 		default:
-	 			console.error("Could not parse turn action");
+	 			console.error("Could not parse turn action: " + action);
 	 		}
 	 	}
 	 
@@ -374,10 +393,13 @@
 			hidePopUp(id1);
 			showPopUp(id2);
 		}
+		
+		function setBoardText(text) {
+			let boardText = document.getElementById("boardText");
+			boardText.innerHTML = text;
+		}
 	 </script>
 	 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	
 	<script>
 		function start() {
 			if(--imgCount > 0) {
@@ -418,18 +440,23 @@
 					}, velocity);
 				}
 			} else {
-				parsePopUp(true);
+				if('${Turn.action}' == 'DRAW_CARD' || ('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
+					parsePopUp(true);
+					
+					let showActionButton = document.getElementById('showActionButton');
+					
+					if(showActionButton != null) {
+						showActionButton.disabled = "";
+					}
+				}
 				
 				let endTurnButton = document.getElementById('endTurnButton');
-				let showActionButton = document.getElementById('showActionButton');
 				
 				if(endTurnButton != null) {
 					endTurnButton.disabled = "";
 				}
 				
-				if(showActionButton != null) {
-					showActionButton.disabled = "";
-				}
+				ajaxStartScanningForChanges();
 			}
 			
 		}
@@ -482,7 +509,7 @@
 				coords.x = 550 - (pos*50)
 				coords.y = 555
 			} else if(pos == 10) {
-				coords.x = 50
+				coords.x = 35
 				coords.y = 550
 			} else if(pos < 20) {
 				coords.x = 35
@@ -594,51 +621,56 @@
 		})();
 	</script>
 </c:forEach>
+
+	<script>
+		let cardImg = null;
+		let gamePopUpDiv = null;
+		function cardZoomListener() {
+			if(cardImg.zoom) { // Remove zoom
+				gamePopUpDiv.setAttribute("style", '');
+				
+				cardImg.style.position = "";
+				cardImg.style.height = "";
+				cardImg.style.cursor = "zoom-in";
+			
+			} else { // Add zoom
+				gamePopUpDiv.setAttribute("style", "top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
+				
+				cardImg.style.position = "relative";
+				cardImg.style.height = "95vh";
+				cardImg.style.cursor = "zoom-out";
+			}
+			cardImg.zoom = !cardImg.zoom;
+		}
+		
+		function setCardZoomListener() {
+			cardImg = document.getElementById("cardImg");
+			gamePopUpDiv = document.getElementById("gamePopUp1");
+			
+			if(cardImg != null && cardImg != undefined) {
+				cardImg.style.cursor = "zoom-in";
+				cardImg.zoom = false;
+				
+				cardImg.addEventListener("click", cardZoomListener);
+			}
+		}
+	</script>
 	
 	<script>
-// 			0  -> 550, 555			Salida
-// 			1  -> 500, 555
-// 			2  -> 450, 555
-// 			3  -> 400, 555
-// 			4  -> 350, 555
-// 			5  -> 300, 555
-// 			6  -> 250, 555
-// 			7  -> 200, 555
-// 			8  -> 150, 555
-// 			9  -> 100, 555
-// 			10 Carcel -> 50, 545
-// 			10 Visitas -> 5, 545
-//				35, 550
-// 			11 -> 35, 500
-// 			12 -> 35, 450
-// 			13 -> 35, 400
-// 			14 -> 35, 350
-// 			15 -> 35, 300
-// 			16 -> 35, 250
-// 			17 -> 35, 200
-// 			18 -> 35, 150
-// 			19 -> 35, 100
-// 			20 -> 35, 35          Parking
-//				50, 35
-// 			21 -> 100, 35
-// 			22 -> 150, 35
-// 			23 -> 200, 35
-// 			24 -> 250, 35
-// 			25 -> 300, 35
-// 			26 -> 350, 35
-// 			27 -> 400, 35
-// 			28 -> 450, 35
-// 			29 -> 500, 35
-// 			30 -> 550, 35        Go to jail
-// 			31 -> 550, 100
-// 			32 -> 550, 150
-// 			33 -> 550, 200
-// 			34 -> 550, 250
-// 			35 -> 550, 300
-// 			36 -> 550, 350
-// 			37 -> 550, 400
-// 			38 -> 550, 450
-// 			39 -> 550, 500
-	</script>	
+		function ajaxStartScanningForChanges() {
+			var auto_refresh = setInterval(
+				  function() {
+				    $.get('/game/${Game.id}/version').done(function(reply) {
+				    	console.log(reply);
+				        if (reply <= parseInt("${Version}")) {
+				            return;
+				        }
+				        location.reload();
+				    });
+				  }, 2000);
+		}
+	</script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 </monopoly:layout>

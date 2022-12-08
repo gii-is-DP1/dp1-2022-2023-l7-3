@@ -7,16 +7,18 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class CardService {
 	
 	private CardRepository cardRepository;
-	
+	private PlayerRepository playerRepository;
 	@Autowired
-	public CardService(CardRepository cardRepository) {
+	public CardService(CardRepository cardRepository, PlayerRepository playerRepository) {
 		this.cardRepository = cardRepository;
+		this.playerRepository = playerRepository;
 	}
 	
 	@Transactional
@@ -32,6 +34,7 @@ public class CardService {
 	@Transactional
 	public void payTax(Card card, Player player) {
 		player.setMoney(player.getMoney() - card.getQuantity());
+		playerRepository.save(player);
 	}
 	
 	@Transactional
@@ -41,12 +44,15 @@ public class CardService {
 		
 		for (Player p: playersReceive) {
 			p.setMoney(p.getMoney() + card.getQuantity());
+			playerRepository.save(p);
 		}
+		playerRepository.save(playerPay);
 	}
 	
 	@Transactional
 	public void charge(Card card, Player playerPay) {
 		playerPay.setMoney(playerPay.getMoney() + card.getQuantity());
+		playerRepository.save(playerPay);
 	}
 	
 	@Transactional
@@ -55,7 +61,9 @@ public class CardService {
 		playerReceive.setMoney(playerReceive.getMoney() + card.getQuantity()*playersPay.size());
 		for (Player p: playersPay) {
 			p.setMoney(p.getMoney() - card.getQuantity());
+			playerRepository.save(p);
 		}
+		playerRepository.save(playerReceive);
 	}
 	
 	@Transactional
@@ -69,11 +77,13 @@ public class CardService {
 		} else {
 			player.setTile(newPos);
 		}
+		playerRepository.save(player);
 	}
 	
 	@Transactional
 	public void moveTo(Card card, Player player) {
 		player.setTile(card.getQuantity());
+		playerRepository.save(player);
 	}
 	
 	@Transactional
@@ -84,17 +94,20 @@ public class CardService {
 		Integer houseMoney = numHouses * 100; 
 		
 		player.setMoney(player.getMoney() - hotelMoney - houseMoney); 
+		playerRepository.save(player);
 	}
 	
 	@Transactional
 	public void gotoJail(Player player) {
 		player.setTile(10);
 		player.setIsJailed(true);
+		playerRepository.save(player);
 	}
 	
 	@Transactional
 	public void saveFree(Player player) {
 		player.setHasExitGate(true);
+		playerRepository.save(player);
 	}
 		
 }

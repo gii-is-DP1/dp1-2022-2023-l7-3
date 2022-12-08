@@ -1,5 +1,6 @@
 package org.springframework.monopoly.turn;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,13 +25,13 @@ import lombok.Setter;
 @Table(name = "turns")
 public class Turn extends BaseEntity {
 
-	@Column(name= "action")
+	@Column(name = "action")
 	@Enumerated(EnumType.STRING)
 	private Action action;
 	
-//	@Column(name = "quantity")
-//	private Integer quantity;
-		
+	@Column(name = "is_action_evaluated")
+	private Boolean isActionEvaluated = false;
+	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
 	private Integer turnNumber;
@@ -61,7 +62,7 @@ public class Turn extends BaseEntity {
 	@JoinColumn(name = "game_id", referencedColumnName = "id")
 	private Game game;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "player_id", referencedColumnName = "id")
 	private Player player;
 	

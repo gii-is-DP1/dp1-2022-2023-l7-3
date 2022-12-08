@@ -87,7 +87,7 @@
   	left: 25%;
   	right: 25%;
   	position: relative;
-	transition: all 5s ease-in-out;
+	transition: visibility 5s ease-in-out, opacity 5s ease-in-out;
   	
   	max-height: 700px;
   	
@@ -181,10 +181,11 @@
 }
 
 .propertyTxt{
-	padding:10px;
-	display: inherit;
+	padding:0px;
+	/*display: inherit;*/
 	margin: inherit;
 	text-align: center;
+	display: block;
 }
 
 .propertyTxt2{
@@ -265,6 +266,7 @@
 	margin-right: 2px;
 	margin-left: 2px;
 }
+
 
 .popUpSampleButton{
 	height: 60px;
@@ -425,5 +427,12 @@
 	margin: auto;
 	height:3vh;
 	width: 10vh;
+}
+
+.JailImg{
+	padding: 10px;
+	display: inherit;
+	margin: inherit;
+	scale: 50%;
 }
 

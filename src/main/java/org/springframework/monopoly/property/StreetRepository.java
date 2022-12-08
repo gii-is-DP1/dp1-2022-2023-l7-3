@@ -31,7 +31,7 @@ public interface StreetRepository extends  CrudRepository<Street, Integer>{
 				+ 		" FROM (SELECT color,count(color) AS count "
 				+ 				"FROM (SELECT color, owner "
 				+ 					  "FROM streets "
-				+ 					  "WHERE game = 2 "
+				+ 					  "WHERE game = :gameId "
 				+ 					  "GROUP BY color, owner) "
 				+ 				"GROUP BY color)"
 				+ 		" WHERE count = 1)")
