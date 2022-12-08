@@ -7,6 +7,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.stereotype.Service;
@@ -16,11 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class GenericService {
 	
 	private GenericRepository genericRepository;
+	private PlayerRepository playerRepository;
 	private static Random random = new Random();
 
 	@Autowired
-	public GenericService(GenericRepository genericRepository) {
+	public GenericService(GenericRepository genericRepository, PlayerRepository playerRepository) {
 		this.genericRepository = genericRepository;
+		this.playerRepository = playerRepository;
 	}
 	
 	@Transactional
@@ -67,6 +70,7 @@ public class GenericService {
 			break;
 					
 			default:}
+		playerRepository.save(player);
 	}
 	
 	public Pair<Integer, Boolean> getRoll() {
