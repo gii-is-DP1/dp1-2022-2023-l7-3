@@ -22,6 +22,7 @@
 		<input type="hidden" name="currentBid" value="${auction.currentBid}"/>
 		<input type="hidden" name="playerBid" value="${auction.playerBid}" id = "playerBid"/>
 		<input type="hidden" name="propertyId" value="${auction.propertyId}"/>
+		<input type="hidden" name="gameId" value="${auction.gameId}"/>
 		<a class="popUpButtons">
 			<button class="popUpDangerButton">Abandon</button>
 			<button class="popUpButton" type = "button" onclick="newBid(1)">1M</button>

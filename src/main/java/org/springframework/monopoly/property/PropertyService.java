@@ -186,30 +186,33 @@ public class PropertyService {
 			
 
 	public Auction auctionPropertyById(Auction auction) {
-		Integer newBid = auction.getCurrentBid() + auction.getPlayerBid();
-		Integer newIndex;
+		
+		Integer newBid = auction.getCurrentBid();
+		Integer actualPlayerId = auction.getRemainingPlayers().get(auction.getPlayerIndex());
+		Player player = playerRepository.findPlayerById(actualPlayerId, auction.getGameId());
 		List<Integer> newRemaining = new ArrayList<>();
 		newRemaining.addAll(auction.getRemainingPlayers());
+		
+		Integer newIndex = 0;
+		
 		if (newRemaining.size() > 1) {
-			if (auction.getPlayerBid() == 0) {
+			if (auction.getPlayerBid() == 0 || player.getMoney() < auction.getCurrentBid()) {
 				 newRemaining.remove(auction.getRemainingPlayers().get(auction.getPlayerIndex()));
-			} 
-			auction.setCurrentBid(newBid);
-			auction.setPlayerBid(0);
-
+			} else {
+				newBid = auction.getCurrentBid() + auction.getPlayerBid();
+			}
+			
 			if (newRemaining.size() == auction.getRemainingPlayers().size()) {
 				newIndex = (auction.getPlayerIndex() + 1)%(newRemaining.size());
-			}else {
+			} else {
 				newIndex = (auction.getPlayerIndex())%(newRemaining.size());
 			}
-			auction.setPlayerIndex(newIndex);
-			auction.setRemainingPlayers(newRemaining);
 		} 
-		return auction;
+		return new Auction(newIndex, newRemaining, newBid, 0, auction.getPropertyId(), auction.getGameId());
 	}
 	
 	public void setAuctionWinner(Auction auction, Turn turn) {
-		Player auctionWinner = playerRepository.findPlayerById( auction.getRemainingPlayers().get(0));
+		Player auctionWinner = playerRepository.findPlayerById(auction.getRemainingPlayers().get(0), turn.getGame().getId());
 		auctionWinner.setMoney(auctionWinner.getMoney() - auction.getCurrentBid());
 		Property property = (Property) getProperty(auction.getPropertyId(), turn.getGame().getId());
 		property.setOwner(auctionWinner);

@@ -84,7 +84,7 @@ public class GameController {
 		Object property = propertyService.getProperty(idProperty, idGame);
 		List<Integer> players = gameService.findGame(idGame).get().getPlayers().stream().map(p-> p.getId()).collect(Collectors.toList());
 		Player player = playerService.findPlayerById(players.get(0));
-		Auction auction = new Auction(0, players, 10, 0, idProperty); 
+		Auction auction = new Auction(0, players, 10, 0, idProperty, idGame); 
 		List<Color> colors= propertyService.findPlayerColors(idGame, idPlayer);
 		List<Property> properties= new ArrayList<>();
 		for (Color c: colors) {
