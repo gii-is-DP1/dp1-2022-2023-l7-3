@@ -13,13 +13,15 @@ public class Auction {
 	private Integer currentBid;
 	private Integer playerBid;
 	private Integer propertyId;
+	private Integer gameId;
 	
-	public Auction(Integer playerIndex, List<Integer> remainingPlayers, Integer currentBid, Integer playerBid, Integer property) {
+	public Auction(Integer playerIndex, List<Integer> remainingPlayers, Integer currentBid, Integer playerBid, Integer property, Integer gameId) {
 		this.playerIndex = playerIndex;
 		this.remainingPlayers = remainingPlayers;
 		this.currentBid = currentBid;
 		this.playerBid = playerBid;
 		this.propertyId = property;
+		this.gameId = gameId;
 	}
 	
 }

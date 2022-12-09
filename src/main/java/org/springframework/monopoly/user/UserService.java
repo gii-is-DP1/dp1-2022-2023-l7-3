@@ -69,13 +69,8 @@ public class UserService {
 	}	
 	
 	@Transactional(readOnly = true)
-	public User findUserByName(String name) {
-		Optional<User> user = monopolyUserRepository.findByUsername(name);
-		if(user.isPresent()) {
-			return user.get();
-		} else {
-			return null;
-		}
+	public Optional<User> findUserByName(String name) {
+		return monopolyUserRepository.findByUsername(name);
 	}
 	@Transactional
 	public void delete(Integer id) throws DataAccessException{

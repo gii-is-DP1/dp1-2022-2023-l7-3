@@ -1,7 +1,6 @@
 package org.springframework.monopoly.tile;
 
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.util.RollGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +18,6 @@ public class GenericService {
 	
 	private GenericRepository genericRepository;
 	private PlayerRepository playerRepository;
-	private static Random random = new Random();
 
 	@Autowired
 	public GenericService(GenericRepository genericRepository, PlayerRepository playerRepository) {
@@ -61,7 +60,7 @@ public class GenericService {
 			case 2: player.setHasExitGate(false); 
 					player.setIsJailed(false);
 					break;
-			case 3: Pair<Integer, Boolean> roll =  getRoll(); {
+			case 3: Pair<Integer, Boolean> roll =  RollGenerator.getRoll(); {
 				if (roll.getSecond()) {
 					player.setIsJailed(false);
 					turn.setRoll(roll.getFirst());
@@ -71,12 +70,6 @@ public class GenericService {
 					
 			default:}
 		playerRepository.save(player);
-	}
-	
-	public Pair<Integer, Boolean> getRoll() {
-		Integer roll1 = random.ints(1, 7).findFirst().getAsInt();
-		Integer roll2 = random.ints(1, 7).findFirst().getAsInt();
-		return Pair.of(roll1 + roll2, roll1.equals(roll2));
 	}
 	
 }

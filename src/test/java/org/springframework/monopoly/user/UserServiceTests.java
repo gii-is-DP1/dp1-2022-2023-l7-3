@@ -43,7 +43,7 @@ public class UserServiceTests {
 		
 	@Test
 	void shouldFindUserWithCorrectUsername() {
-		User user1 = this.userService.findUserByName("xXPaco02Xx");	
+		User user1 = this.userService.findUserByName("xXPaco02Xx").orElse(null);	
 		assertThat(user1).isNotNull();
 		assertThat(user1.getId()).isEqualTo(1);
 		assertThat(user1.getPassword()).isEqualTo("paco");
@@ -52,7 +52,7 @@ public class UserServiceTests {
 	
 	@Test
 	void shouldNotFindUserWithIncorrectUsername() {
-		User user = this.userService.findUserByName("testUser"); // Username does not exist in database	
+		User user = this.userService.findUserByName("testUser").orElse(null); // Username does not exist in database	
 		assertThat(user).isNull();
 	}
 	

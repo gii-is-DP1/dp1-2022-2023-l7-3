@@ -2,7 +2,7 @@ package org.springframework.monopoly.property;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,11 +34,12 @@ public class PropertyServiceTests {
 	private static Game game;
 	
 	private PlayerRepository playerRepository;
+	
 	@Autowired
 	public PropertyServiceTests(PlayerRepository playerRepository) {
-		
 		this.playerRepository = playerRepository;
-	}	
+	}
+	
 	@BeforeEach
 	void setup() {
 		game = new Game();
@@ -95,6 +96,39 @@ public class PropertyServiceTests {
 		assertThat(turn.getAction()).isEqualTo(Action.MORTGAGE); //the player has no money so the property is mortgaged
 	}
 	
+	@Test
+	void canParticipateInAuction() {
+		Auction auction = new Auction(1, List.of(4,5,2), 300, 10, 1, 2); // Player 5 has 577 M
+		Auction newAuction = this.propertyService.auctionPropertyById(auction);
+		assertThat(newAuction.getCurrentBid()).isEqualTo(310);
+		assertThat(auction.getRemainingPlayers().size()).isEqualTo(newAuction.getRemainingPlayers().size());
+	}
 	
+	@Test
+	void cannotParticipateInAuction() {
+		Auction auction = new Auction(1, List.of(4,5,2), 600, 10, 1, 2); 
+		Auction newAuction = this.propertyService.auctionPropertyById(auction);
+		assertThat(newAuction.getCurrentBid()).isEqualTo(600);
+		assertThat(auction.getRemainingPlayers().size()).isNotEqualTo(newAuction.getRemainingPlayers().size());
+		assertThat(newAuction.getRemainingPlayers().contains(5)).isEqualTo(false);
+	}
 	
+	@Test
+	void shouldAbandonAuction() {
+		Auction auction = new Auction(1, List.of(4,5,2), 300, 0, 1, 2); 
+		Auction newAuction = this.propertyService.auctionPropertyById(auction);
+		assertThat(newAuction.getCurrentBid()).isEqualTo(300);
+		assertThat(auction.getRemainingPlayers().size()).isNotEqualTo(newAuction.getRemainingPlayers().size());
+		assertThat(newAuction.getRemainingPlayers().contains(5)).isEqualTo(false);
+	}
+	
+	@Test
+	void testAuctionWinner() {
+		Auction auction = new Auction(0, List.of(5), 300, 0, 1, 2);
+		this.propertyService.setAuctionWinner(auction);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(277);
+		Property property = (Property)this.propertyService.getProperty(auction.getPropertyId(), auction.getGameId());
+		assertThat(property.getOwner()).isEqualTo(turn.getPlayer());
+	}
+		
 }

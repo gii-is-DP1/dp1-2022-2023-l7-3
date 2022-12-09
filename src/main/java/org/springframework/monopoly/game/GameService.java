@@ -2,6 +2,7 @@ package org.springframework.monopoly.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -14,12 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.monopoly.card.Card;
+import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
+import org.springframework.monopoly.property.Auction;
+import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.CompanyService;
+import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.StationService;
 import org.springframework.monopoly.property.Street;
@@ -32,18 +38,21 @@ import org.springframework.monopoly.tile.Luck;
 import org.springframework.monopoly.tile.LuckService;
 import org.springframework.monopoly.tile.Taxes;
 import org.springframework.monopoly.tile.TaxesService;
+import org.springframework.monopoly.turn.Action;
+import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
-import org.springframework.monopoly.user.UserRepository;
 import org.springframework.monopoly.user.UserService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 @Service
 public class GameService {
 	
 	private GameRepository gameRepository;
-	private UserRepository userRepository;
 	
 	private StreetService streetService;
 	private CompanyService companyService;
@@ -54,14 +63,16 @@ public class GameService {
 	private LuckService luckService;
 	private TaxesService taxService;
 	private GenericService genericService;
+	private TurnService turnService;
+	private PropertyService propertyService;
+	private CardService cardService;
 	
 	@Autowired
-	public GameService(GameRepository gameRepository, UserRepository userRepository, StreetService streetService,
+	public GameService(GameRepository gameRepository, StreetService streetService,
 			CompanyService companyService, StationService stationService, UserService userService,
 			PlayerService playerService, CommunityBoxService cbService, LuckService luckService, TaxesService taxService,
-			GenericService genericService) {
+			GenericService genericService, TurnService turnService, PropertyService propertyService, CardService cardService) {
 		this.gameRepository = gameRepository;
-		this.userRepository = userRepository;
 		this.streetService = streetService;
 		this.stationService = stationService;
 		this.companyService = companyService;
@@ -71,13 +82,16 @@ public class GameService {
 		this.luckService = luckService;
 		this.taxService = taxService;
 		this.genericService = genericService;
+		this.turnService = turnService;
+		this.propertyService = propertyService;
+		this.cardService = cardService;
 	}
 	
 	@Transactional
 	public Game saveGame(Game game) throws DataAccessException, InvalidNumberOfPLayersException {
-//		if(game.getPlayers().size() < 2 || game.getPlayers().size() > 6) {
-//			throw new InvalidNumberOfPLayersException();
-//		}
+		if(game.getPlayers().size() < 2 || game.getPlayers().size() > 6) {
+			throw new InvalidNumberOfPLayersException();
+		}
 		return gameRepository.save(game);
 	}
 	
@@ -85,7 +99,7 @@ public class GameService {
 		return gameRepository.findById(id);
 	}	
 	
-	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class, InvalidNumberOfPLayersException.class})
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Game setUpNewGame(GameForm createGameForm) throws InvalidNumberOfPLayersException {
 		Game game = new Game();
 		List<Integer> userIds = createGameForm.getUsers();
@@ -171,6 +185,7 @@ public class GameService {
 		return game;
 	}
 	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public void setTiles(Game game) {
 		Set<CommunityBox> blankCommunityBoxes = cbService.getBlankCB();
 		for(CommunityBox cb:blankCommunityBoxes) {
@@ -206,13 +221,15 @@ public class GameService {
 		}
 	}
 	
+	@Transactional(readOnly = true)
 	public List<Player> getPlayersOrderedByTurn(Integer gameId) {
 		return gameRepository.findPlayersOrderByTurn(gameId);
 	}
 	
+	@Transactional(readOnly = true)
 	public Page<Game> getAll(Pageable pageable, String username) {
 		
-		Optional<User> u = userRepository.findByUsername(username);
+		Optional<User> u = userService.findUserByName(username);
 		Page<Game> res = Page.empty();
 		
 		if (u.isPresent() && u.get().getIs_admin().equals("admin")) {
@@ -224,8 +241,128 @@ public class GameService {
 		return res;
 	}
 	
+	@Transactional(readOnly = true)
 	public Integer findLastId() {
 		return gameRepository.findLastId();
+	}
+
+	@Transactional(readOnly = true)
+	public Model setupGameModel(Model model, Integer gameId, Authentication auth) throws Exception {
+		Optional<Game> gameOptional = findGame(gameId);
+		if(gameOptional.isEmpty()) {
+			throw new Exception("Game doesn't exist");
+		}  
+		Game game = gameOptional.get();
+		 
+		User requestUser = userService.findUserByName(auth.getName()).orElse(null);
+		if(requestUser == null) {
+			throw new Exception("No such user found for that principal");
+		}
+		
+		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
+		Collections.sort(players, c);
+
+		//esto se va al turn service como nexturn no se que
+		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
+		Turn turn = new Turn();
+		turn.setGame(game);
+		Player nextPlayer;
+		Boolean isPlaying = false;
+		
+		// Calculating next turn result
+		if(lastTurn != null) {
+			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
+				turn.setPlayer(nextPlayer);
+				turn.setInitial_tile(nextPlayer.getTile());
+				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
+				turnService.calculateTurn(turn);
+				isPlaying = nextPlayer.getUser().equals(requestUser);
+			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
+				isPlaying = nextPlayer.getUser().equals(requestUser);
+				turn = lastTurn;
+			} else {
+				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
+				turn = lastTurn;
+			} 
+			
+		} else {
+			// Esto se podría pasar al metodo de crear partida
+			nextPlayer = players.get(0);
+			isPlaying = nextPlayer.getUser().equals(requestUser);
+			turn.setPlayer(nextPlayer);
+			turn.setInitial_tile(nextPlayer.getTile());
+			turn.setTurnNumber(0);
+			turnService.calculateTurn(turn);
+			
+		}
+		
+		model.addAttribute("Game", game);
+		model.addAttribute("Turn", turn);
+		model.addAttribute("Players", players); 
+		model.addAttribute("Version", game.getVersion());
+		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
+		
+		 
+		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
+		if(turn.getAction().equals(Action.PAY_TAX)) {
+			model.addAttribute("taxes", taxService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
+		} else if(turn.getAction().equals(Action.DRAW_CARD)) {
+			Card card = cardService.findCardById(turn.getActionCardId()).orElse(null);
+			if(card != null) {
+				model.addAttribute("drawCardSource", card.getBadgeImage());
+			} 
+		} else if(turn.getAction().equals(Action.AUCTION)) {
+			Auction auction = new Auction(0, players.stream().map(p -> p.getId()).collect(Collectors.toList()), 0, 0, turn.getFinalTile(), gameId);
+			model.addAttribute("auction", auction);
+		}
+		
+		// To show the end turn button and popups if there is any
+		model.addAttribute("isPlaying", isPlaying); 
+
+		// Query the names of the properties of every player 
+		List<List<String>> properties = new ArrayList<List<String>>();
+		for(Player p:players) {
+			properties.add(playerService.findPlayerPropertiesNames(p));
+		} 
+
+		model.addAttribute("Properties", properties);
+		    
+		// Complete street colors
+ 		List<List<Color>> colors = new ArrayList<List<Color>>();
+		for(Player p:players) {
+			colors.add(streetService.findPlayerColors(p));
+		}
+ 		model.addAttribute("Colors", colors);
+		return model;
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
+	public void evaluateTurn(Model model, Integer gameId, Authentication auth) throws Exception {
+		Turn turn = turnService.findLastTurn(gameId).get();
+		User requestUser = userService.findUserByName(auth.getName()).orElse(null);
+		if(requestUser == null) {
+			throw new Exception("No such user found for that principal");
+		}
+		Game game = findGame(gameId).get();
+		
+		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
+			
+			if(!turn.getIsActionEvaluated()) {
+				turnService.evaluateTurnAction(turn, false);
+			}
+			
+			turn.setIsFinished(true);
+			
+			turn.getPlayer().setTile(turn.getFinalTile());
+			playerService.savePlayer(turn.getPlayer());
+			
+			game.setVersion(game.getVersion() + 1);
+			saveGame(game);
+			
+			turnService.saveTurn(turn);
+		}
 	}
 		
 }

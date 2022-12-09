@@ -10,9 +10,9 @@
 	<h1 class="propertyTxt2">Current Bid: <c:out value = "${auction.currentBid}"></c:out> M </h1>
 
 	
-	<a  class="propertyImg">
+	<div  class="propertyImg">
 		<img  alt="Card image" src="${property.badgeImage}">
-	</a>
+	</div>
 	
 	<form:form modelAttribute="auction" id = "AuctionForm" >
 		<input type="hidden" name="playerIndex" value="${auction.playerIndex}"/>
@@ -22,12 +22,13 @@
 		<input type="hidden" name="currentBid" value="${auction.currentBid}"/>
 		<input type="hidden" name="playerBid" value="${auction.playerBid}" id = "playerBid"/>
 		<input type="hidden" name="propertyId" value="${auction.propertyId}"/>
-		<a class="popUpButtons">
+		<input type="hidden" name="gameId" value="${auction.gameId}"/>
+		<div class="popUpButtons">
 			<button class="popUpDangerButton">Abandon</button>
 			<button class="popUpButton" type = "button" onclick="newBid(1)">1M</button>
 			<button class="popUpButton" type = "button" onclick="newBid(10)">10M</button>
 			<button class="popUpButton" type = "button" onclick="newBid(100)">100M</button>
-		</a>
+		</div>
     </form:form>
 
 <script>
