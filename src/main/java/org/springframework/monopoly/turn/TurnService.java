@@ -69,17 +69,14 @@ public class TurnService {
 	}
 	
 	@Transactional
-	public void evaluateTurn(Turn turn, Boolean formValue) {
-		// Llamada al metodo de property
+	public void evaluateTurnAction(Turn turn, Boolean formValue) {
+		// Call to the method handling properties
 		if(formValue || turn.getAction().equals(Action.PAY)) {
 			propertyService.calculateActionProperty(turn);
 		}
 		
-		// Llamada al metodo del resto de las tiles
+		// Call to the method handling the rest of the tiles
 		tileService.calculateActionTile(turn, null);
-		
-		// Saving again just in case some method forgot earlier
-		playerService.savePlayer(turn.getPlayer());
 		
 		turn.setIsActionEvaluated(true);
 		saveTurn(turn);
