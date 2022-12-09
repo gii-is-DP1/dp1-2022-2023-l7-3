@@ -22,7 +22,8 @@ public class GameVersionController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Integer getVersion(@PathVariable("gameId") Integer gameId) {
-		return gameService.findGame(gameId).get().getVersion();
+		Game version = gameService.findGame(gameId).orElse(null);
+		return version == null ? 0 : version.getVersion();
 	}
 	
 }
