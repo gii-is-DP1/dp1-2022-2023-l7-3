@@ -274,11 +274,6 @@
 		 
 	</div>
 	
-	<!-- 
-	
-	Insert pop up layouts in this space here
-	
-	 -->
 	 <c:if test="${Turn.action == 'PAY'}">
 		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:haveToPay/>
@@ -309,7 +304,6 @@
 		 </monopoly:popup>
 	 </c:if>
 	 
-	 <!-- Action for this thing ? -->
 	 <c:if test="${Turn.action == 'MORTGAGE'}">
 		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
 		 	<monopoly:mergeBuilding/>
@@ -328,7 +322,7 @@
 		 </monopoly:popup>
 	 </c:if>
 	 
-	 
+	 <!-- Popup showing related scripts -->
 	 <script>
 	 	function parsePopUp(showOrHide = true, inputAction) {
 	 		let monodolarEmote = "<img style='height: 24px' src='/resources/images/Monodolar.png'/>";
@@ -406,6 +400,8 @@
 		}
 	 </script>
 	 
+	
+	<!-- Piece moving on board scripts --> 
 	<script>
 		function start() {
 			if(--imgCount > 0) {
@@ -446,7 +442,7 @@
 					}, velocity);
 				}
 			} else {
-				if('${Turn.action}' == 'AUCTION' || '${Turn.action}' == 'DRAW_CARD' || 
+				if((('${Turn.action}' == 'AUCTION' || '${Turn.action}' == 'DRAW_CARD') && '${Turn.isActionEvaluated}' == 'false') || 
 						('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
 					parsePopUp(true);
 					
@@ -506,6 +502,7 @@
 
 	</script>
 	
+	<!-- Auxiliary scripts to control piece position on board -->
 	<script>
 		function positionToCoords(pos) {
 			coords = {
@@ -561,6 +558,7 @@
 		}
 	</script>
 	
+	<!-- Script in charge of loading and starting piece animation -->
 	<script defer>
 		let play = true;
 	
@@ -580,6 +578,7 @@
 		let ctx = canvas.getContext('2d');
 	</script>
 	
+	<!-- Scripts for setting up every player's piece on the board -->
 <c:forEach items="${Players}" varStatus="status">
 	<script defer>
 		(function () {
@@ -629,6 +628,7 @@
 	</script>
 </c:forEach>
 
+	<!-- Card images zoom setter and controller -->
 	<script>
 		let cardImg = null;
 		let gamePopUpDiv = null;
@@ -663,6 +663,7 @@
 		}
 	</script>
 	
+	<!-- Script in charge of testing if game state has changed and reloads the page if needed -->
 	<script>
 		function ajaxStartScanningForChanges() {
 			var auto_refresh = setInterval(
@@ -678,6 +679,7 @@
 		}
 	</script>
 	
+	<!-- Ajax related jquery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 </monopoly:layout>

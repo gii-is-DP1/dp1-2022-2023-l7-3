@@ -17,13 +17,11 @@ package org.springframework.monopoly.user;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,8 +57,8 @@ public class UserService {
 	}
 	
 	@Transactional
-	public void saveUser(User monopolyUser) throws DataAccessException {
-		monopolyUserRepository.save(monopolyUser);
+	public User saveUser(User monopolyUser) throws DataAccessException {
+		return monopolyUserRepository.save(monopolyUser);
 	}
 	
 	@Transactional(readOnly = true)
