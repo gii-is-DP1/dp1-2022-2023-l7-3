@@ -7,21 +7,19 @@
 <link href="${gameCss}" rel="stylesheet"/>
 
 	<h1 class="propertyTxt">Choose how to get out of jail</h1>
-	
-	<a  class="JailImg" href="${cardUrl}">
-		<img  alt="Jail image" src="/resources/images/Jail.png">	
-	</a>
+
+	<img class="propertyImg" id="JailImg" alt="Jail image" src="/resources/images/Jail.png">
 
 	<form:form modelAttribute="exitGate" id = "ExitGateForm" action = "/exitGate">
 		<input type="hidden" name="option" value="${0}"/>
 	
-		<a class="popUpButtons">
+		<div class="popUpButtons">
 			<button class="popUpButton" type = "button" onclick="exitJailOption(1)">Pay 50M</button>
 			<c:if test="${player.hasExitGate}">
 				<button class="popUpButton" type = "button" onclick="exitJailOption(2)">Use Exit Gate Card</button>
 			</c:if>
 			<button class="popUpButton" type = "button" onclick="exitJailOption(3)">Roll dice</button>
-		</a>
+		</div>
 	</form:form>
 	
 <script>

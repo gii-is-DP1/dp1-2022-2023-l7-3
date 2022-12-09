@@ -7,10 +7,7 @@
 
 	<h1 class="propertyTxt">Do you want to buy this property for <c:out value = "${property.price}"></c:out> <img style="height: 22px" src="/resources/images/Monodolar.png"/> ?</h1>
 
-	
-	<div  class="propertyImg">
-		<img id="cardImg" alt="Card image" src="${property.badgeImage}">
-	</div>
+		<img class="propertyImg" id="cardImg" alt="Card image" src="${property.badgeImage}">
 
 	<a class="popUpButtons">
 		<button type="button" class="popUpButton" onclick="setFormInput('true')">Yes</button>

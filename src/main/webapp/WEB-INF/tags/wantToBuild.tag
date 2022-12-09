@@ -7,9 +7,7 @@
 
 	<h1 class="propertyTxt">Do you want to build?</h1>
 
-    <a  class="constructorImg" href="${cardUrl}">
-		<img  alt="Card image" src="/resources/images/monopolyConstructor.png">
-	</a>
+		<img  class="propertyImg" alt="Card image" src="/resources/images/monopolyConstructor.png">
 
 	<a class="popUpButtons">
 		<button type="button" onclick="closeOpenPopUp(&quot;wantToBuildPopUp&quot, &quot;buildBuildingsPopUp&quot)" class="popUpButton">Yes</button>
