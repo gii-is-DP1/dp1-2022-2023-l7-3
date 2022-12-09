@@ -27,8 +27,8 @@ public class TurnService {
 	}
 
 	@Transactional
-	public void saveTurn(Turn turn) throws DataAccessException {
-		turnRepository.save(turn);
+	public Turn saveTurn(Turn turn) throws DataAccessException {
+		return turnRepository.save(turn);
 	}
 	
 	@Transactional
@@ -79,7 +79,6 @@ public class TurnService {
 			break;
 		default:
 			break;
-			
 		}
 		
 		// Call to the method handling the rest of the tiles
