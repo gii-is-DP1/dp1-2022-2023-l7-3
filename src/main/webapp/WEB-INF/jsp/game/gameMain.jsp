@@ -322,6 +322,12 @@
 		 </monopoly:popup>
 	 </c:if>
 	 
+	 <c:if test="${Turn.action == 'AUCTION'}">
+		 <monopoly:popup popUpId="auction" gameId="${Game.id}" popUpPostFormAction="auction">
+		 	<monopoly:auctionBuilding/>
+		 </monopoly:popup>
+	 </c:if>
+	 
 	 
 	 <script>
 	 	function parsePopUp(showOrHide = true, inputAction) {
@@ -440,7 +446,8 @@
 					}, velocity);
 				}
 			} else {
-				if('${Turn.action}' == 'DRAW_CARD' || ('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
+				if('${Turn.action}' == 'AUCTION' || '${Turn.action}' == 'DRAW_CARD' || 
+						('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
 					parsePopUp(true);
 					
 					let showActionButton = document.getElementById('showActionButton');

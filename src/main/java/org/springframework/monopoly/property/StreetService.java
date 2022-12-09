@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.player.Player;
@@ -18,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class StreetService {
 	
 	private StreetRepository streetRepository;
-	
-	@PersistenceContext
-	private EntityManager em;
 	
 	@Autowired
 	public StreetService(StreetRepository streetRepository) {

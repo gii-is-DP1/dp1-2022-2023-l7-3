@@ -14,5 +14,5 @@
 
 	<a class="popUpButtons">
 		<button type="button" class="popUpButton" onclick="setFormInput('true')">Yes</button>
-		<button type="button" onclick="setFormInput('false')" class="popUpButton">No</button>
+		<button type="button" class="popUpButton" onclick="setFormInput('false')">No</button>
 	</a>

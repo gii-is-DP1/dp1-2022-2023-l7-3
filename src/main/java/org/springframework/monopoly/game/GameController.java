@@ -18,11 +18,10 @@ import org.springframework.monopoly.property.Auction;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
-import org.springframework.monopoly.property.Street;
-import org.springframework.monopoly.property.StreetService;
 import org.springframework.monopoly.tile.ExitGateForm;
 import org.springframework.monopoly.tile.TaxesService;
 import org.springframework.monopoly.tile.TileService;
+import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
@@ -49,19 +48,17 @@ public class GameController {
 	private PlayerService playerService;
 	private UserService userService;
 	private TurnService turnService;
-	private StreetService streetService;
 	private PropertyService propertyService;
 	private TileService tileService;
 	
 	@Autowired
-	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService,
-			StreetService streetService, PropertyService propertyService, TaxesService taxesService, TileService tileService,
+	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService, 
+			PropertyService propertyService, TaxesService taxesService, TileService tileService,
 			CardService cardService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
-		this.streetService = streetService;
 		this.propertyService = propertyService;
 		this.tileService = tileService;
 	}
@@ -111,10 +108,11 @@ public class GameController {
 	public String auctionFinal(@PathVariable("gameId") int gameId, Auction auction, Model model, Authentication authentication) throws Exception {
 		Object property = propertyService.getProperty(auction.getPropertyId(), gameId);
 		Auction newAuction = propertyService.auctionPropertyById(auction);
+		
 		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
-			//propertyService.setAuctionWinner(newAuction, turnService.findLastTurn(idGame).get());
-			return GAMES_LISTING;
+			propertyService.setAuctionWinner(newAuction);
 		}
+		
 		model.addAttribute("property", property);
 		model.addAttribute("auction", newAuction);
 		model.addAttribute("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
@@ -211,15 +209,24 @@ public class GameController {
 	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		model = gameService.setupGameModel(model, gameId, auth);
 		return GAME_MAIN;
-	} 
+	}  
 	
 	@PostMapping(value = "/game/{gameId}/tileAction")
-	public String evalTurnAction(@PathVariable("gameId") int gameId, Boolean formValue, Authentication auth, Model model) throws Exception {
+	public String evalTurnAction(@PathVariable("gameId") int gameId, Boolean decisionResult, Authentication auth, Model model) throws Exception {
 		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		
 		if(lastTurn != null) {
-			turnService.evaluateTurnAction(lastTurn, formValue);
-		}
+			if(lastTurn.getAction().equals(Action.BUY) && !decisionResult) {
+				lastTurn.setAction(Action.AUCTION);
+				turnService.saveTurn(lastTurn);
+			} else { 
+				turnService.evaluateTurnAction(lastTurn, decisionResult);
+			}
+		}  
+		
+		Game game = gameService.findGame(gameId).get();
+		game.setVersion(game.getVersion()+1);
+		gameService.saveGame(game);
 		
 		return "redirect:/game/" + gameId;
 	} 

@@ -125,7 +125,7 @@ public class PropertyServiceTests {
 	@Test
 	void testAuctionWinner() {
 		Auction auction = new Auction(0, List.of(5), 300, 0, 1, 2);
-		this.propertyService.setAuctionWinner(auction, turn);
+		this.propertyService.setAuctionWinner(auction);
 		assertThat(turn.getPlayer().getMoney()).isEqualTo(277);
 		Property property = (Property)this.propertyService.getProperty(auction.getPropertyId(), auction.getGameId());
 		assertThat(property.getOwner()).isEqualTo(turn.getPlayer());
