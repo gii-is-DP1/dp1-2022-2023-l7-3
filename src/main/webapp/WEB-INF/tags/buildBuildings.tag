@@ -7,7 +7,7 @@
 
 	<h1 class="propertyTxt">What do you want to build?</h1>
 
-	    <table id="propertiesTable" class="table table-striped">
+	    <table id="propertiesTable" class="table table-fixed">
         <thead>
         <tr>
             <th style="font-size: 20px; text-align: center;">COLOR</th>
