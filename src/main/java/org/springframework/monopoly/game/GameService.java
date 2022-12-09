@@ -65,15 +65,13 @@ public class GameService {
 	private GenericService genericService;
 	private TurnService turnService;
 	private PropertyService propertyService;
-	private TaxesService taxesService;
 	private CardService cardService;
 	
 	@Autowired
 	public GameService(GameRepository gameRepository, StreetService streetService,
 			CompanyService companyService, StationService stationService, UserService userService,
 			PlayerService playerService, CommunityBoxService cbService, LuckService luckService, TaxesService taxService,
-			GenericService genericService, GameService gameService, TurnService turnService,
-			PropertyService propertyService, CardService cardService) {
+			GenericService genericService, TurnService turnService, PropertyService propertyService, CardService cardService) {
 		this.gameRepository = gameRepository;
 		this.streetService = streetService;
 		this.stationService = stationService;
@@ -309,7 +307,7 @@ public class GameService {
 		 
 		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
 		if(turn.getAction().equals(Action.PAY_TAX)) {
-			model.addAttribute("taxes", taxesService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
+			model.addAttribute("taxes", taxService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
 		} else if(turn.getAction().equals(Action.DRAW_CARD)) {
 			Card card = cardService.findCardById(turn.getActionCardId()).orElse(null);
 			if(card != null) {

@@ -11,7 +11,7 @@ import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
-import org.springframework.monopoly.turn.TurnService;
+import org.springframework.monopoly.util.RollGenerator;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,7 +21,6 @@ public class PropertyService {
 	private CompanyRepository companyRepository;
 	private StationRepository stationRepository;
 	private PlayerRepository playerRepository;
-	private static TurnService turnService;
 	
 	@Autowired
 	public PropertyService( StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository , PlayerRepository playerRepository) {
@@ -162,7 +161,7 @@ public class PropertyService {
 		Company company = (Company) property;
 		Integer n = 4;
 		if (companyRepository.findByOwner(company.getOwner().getId(),company.getGame().getId()).stream().count() == 2.) n = 10;
-		return n * turnService.getRoll().getFirst();
+		return n * RollGenerator.getRoll().getFirst();
 	}
 	
 
@@ -211,10 +210,10 @@ public class PropertyService {
 		return new Auction(newIndex, newRemaining, newBid, 0, auction.getPropertyId(), auction.getGameId());
 	}
 	
-	public void setAuctionWinner(Auction auction, Turn turn) {
-		Player auctionWinner = playerRepository.findPlayerById(auction.getRemainingPlayers().get(0), turn.getGame().getId());
+	public void setAuctionWinner(Auction auction) {
+		Player auctionWinner = playerRepository.findPlayerById(auction.getRemainingPlayers().get(0), auction.getGameId());
 		auctionWinner.setMoney(auctionWinner.getMoney() - auction.getCurrentBid());
-		Property property = (Property) getProperty(auction.getPropertyId(), turn.getGame().getId());
+		Property property = (Property) getProperty(auction.getPropertyId(), auction.getGameId());
 		property.setOwner(auctionWinner);
 		
 		playerRepository.save(auctionWinner);
