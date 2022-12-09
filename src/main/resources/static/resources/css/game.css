@@ -227,9 +227,7 @@
 	height: 60vh
 }
 
-.table-fixed{
 
-}
 
 .propertyTxt{
 	padding:0px;
@@ -254,7 +252,46 @@
 	margin:auto;
 }
 
+thead{
+	display:inline-block;
+	align-items:center;
+}
 
+tbody{
+	display:inline-block;
+	overflow-y:scroll;
+}
+td{
+	display:flex;
+	align-items:center;
+	margin:auto;
+	width: 11.75vw;
+	height: 8vh;
+}
+tr{
+	display:flex;
+	flex-direction: row;
+	width:47vw;
+	height: 8vh;
+	align-items:center;
+}
+
+.tableCell{
+	display:inline;
+	text-align: center;
+	align-items: center;
+	margin:auto;
+}
+.table{
+	display:flex;
+	flex-direction: column;
+	flex: auto;
+	text-align: center;
+	align-items:center;
+	width: 55vw;
+	height:65vh;
+	
+}
 
 .popUpButton2 {
     height: 50px;
