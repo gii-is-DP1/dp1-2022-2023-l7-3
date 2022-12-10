@@ -9,7 +9,7 @@
 
 		<img class="propertyImg" id="cardImg" alt="Card image" src="${property.badgeImage}">
 
-	<a class="popUpButtons">
+	<div class="popUpButtons">
 		<button type="button" class="popUpButton" onclick="setFormInput('true')">Yes</button>
 		<button type="button" class="popUpButton" onclick="setFormInput('false')">No</button>
-	</a>
+	</div>
