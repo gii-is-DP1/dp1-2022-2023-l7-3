@@ -58,26 +58,38 @@ public class GenericService {
 		Player player = turn.getPlayer();
 		List<Turn> turnsJailed = turnRepository.findLastJailedTurns(turn.getGame().getId(), player.getId());
 	    Boolean lastTurnJailed = turnsJailed.stream().allMatch(t-> t.getPlayer().getIsJailed());
+	    if(decision == 2) {
+		    decision = player.getHasExitGate() ? decision:0;
+	    }
 		switch (decision) {
 			case 1: player.setMoney(player.getMoney() - 50); 
 					player.setIsJailed(false);
+					turn.setRoll(0);
+					turnRepository.save(turn);
 					break;
 			case 2: player.setHasExitGate(false); 
 					player.setIsJailed(false);
+					turn.setRoll(0);
+					turnRepository.save(turn);
 					break;
 			case 3: Pair<Integer, Boolean> roll =  RollGenerator.getRoll(); {
 				if (roll.getSecond()) {
 					player.setIsJailed(false);
 					turn.setRoll(roll.getFirst());
+					turn.setIsDoubles(true);
 				} else if(lastTurnJailed) {
 					player.setMoney(player.getMoney() - 50);
 					player.setIsJailed(false);
+					turn.setIsDoubles(false);
+					turn.setRoll(0);
 				}
+				turnRepository.save(turn);
 			}
 			break;
 					
 			default:}
 		playerRepository.save(player);
+
 	}
 	
 }
