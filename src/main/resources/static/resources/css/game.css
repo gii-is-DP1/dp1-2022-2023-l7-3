@@ -227,8 +227,6 @@
 	height: 60vh
 }
 
-
-
 .propertyTxt{
 	padding:0px;
 	/*display: inherit;*/
@@ -261,6 +259,7 @@ tbody{
 	display:inline-block;
 	overflow-y:scroll;
 }
+
 td{
 	display:flex;
 	align-items:center;
@@ -268,6 +267,7 @@ td{
 	width: 11.75vw;
 	height: 8vh;
 }
+
 tr{
 	display:flex;
 	flex-direction: row;
@@ -282,6 +282,7 @@ tr{
 	align-items: center;
 	margin:auto;
 }
+
 .table{
 	display:flex;
 	flex-direction: column;
@@ -289,7 +290,7 @@ tr{
 	text-align: center;
 	align-items:center;
 	width: 55vw;
-	height:65vh;
+	height:59vh;
 	
 }
 
@@ -307,9 +308,6 @@ tr{
 	margin-right: 2px;
 	margin-left: 2px;
 }
-
-
-
 
 .popUpSampleButton{
 	height: 60px;
