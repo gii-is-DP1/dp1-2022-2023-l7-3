@@ -182,8 +182,6 @@
 .popUpButton {
 	height: 6vh;
 	width: 13vw;
-/*     height: 50px;
-    width: 170px; */
     background-color: #47525e;
     color: white;
     border: none;
@@ -250,9 +248,31 @@
 	margin:auto;
 }
 
-thead{
-	display:inline-block;
-	align-items:center;
+.buildButtons{
+	height: 35px;
+	width: 35px;
+	background-color: #47525e;
+	color: white;
+	border: none;
+	border-radius: 100%;
+    margin-top: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	font-weight: bold;
+	display: table-cell;
+	text-align: center;
+}
+
+.cancelButton{
+	height: 35px;
+	width: 35px;
+	background-color: transparent;
+	color: #47525e;
+	border: none;
+	cursor: pointer;
+	display: table-cell;
+	text-align: center;
+	font-size: 20px;
 }
 
 tbody{
@@ -260,7 +280,7 @@ tbody{
 	overflow-y:scroll;
 }
 
-td{
+td, th{
 	display:flex;
 	align-items:center;
 	margin:auto;
@@ -274,6 +294,7 @@ tr{
 	width:47vw;
 	height: 8vh;
 	align-items:center;
+	text-align: center;
 }
 
 .tableCell{
@@ -283,6 +304,22 @@ tr{
 	margin:auto;
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.tableCell2{
+	display:inline;
+	text-align: center;
+	align-items: center;
+	margin:auto;
+	height:3vh;
+	width: 7vh;
+}
+
+
 .table{
 	display:flex;
 	flex-direction: column;
@@ -290,7 +327,7 @@ tr{
 	text-align: center;
 	align-items:center;
 	width: 55vw;
-	height:59vh;
+	height:65vh;
 	
 }
 
@@ -389,8 +426,6 @@ tr{
 	grid-auto-flow: column;
 	
 }
-
-
 
 .color2BROWN {
 	background-color: #804000;
