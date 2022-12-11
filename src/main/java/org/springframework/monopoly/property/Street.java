@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
@@ -27,6 +29,8 @@ public class Street extends Property{
 	
 	@Column(name = "house_num")
 	@NotNull
+	@Max(value=4,message="The number for Houses is between 0 and 4")
+	@Min(value=0,message="The number for Houses is between 0 and 4")
 	private Integer houseNum;
 	
 	@Column(name = "have_hotel")

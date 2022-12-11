@@ -18,6 +18,8 @@ import org.springframework.monopoly.property.Auction;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
+import org.springframework.monopoly.property.Street;
+import org.springframework.monopoly.property.StreetForm;
 import org.springframework.monopoly.tile.ExitGateForm;
 import org.springframework.monopoly.tile.TaxesService;
 import org.springframework.monopoly.tile.TileService;
@@ -74,17 +76,38 @@ public class GameController {
 		Player player = playerService.findPlayerById(players.get(0));
 		Auction auction = new Auction(0, players, 10, 0, idProperty, idGame); 
 		List<Color> colors= propertyService.findPlayerColors(idGame, idPlayer);
-		List<Property> properties= new ArrayList<>();
+		List<Property> streets= new ArrayList<>();
 		for (Color c: colors) {
-			propertyService.findStreetByColor(c, idGame).forEach(x -> properties.add(x));;
+			propertyService.findStreetByColor(c, idGame).forEach(x -> streets.add(x));;
 		}
 		
-		model.put("properties", properties );
+		model.put("streets", streets );
 		model.put("property", property );
 		model.put("auction", auction);
 		model.put("player", player);
 
 		return BLANK_GAME;
+	}
+	
+	@PostMapping(value="/blankGame/build")
+	public String build(StreetForm streetForm,Map<String,Object>model, Authentication authentication) {
+		Integer idGame = 2;
+		Integer idPlayer = 5;
+
+		List<Color> colors= propertyService.findPlayerColors(idGame, idPlayer);
+		List<Street> streets= new ArrayList<>();
+		for (Color c: colors) {
+			propertyService.findStreetByColor(c, idGame).forEach(x -> streets.add(x));;
+		}
+		model.put("streets", streets );
+		Street street = (Street) propertyService.getProperty(streetForm.getStreetId(), idGame);
+		street.setHouseNum(streetForm.getHouse());
+		propertyService.saveProperty(street);
+		
+		
+		
+		return BLANK_GAME;
+		
 	}
 	
 	@PostMapping(value = "/blankGame")
