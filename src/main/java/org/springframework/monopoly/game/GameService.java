@@ -355,8 +355,16 @@ public class GameService {
 			
 			turn.setIsFinished(true);
 			
-			turn.getPlayer().setTile(turn.getFinalTile());
-			playerService.savePlayer(turn.getPlayer());
+			if(turn.getAction().equals(Action.DRAW_CARD)) {
+				Card c = cardService.findCardById(turn.getActionCardId()).get();
+				if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+					turn.getPlayer().setTile(turn.getFinalTile());
+					playerService.savePlayer(turn.getPlayer());
+				}
+			} else {
+				turn.getPlayer().setTile(turn.getFinalTile());
+				playerService.savePlayer(turn.getPlayer());
+			}
 			
 			game.setVersion(game.getVersion() + 1);
 			saveGame(game);

@@ -215,7 +215,7 @@
 	align-self: center;
 	display: flex;
 	margin:auto;
-	height: 45vh
+	height: 55vh;
 }
 
 .propertyImg2{
@@ -224,7 +224,7 @@
 	align-self: center;
 	display: flex;
 	margin:auto;
-	height: 60vh
+	height: 60vh;
 }
 
 .propertyTxt{
