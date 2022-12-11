@@ -101,7 +101,10 @@ public class GameController {
 		}
 		model.put("streets", streets );
 		Street street = (Street) propertyService.getProperty(streetForm.getStreetId(), idGame);
+		if(streetForm.getHouse()!=null) {
 		street.setHouseNum(streetForm.getHouse());
+		}
+		street.setHaveHotel(streetForm.getHotel());
 		propertyService.saveProperty(street);
 		
 		

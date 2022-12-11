@@ -9,9 +9,11 @@ public class StreetForm {
 	
 	private Integer streetId;
 	private Integer house;
-	public StreetForm(Integer streetId, Integer house){
+	private Boolean hotel;
+	public StreetForm(Integer streetId, Integer house, Boolean hotel){
 		this.streetId=streetId;
 		this.house=house;
+		this.hotel=hotel;
 	}
 
 }
