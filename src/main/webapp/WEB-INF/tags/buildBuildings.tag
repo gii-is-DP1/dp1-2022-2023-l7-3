@@ -33,9 +33,11 @@
                     	<td>
 	                		<input type="number" name="house" class="tableCell" placeholder="${street.houseNum}">  
                    		</td>
+                   		<c:if test="${street.haveHotel==false}">
                     	<td>
-                        	<div class="tableCell">${street.haveHotel}</div>  
-                    	</td>
+	                		<input type="checkbox" name="hotel" class="tableCell" placeholder="${street.haveHotel}">  
+                   		</td>
+                   		</c:if>
                     	<td>
                     		<button type="submit" class="popUpButton">Confirm</button>
                     	</td>
