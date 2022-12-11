@@ -28,7 +28,6 @@ public class Street extends Property{
 	private Integer buildingPrice;
 	
 	@Column(name = "house_num")
-	@NotNull
 	@Max(value=4,message="The number for Houses is between 0 and 4")
 	@Min(value=0,message="The number for Houses is between 0 and 4")
 	private Integer houseNum;
