@@ -6,16 +6,19 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-	<h1 class="propertyTxt">What do you want to build?</h1>
+	<div style="display:flex;flex-direction: row;margin: auto;">
+		<h1 class="propertyTxt">What do you want to build?</h1>
+		<button onclick="closePopUp(&quot;buildBuildingsPopUp&quot)" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
+	</div>
     <div class="tableButtoms">
-    	
         <table id="propertiesTable" class="table table-stripped">
             <thead>
             <tr>
-                <th style="font-size: 20px; width: 25vw; text-align: center;">COLOR</th>
-                <th style="font-size: 20px; width: 25vw; text-align: center;">NAME</th>
-                <th style="font-size: 20px; width: 25vw; text-align: center;">HOUSES</th>
-                <th style="font-size: 20px; width: 25vw; text-align: center;">HOTEL</th>
+                <th><div class="tableCell">COLOR</div> </th>
+                <th style="width: 30vw;"><div class="tableCell">NAME</div> </th>
+                <th><div class="tableCell">HOUSES</div> </th>
+                <th><div class="tableCell">HOTEL</div> </th>
+				<th><div class="tableCell"></div> </th>
                 
             </tr>
             </thead>
@@ -27,29 +30,23 @@
                     	<td>
                         	<div  class="color2${street.color}">   </div>                    
                     	</td>
-                    	<td>
+                    	<td style="width: 30vw;">
                         	<div class="tableCell">${street.name}</div>  
                     	</td>
                     	<td>
-	                		<input type="number" name="house" class="tableCell" placeholder="${street.houseNum}">  
+	                		<input type="number" name="house" class="tableCell2" placeholder="${street.houseNum}">  
                    		</td>
                    		<c:if test="${street.haveHotel==false}">
-                    	<td>
-	                		<input type="checkbox" name="hotel" class="tableCell" placeholder="${street.haveHotel}">  
+                    	<td class="tableCell">
+	                		<input type="checkbox" name="hotel" class="tableCell" style= "margin-top: 15px;" placeholder="${street.haveHotel}">  
                    		</td>
                    		</c:if>
-                    	<td>
-                    		<button type="submit" class="popUpButton">Confirm</button>
+                    	<td class="tableCell">
+                    		<button type="submit" class="buildButtons"><span class="glyphicon glyphicon-ok"></span></button>
                     	</td>
                 	</tr>
                 </form:form>
             </c:forEach>
             </tbody>
-        </table>
-        
-        <div class="popUpButtons">
-           
-            <button onclick="closePopUp(&quot;buildBuildingsPopUp&quot)" class="popUpDangerButton">Cancel</button>
-        </div>
-       
+        </table>       
     </div>
