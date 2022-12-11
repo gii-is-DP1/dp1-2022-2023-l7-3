@@ -219,4 +219,9 @@ public class PropertyService {
 		playerRepository.save(auctionWinner);
 		saveProperty(property);
 	}
+	
+	public List<Street> findStreetName(){
+		return (List<Street>) this.streetRepository.findAll();
+		
+	}
 }
