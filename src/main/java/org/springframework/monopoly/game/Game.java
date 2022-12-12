@@ -9,10 +9,12 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 
 import org.springframework.monopoly.model.BaseEntity;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.property.Auction;
 import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.Street;
@@ -53,6 +55,10 @@ public class Game extends BaseEntity {
     
     @Column(name = "version")
     protected Integer version = 0;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "gameid")
+    protected Set<Auction> auctions;
 
 	@Override
 	public int hashCode() {

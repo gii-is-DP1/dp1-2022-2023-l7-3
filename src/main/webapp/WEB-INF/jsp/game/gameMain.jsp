@@ -300,7 +300,7 @@
 	 
 	 <c:if test="${Turn.action == 'AUCTION'}">
 		 <monopoly:popup popUpId="auctionBuilding" gameId="${Game.id}" popUpPostFormAction="auction">
-		 	<monopoly:auctionBuilding/>
+		 	<monopoly:auctionBuilding2/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -313,12 +313,6 @@
 	 <c:if test="${Turn.action == 'DRAW_CARD'}">
 		 <monopoly:popup popUpId="drawCard" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:showCard/>
-		 </monopoly:popup>
-	 </c:if>
-	 
-	 <c:if test="${Turn.action == 'AUCTION'}">
-		 <monopoly:popup popUpId="auction" gameId="${Game.id}" popUpPostFormAction="auction">
-		 	<monopoly:auctionBuilding/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -459,7 +453,7 @@
 					endTurnButton.disabled = "";
 				}
 				
-				ajaxStartScanningForChanges();
+				// ajaxStartScanningForChanges();
 			}
 			
 		}
