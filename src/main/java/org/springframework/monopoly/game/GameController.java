@@ -15,6 +15,7 @@ import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
+import org.springframework.monopoly.property.AuctionRepository;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
@@ -52,17 +53,19 @@ public class GameController {
 	private TurnService turnService;
 	private PropertyService propertyService;
 	private TileService tileService;
+	private AuctionRepository auctionRepository;
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService, 
 			PropertyService propertyService, TaxesService taxesService, TileService tileService,
-			CardService cardService) {
+			CardService cardService, AuctionRepository auctionRepository) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
 		this.propertyService = propertyService;
 		this.tileService = tileService;
+		this.auctionRepository = auctionRepository;
 	}
 
 	//PROVISIONAL
@@ -87,7 +90,7 @@ public class GameController {
 		model.put("player", player);
 
 		return BLANK_GAME;
-	}
+	} 
 	
 	@PostMapping(value="/blankGame/build")
 	public String build(StreetForm streetForm,Map<String,Object>model, Authentication authentication) {
@@ -114,7 +117,7 @@ public class GameController {
 	}
 	
 	@PostMapping(value = "/blankGame")
-	public String auction( Auction auction, Map<String, Object> model, Authentication authentication) {
+	public String auction(Auction auction, Map<String, Object> model, Authentication authentication) {
 		Integer idGame = 2;
 		Object property = propertyService.getProperty(auction.getPropertyId(), idGame);
 		Auction newAuction = propertyService.auctionPropertyById(auction);
@@ -130,22 +133,51 @@ public class GameController {
 	}
 	
 	// Auction method with the real game mapping
-	@PostMapping(value = "/game/{gameId}/auction")
-	public String auctionFinal(@PathVariable("gameId") int gameId, Auction auction, Model model, Authentication authentication) throws Exception {
+	@GetMapping(value = "/game/{gameId}/auction")
+	public String auctionGetFinal(@PathVariable("gameId") int gameId, Auction auction, Model model, Authentication authentication) throws Exception {
 		Object property = propertyService.getProperty(auction.getPropertyId(), gameId);
-		Auction newAuction = propertyService.auctionPropertyById(auction);
-		
-		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
-			propertyService.setAuctionWinner(newAuction);
-		}
+		Auction oldAuction = gameService.getLastAuction(gameId);
 		
 		model.addAttribute("property", property);
-		model.addAttribute("auction", newAuction);
-		model.addAttribute("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
+		model.addAttribute("auction", oldAuction);
+		model.addAttribute("player", playerService.findPlayerById(oldAuction.getRemainingPlayers().get(oldAuction.getPlayerIndex())));
 		
 		model = gameService.setupGameModel(model, gameId, authentication);
 		
 		return GAME_MAIN;
+	}
+	
+	@PostMapping(value = "/game/{gameId}/auction")
+	public String auctionPostFinal(@PathVariable("gameId") int gameId, Auction auction, Model model, Authentication authentication) throws Exception {
+		Object property = propertyService.getProperty(auction.getPropertyId(), gameId);
+		Auction newAuction = propertyService.auctionPropertyById(auction);
+		newAuction = auctionRepository.save(newAuction);
+		
+		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
+			propertyService.setAuctionWinner(newAuction);
+			
+			model.addAttribute("property", property);
+			model.addAttribute("auction", newAuction);
+			model.addAttribute("player", playerService.findPlayerById(newAuction.getRemainingPlayers().get(newAuction.getPlayerIndex())));
+			
+			model = gameService.setupGameModel(model, gameId, authentication);
+			
+			Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
+			
+			if(lastTurn != null) {
+				turnService.evaluateTurnAction(lastTurn, false);
+			}  
+			
+			Game game = gameService.findGame(gameId).get();
+			game.setVersion(game.getVersion()+1);
+			gameService.saveGame(game);
+			
+			return GAME_MAIN;
+		} else {
+			return "redirect:/game/" + gameId + "/auction";
+		}
+		
+		
 	}
 	
 	@PostMapping(value = "/exitGate")
@@ -234,6 +266,12 @@ public class GameController {
 	@GetMapping(value = "/game/{gameId}")
 	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		model = gameService.setupGameModel(model, gameId, auth);
+		
+		Turn turn = (Turn) model.getAttribute("Turn");
+		if(turn != null && turn.getAction().equals(Action.AUCTION)) {
+			return "redirect:/game/" + gameId + "/auction";
+		}
+		
 		return GAME_MAIN;
 	}  
 	

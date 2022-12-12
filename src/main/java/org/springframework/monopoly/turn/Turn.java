@@ -1,6 +1,5 @@
 package org.springframework.monopoly.turn;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,6 +30,9 @@ public class Turn extends BaseEntity {
 	
 	@Column(name = "is_action_evaluated")
 	private Boolean isActionEvaluated = false;
+	
+	@Column(name = "is_auction_ongoing")
+	private Boolean isAuctionOnGoing = false;
 	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")

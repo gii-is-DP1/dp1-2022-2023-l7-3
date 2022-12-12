@@ -84,6 +84,7 @@ public class TurnService {
 		// Call to the method handling the rest of the tiles
 		tileService.calculateActionTile(turn, null);
 		
+		// Careful here, might set evaluated when nothing happened/ it didnt work
 		turn.setIsActionEvaluated(true);
 		saveTurn(turn);
 	}
