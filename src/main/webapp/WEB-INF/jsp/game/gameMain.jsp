@@ -16,7 +16,7 @@
 						<p> Properties </p>
 						<c:if test="${!Properties.get(0).isEmpty()}">
 							<c:forEach items="${Properties.get(0)}" var="property">
-								<span>${property}</span>
+								<span><c:out value = "${property}" /></span>
 							</c:forEach>
 						</c:if>
 					</div>
@@ -25,7 +25,7 @@
 					<div class="colors">
 						<c:if test="${Colors[0] != null && !Colors[0].isEmpty()}">
 							<c:forEach items="${Colors[0]}" var="color">
-								<div class="color${color}">   </div>
+								<div class="color<c:out value = "${color}" />">   </div>
 							</c:forEach>
 						</c:if> 
 					</div>
@@ -42,8 +42,8 @@
 				
 				<div class="playerAndMoney">
 					<img class="playerAvatar" src="/resources/images/Verde.png" />
-					<p>${Players[0].user.username}</p>
-					<p>${Players[0].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
+					<p><c:out value = "${Players[0].user.username}" /></p>
+					<p><c:out value = "${Players[0].money}" /> <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 				</div>
 			</div>
 			
@@ -56,7 +56,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(4).isEmpty()}">
 								<c:forEach items="${Properties.get(4)}" var="property">
-									<span>${property}</span>
+									<span><c:out value = "${property}" /></span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -65,7 +65,7 @@
 						<div class="colors">
 							<c:if test="${Colors[4] != null && !Colors[4].isEmpty()}">
 								<c:forEach items="${Colors[4]}" var="color">
-									<div class="color${color}">   </div>
+									<div class="color<c:out value = "${color}" />">   </div>
 								</c:forEach>
 							</c:if> 
 						</div>
@@ -82,8 +82,8 @@
 					
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Amarillo.png" />
-						<p>${Players[4].user.username}</p>
-						<p>${Players[4].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
+						<p><c:out value = "${Players[4].user.username}" /></p>
+						<p><c:out value = "${Players[4].money}" /> <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 					</div>
 				</c:if>
 			</div>
@@ -97,7 +97,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(2).isEmpty()}">
 								<c:forEach items="${Properties.get(2)}" var="property">
-									<span>${property}</span>
+									<span><c:out value = "${property}" /></span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -106,7 +106,7 @@
 						<div class="colors">
 							<c:if test="${Colors[2] != null && !Colors[2].isEmpty()}">
 								<c:forEach items="${Colors[2]}" var="color">
-									<div class="color${color}">   </div>
+									<div class="color<c:out value = "${color}" />">   </div>
 								</c:forEach>
 							</c:if> 
 						</div>
@@ -123,8 +123,8 @@
 					
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Rosa.png" />
-						<p>${Players[2].user.username}</p>
-						<p>${Players[2].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
+						<p><c:out value = "${Players[2].user.username}" /></p>
+						<p><c:out value = "${Players[2].money}" /> <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 					</div>
 				</c:if>
 			</div>
@@ -133,7 +133,7 @@
 		
 		<div class="secondColumn">
 			<div class="boardTextDiv">
-				<p> It's ${CurrentUser}'s turn </p>
+				<p> It's <c:out value = "${CurrentPlayer}" />'s turn. <c:if test="${Turn.isDoubles}">It was doubles!</c:if></p>
 				<p id="boardText"></p>
 			</div>
 			<canvas id="Board" width="600" height="600"></canvas>
@@ -143,7 +143,7 @@
 						<button id="endTurnButton" class="mainButtonStyle" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
 					</a>
 				</c:if>
-				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '${Turn.action}')" disabled="disabled"> Show turn action </button>
+				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action </button>
 			</div>
 			
 		</div>
@@ -157,7 +157,7 @@
 						<p> Properties </p>
 						<c:if test="${!Properties.get(1).isEmpty()}">
 							<c:forEach items="${Properties.get(1)}" var="property">
-								<span>${property}</span>
+								<span><c:out value = "${property}" /></span>
 							</c:forEach>
 						</c:if>
 					</div>
@@ -166,7 +166,7 @@
 					<div class="colors">
 						<c:if test="${Colors[1] != null && !Colors[1].isEmpty()}">
 							<c:forEach items="${Colors[1]}" var="color">
-								<div class="color${color}">   </div>
+								<div class="color<c:out value = "${color}" />">   </div>
 							</c:forEach>
 						</c:if> 
 					</div>
@@ -183,8 +183,8 @@
 				
 				<div class="playerAndMoney">
 					<img class="playerAvatar" src="/resources/images/Azul.png" />
-					<p>${Players[1].user.username}</p>
-					<p>${Players[1].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
+					<p><c:out value = "${Players[1].user.username}" /></p>
+					<p><c:out value = "${Players[1].money}" /> <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 				</div>
 			</div>
 			
@@ -197,7 +197,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(5).isEmpty()}">
 								<c:forEach items="${Properties.get(5)}" var="property">
-									<span>${property}</span>
+									<span><c:out value = "${property}" /></span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -206,7 +206,7 @@
 						<div class="colors">
 							<c:if test="${Colors[5] != null && !Colors[5].isEmpty()}">
 								<c:forEach items="${Colors[5]}" var="color">
-									<div class="color${color}">   </div>
+									<div class="color<c:out value = "${color}" />">   </div>
 								</c:forEach>
 							</c:if> 
 						</div>
@@ -223,8 +223,8 @@
 					
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Cyan.png" />
-						<p>${Players[5].user.username}</p>
-						<p>${Players[5].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
+						<p><c:out value = "${Players[5].user.username}" /></p>
+						<p><c:out value = "${Players[5].money}" /> <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p>
 					</div>
 				</c:if>
 			</div>
@@ -238,7 +238,7 @@
 							<p> Properties </p>
 							<c:if test="${!Properties.get(3).isEmpty()}">
 								<c:forEach items="${Properties.get(3)}" var="property">
-									<span>${property}</span>
+									<span><c:out value = "${property}" /></span>
 								</c:forEach>
 							</c:if>
 						</div>
@@ -247,7 +247,7 @@
 						<div class="colors">
 							<c:if test="${Colors[3] != null && !Colors[3].isEmpty()}">
 								<c:forEach items="${Colors[3]}" var="color">
-									<div class="color${color}">   </div>
+									<div class="color<c:out value = "${color}" />">   </div>
 								</c:forEach>
 							</c:if> 
 						</div>
@@ -264,8 +264,8 @@
 					
 					<div class="playerAndMoney">
 						<img class="playerAvatar" src="/resources/images/Naranja.png" />
-						<p>${Players[3].user.username}</p>
-						<p>${Players[3].money} <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p> 
+						<p><c:out value = "${Players[3].user.username}" /></p>
+						<p><c:out value = "${Players[3].money}" /> <img class="monodolarEmote" src="/resources/images/Monodolar.png"/> </p> 
 					</div>
 				</c:if>
 			</div>
@@ -453,7 +453,7 @@
 					endTurnButton.disabled = "";
 				}
 				
-				// ajaxStartScanningForChanges();
+				ajaxStartScanningForChanges();
 			}
 			
 		}
@@ -635,7 +635,7 @@
 				cardImg.style.cursor = "zoom-in";
 			
 			} else { // Add zoom
-				gamePopUpDiv.setAttribute("style", "top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
+				gamePopUpDiv.setAttribute("style", "padding-top: 15%; top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
 				
 				cardImg.style.position = "relative";
 				cardImg.style.height = "95vh";
