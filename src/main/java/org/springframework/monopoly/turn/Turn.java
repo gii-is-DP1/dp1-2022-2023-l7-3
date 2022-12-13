@@ -26,7 +26,7 @@ public class Turn extends BaseEntity {
 
 	@Column(name = "action")
 	@Enumerated(EnumType.STRING)
-	private Action action;
+	private Action action = Action.NOTHING_HAPPENS;
 	
 	@Column(name = "is_action_evaluated")
 	private Boolean isActionEvaluated = false;
@@ -43,7 +43,7 @@ public class Turn extends BaseEntity {
 	private Integer roll;
 	
 	@Column(name = "is_doubles")
-	private Boolean isDoubles;
+	private Boolean isDoubles = false;
 	
 	@Column(name = "is_finished")
 	private Boolean isFinished = false;

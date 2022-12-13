@@ -1,13 +1,11 @@
 package org.springframework.monopoly.game;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import org.springframework.monopoly.player.Player;
-import org.springframework.monopoly.user.User;
 
 public class GameForm {
 
-	private List<Integer> users;
+	private List<Integer> users = new ArrayList<Integer>();
 	
 	public GameForm() {
 		

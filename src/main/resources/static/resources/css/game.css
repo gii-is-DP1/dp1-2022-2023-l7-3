@@ -72,31 +72,32 @@
   	transition: opacity 500ms;
   	visibility: hidden;
   	opacity: 0;
+  	
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
 }
 
 .gamePopUp1 {
-	background-color: #76d09e;
-	border-radius: 5px;
-	
+	background-color: #7cb897bd;
+	border-radius: 20px;
   	padding: 20px;
-  	height: 70%;
-  	width: 50%;
-  	
-  	top: 15%;
-  	bottom: 15%;
-  	left: 25%;
-  	right: 25%;
-  	position: relative;
-	transition: visibility 5s ease-in-out, opacity 5s ease-in-out;
-  	
-  	max-height: 700px;
-  	
-  	display: flex;
-	flex-direction: column;
-	overflow: auto;
+  	align-items: center;
+	color: #47525e;
+  	margin: auto;
+	position: absolute;
 	
+	display: flex;
+	flex-direction: column;
 	justify-content: center;
-	align-items: center;
+	min-height: 75%;
+	height: auto;
+	max-height: 100%;
+	min-width: 50%;
+	width: auto;
+	max-width: 100%;
+	overflow-y: auto;
+	transition: visibility 5s ease-in-out, opacity 5s ease-in-out;
 }
 
 .popUpFormDiv {
@@ -115,17 +116,21 @@
 	background-color: #76d09e;
 	border-radius: 5px;
 	
-	margin: 40vh auto;
   	padding: 40px;
-  	width: 30%;
   	position: relative;
-/*   	transition: all 5s ease-in-out; */
-  	
-  	max-height: 700px;
+  	transition: all 5s ease-in-out;
   	
   	display: flex;
+  	align-items: center;
+  	justify-content: center;
 	flex-direction: column;
 	overflow: auto;
+	
+	height: auto;
+	max-height: 80%;
+	min-width: 50%;
+	width: auto;
+	max-width: 70%;
 }
 
 
@@ -144,6 +149,10 @@
 	width: 100%;
 	height: auto;
 	margin-bottom: 15px;
+	
+	display: flex;
+  	align-items: center;
+  	justify-content: center;
 }
 
 .addPlayerPopUp {

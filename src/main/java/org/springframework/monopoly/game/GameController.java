@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -32,7 +33,6 @@ import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -134,17 +134,33 @@ public class GameController {
 	
 	// Auction method with the real game mapping
 	@GetMapping(value = "/game/{gameId}/auction")
-	public String auctionGetFinal(@PathVariable("gameId") int gameId, Auction auction, Model model, Authentication authentication) throws Exception {
-		Object property = propertyService.getProperty(auction.getPropertyId(), gameId);
-		Auction oldAuction = gameService.getLastAuction(gameId);
+	public String auctionGetFinal(@PathVariable("gameId") int gameId, Model model, Authentication authentication) throws Exception {
+		Optional<Turn> turn = turnService.findLastTurn(gameId);
 		
-		model.addAttribute("property", property);
-		model.addAttribute("auction", oldAuction);
-		model.addAttribute("player", playerService.findPlayerById(oldAuction.getRemainingPlayers().get(oldAuction.getPlayerIndex())));
-		
-		model = gameService.setupGameModel(model, gameId, authentication);
-		
-		return GAME_MAIN;
+		if(turn.isPresent() && turn.get().getIsAuctionOnGoing()) {
+			Auction oldAuction = gameService.getLastAuction(gameId);
+			Object property = propertyService.getProperty(oldAuction.getPropertyId(), gameId);
+			
+			List<Player> playersOrdered = playerService.getGameOrderedPlayers(gameId);
+			List<Player> playersOut = new ArrayList<Player>();
+			playersOrdered.forEach(p -> {
+				if(!oldAuction.getRemainingPlayers().contains(p.getId())) {
+					playersOut.add(p);
+				}
+			});
+			playersOrdered.removeAll(playersOut);
+			oldAuction.setRemainingPlayers(playersOrdered.stream().map(p -> p.getId()).collect(Collectors.toList()));
+			
+			model.addAttribute("property", property);
+			model.addAttribute("auction", oldAuction);
+			model.addAttribute("player", playerService.findPlayerById(oldAuction.getRemainingPlayers().get(oldAuction.getPlayerIndex())));
+			
+			model = gameService.setupGameModel(model, gameId, authentication);
+			
+			return GAME_MAIN;
+		} else {
+			return "redirect:/game/" + gameId;
+		}
 	}
 	
 	@PostMapping(value = "/game/{gameId}/auction")
@@ -246,21 +262,45 @@ public class GameController {
 	}
 	
 	@PostMapping(value = "/newGame")
-	public String processGameForm(GameForm gameForm, Map<String, Object> model, BindingResult result) {
-		Game savedGame;
-		try {
-			savedGame = gameService.setUpNewGame(gameForm);
-			savedGame = gameService.setUpNewGamePlayers(gameForm.getUsers(), savedGame);
-			savedGame = gameService.setProperties(savedGame);
-			savedGame = gameService.saveGame(savedGame);
-			gameService.setTiles(savedGame); // Caution: Saves new tiles directly to database
+	public String processGameForm(GameForm gameForm, Model model, Authentication authentication) throws Exception {
+		Game savedGame; 
+		if(gameForm.getUsers().size() < 2 || gameForm.getUsers().size() > 6) {
+			// Doesn't work with a Binding result
+//			result.rejectValue("", "InvalidNumberOfPlayers", "The number of players must be between 2 and 6");
 			
-		} catch (InvalidNumberOfPLayersException e) {
-			result.rejectValue("Users[0]", "Not enough players", "There are not enough players to start");
+			List<User> users = userService.findAll();
+			
+			User creatorUser = userService.findUserByName(authentication.getName()).orElse(null);
+			if(creatorUser == null) {
+				throw new Exception("No such user found for that principal");
+			}
+			users.remove(creatorUser);
+			
+			List<User> players = new ArrayList<User>();
+			players.add(creatorUser);
+			
+			model.addAttribute("users", users);
+			model.addAttribute("players", players);
+			
+			// Solution to errorss
+			model.addAttribute("error", "The number of players must be between 2 and 6");
+			 
 			return VIEWS_NEW_GAME;
+		} else { 
+			try {
+				savedGame = gameService.setUpNewGame(gameForm);
+				savedGame = gameService.setUpNewGamePlayers(gameForm.getUsers(), savedGame);
+				savedGame = gameService.setProperties(savedGame);
+				savedGame = gameService.saveGame(savedGame);
+				gameService.setTiles(savedGame); // Caution: Saves new tiles directly to database
+				
+			} catch (InvalidNumberOfPLayersException e) {
+				// Realisticly, should not happen ever
+				e.printStackTrace();
+				return "/welcome";
+			}
+			return "redirect:/game/" + savedGame.getId();
 		}
-		
-		return "redirect:/game/" + savedGame.getId();
 	}
 	
 	@GetMapping(value = "/game/{gameId}")

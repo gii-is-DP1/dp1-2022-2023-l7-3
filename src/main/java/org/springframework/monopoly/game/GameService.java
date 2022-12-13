@@ -276,7 +276,12 @@ public class GameService {
 		
 		// Calculating next turn result
 		if(lastTurn != null) {
-			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			if(lastTurn.getIsFinished() && turn.getIsDoubles()) {
+				nextPlayer = turn.getPlayer();
+			} else {
+				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			}
+			
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
 				game.setVersion(game.getVersion() + 1);
 				game = saveGame(game);
@@ -285,9 +290,9 @@ public class GameService {
 				turn.setInitial_tile(nextPlayer.getTile());
 				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
 				turnService.calculateTurn(turn);
-				isPlaying = nextPlayer.getUser().equals(requestUser);
+				isPlaying = true;
 			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
-				isPlaying = nextPlayer.getUser().equals(requestUser);
+				isPlaying = false;
 				turn = lastTurn;
 			} else {
 				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
