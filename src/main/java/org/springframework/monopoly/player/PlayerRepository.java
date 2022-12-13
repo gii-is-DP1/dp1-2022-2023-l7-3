@@ -50,4 +50,7 @@ public interface PlayerRepository extends CrudRepository<Player, Integer> {
 		   		+ " SELECT name FROM stations WHERE game = :gameId AND owner = :playerId")
 	List<String> findAllPropertyNamesByPlayer(@Param("gameId") Integer gameId, @Param("playerId") Integer playerId);
 	 
+	@Query(nativeQuery = true,
+		   value = "SELECT * FROM player WHERE game_id = :gameId ORDER BY turn_order")
+	List<Player> findAllGameOrderedPlayers(@Param("gameId") Integer gameId);
 }
