@@ -86,9 +86,6 @@ public class TileService {
 			case PAY_TAX: 
 				cardService.payTax(card, player);
 				break;
-			case PAY_PLAYERS: 
-				cardService.payPlayers(card, player, players);
-				break;
 			case CHARGE: 
 				cardService.charge(card, player);
 				break;
