@@ -193,9 +193,19 @@ public class GameController {
 			return "redirect:/game/" + gameId + "/auction";
 		}
 		
-		
 	}
 	
+	@PostMapping(value= "/game/{gameId}mortgage")
+	public String mortgageProperty(@PathVariable("gameId") int gameId,int turnId, int propertyId, Model model, Authentication authentication) {
+		Property property = (Property) propertyService.getProperty(propertyId, gameId);
+		Turn turn = turnService.findTurn(turnId).get();
+		propertyService.mortgageProperty(turn, property);
+		
+		model.addAttribute(property);
+		
+		
+		return GAME_MAIN;
+	}
 	@PostMapping(value = "/exitGate")
 	public String getOutOfJail(ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
 		
