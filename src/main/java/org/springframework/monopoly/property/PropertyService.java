@@ -96,9 +96,6 @@ public class PropertyService {
 			case PAY: 
 				payPropertyById(property, turn);
 				break;
-			case MORTGAGE: 
-				mortgageProperty(turn);
-				break;
 			default:;
 		}
 	}
@@ -165,20 +162,25 @@ public class PropertyService {
 	}
 	
 
-	private void mortgageProperty(Turn turn) {
-		Integer buildingMoney = 0;
-		if(streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId()) != null) {
-			Street street = (Street)streetRepository.findStreetById(turn.getFinalTile(),turn.getGame().getId());	
-			if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(street.getName())) {
-				if(street.getHaveHotel()) {
-					buildingMoney += street.getBuildingPrice();
-				}else if(street.getHouseNum() > 0) {
-					buildingMoney += street.getBuildingPrice() * street.getHouseNum();
+	public void mortgageProperty(Turn turn, Property property) {
+		Integer buildingsMoney = 0;
+		if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(property.getName())) {
+			if(streetRepository.findStreetById(property.getId(),turn.getGame().getId()) != null) {
+				Street street = (Street)streetRepository.findStreetById(property.getId(),turn.getGame().getId());	
+				if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(street.getName())) {
+					if(street.getHaveHotel()) {
+						buildingsMoney += street.getBuildingPrice() / 2;
+					}else if(street.getHouseNum() > 0) {
+						buildingsMoney += street.getBuildingPrice() / 2 * street.getHouseNum();
+					}
+					turn.getPlayer().setMoney(turn.getPlayer().getMoney() + street.getMortagePrice() + buildingsMoney);
+					street.setIsMortage(true);
+					street.setPrice(street.getMortagePrice());
 				}
-				
-				turn.getPlayer().setMoney(turn.getPlayer().getMoney() + street.getMortagePrice() + buildingMoney);
-				street.setIsMortage(true);
-				street.setPrice(street.getMortagePrice());
+			}else {
+				turn.getPlayer().setMoney(turn.getPlayer().getMoney() + property.getMortagePrice());
+				property.setIsMortage(true);
+				property.setPrice(property.getMortagePrice());
 			}
 		}
 	}
