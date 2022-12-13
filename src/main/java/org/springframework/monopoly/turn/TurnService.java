@@ -74,9 +74,6 @@ public class TurnService {
 		case PAY:
 			propertyService.calculateActionProperty(turn);
 			break;
-		case MORTGAGE:
-			propertyService.calculateActionProperty(turn);
-			break;
 		default:
 			break;
 		}
