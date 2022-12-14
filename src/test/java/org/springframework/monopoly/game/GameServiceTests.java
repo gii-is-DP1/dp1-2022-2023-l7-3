@@ -5,9 +5,9 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -166,11 +166,11 @@ public class GameServiceTests {
 	    assertThat(page.getNumberOfElements() == 1); // p2 has only 1 game
 	}
 
-//	@Test
-//	public void getPlayersOrderedByTurn() {
-//		List<Player> players = gameService.getPlayersOrderedByTurn(2);
-//		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
-//		assertThat(players).isSortedAccordingTo(c);
-//	}
+	@Test
+	public void getPlayersOrderedByTurn() {
+		List<Player> players = gameService.getPlayersOrderedByTurn(1);
+		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
+		assertThat(players).isSortedAccordingTo(c);
+	}
 		
 }
