@@ -105,14 +105,66 @@ public class GameController {
 		model.put("streets", streets );
 		Street street = (Street) propertyService.getProperty(streetForm.getStreetId(), idGame);
 		if(streetForm.getHouse()!=null) {
-		street.setHouseNum(streetForm.getHouse());
+			street.setHouseNum(streetForm.getHouse());
 		}
-		street.setHaveHotel(streetForm.getHotel());
+		
+		if(streetForm.getHotel()!=null) {
+			street.setHaveHotel(streetForm.getHotel());
+		}
 		propertyService.saveProperty(street);
 		
 		
 		
 		return BLANK_GAME;
+		
+	}
+	
+	@PostMapping(value="/game/{gameId}/build")
+	public String buildFinal(@PathVariable("gameId") int gameId, StreetForm streetForm, Model model, Authentication auth) throws Exception {
+		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
+		if(lastTurn == null || !lastTurn.getIsActionEvaluated()) {
+			return "redirect:/game/" + gameId;
+		}
+		 
+		User requestUser = userService.findUserByName(auth.getName()).orElse(null);
+		if(requestUser == null) {
+			throw new Exception("No such user found for that principal");
+		}
+		
+		Game game = gameService.findGame(gameId).orElse(null);
+		if(game == null) {
+			throw new Exception("Game does not exist");
+		}
+		
+		Integer idPlayer = null;
+		for(Player p:game.getPlayers()) {
+			if(p.getUser().equals(requestUser)) {
+				idPlayer = p.getId();
+				break;
+			}
+		}
+
+		List<Color> colors= propertyService.findPlayerColors(gameId, idPlayer);
+		List<Street> streets= new ArrayList<>();
+		for (Color c: colors) {
+			propertyService.findStreetByColor(c, gameId).forEach(x -> streets.add(x));;
+		}
+		model.addAttribute("streets", streets );
+		
+		Street street = (Street) propertyService.getProperty(streetForm.getStreetId(), gameId);
+		if(streetForm.getHouse() != null) {
+			street.setHouseNum(streetForm.getHouse());
+		}
+		
+		if(streetForm.getHotel()!=null) {
+			street.setHaveHotel(streetForm.getHotel());
+		}
+		
+		propertyService.saveProperty(street);
+		
+		model = gameService.setupGameModel(model, gameId, auth);
+		
+		return GAME_MAIN;
 		
 	}
 	
