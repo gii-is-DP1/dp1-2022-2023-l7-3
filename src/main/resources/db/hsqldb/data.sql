@@ -94,10 +94,10 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 /* FINISHED GAME */
 INSERT INTO game (id, date, duration, num_casas) VALUES (1, TO_DATE('11/10/2022', 'DD/MM/YYYY'), 107, 0);
 
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 0, 1, 1, 1);
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 1, 0, 1, 2);
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (2,  420, 'RED', 2, 0, 2, 0, 0, 1, 3);
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 3, 0, 0, 1, 4);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 0, 1, 0, 1, 1);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 1, 0, 0, 1, 2);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (2,  420, 'RED', 2, 0, 2, 0, 0, 0, 1, 3);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 3, 0, 0, 0, 1, 4);
 
 INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (0, 9, 1, 0);
 INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (1, 5, 1, 1);
@@ -152,7 +152,7 @@ INSERT INTO generics(id, generic_type, game) VALUES(30, 'GOTOJAIL', 1);
 
 
 /* Game being played now */
-INSERT INTO game (id, date, num_casas) VALUES (2, TO_DATE('12/11/2022', 'DD/MM/YYYY'), 16);
+INSERT INTO game (id, date, num_casas, version) VALUES (2, TO_DATE('12/11/2022', 'DD/MM/YYYY'), 16, 0);
 
 INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (4,  23000, 'BLUE', 27, 0, 0, 2, 2, 1, false);
 INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (5,  577, 'GREEN', 10, 0, 1, 0, 2, 2, false);

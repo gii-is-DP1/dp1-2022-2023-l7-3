@@ -316,7 +316,7 @@ public class GameController {
 	@GetMapping(value = "/game/{gameId}")
 	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		model = gameService.setupGameModel(model, gameId, auth);
-		
+		 
 		Turn turn = (Turn) model.getAttribute("Turn");
 		if(turn != null && turn.getAction().equals(Action.AUCTION)) {
 			return "redirect:/game/" + gameId + "/auction";
@@ -336,11 +336,11 @@ public class GameController {
 			} else { 
 				turnService.evaluateTurnAction(lastTurn, decisionResult);
 			}
+			
+			Game game = gameService.findGame(gameId).get();
+			game.setVersion(game.getVersion()+1);
+			gameService.saveGame(game);
 		}  
-		
-		Game game = gameService.findGame(gameId).get();
-		game.setVersion(game.getVersion()+1);
-		gameService.saveGame(game);
 		
 		return "redirect:/game/" + gameId;
 	} 

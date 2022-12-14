@@ -16,10 +16,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 	@Query("SELECT g FROM Game g WHERE g.id = :idparam")
 	Game findGameById(@Param("idparam")Integer id);
 
-	@Query(nativeQuery = true,
-			value = "SELECT * FROM "
-			+ "(SELECT players from game where id = :gameId) "
-			+ "ORDER BY turn_number")
+	@Query("SELECT p FROM Player p WHERE p.game.id =:gameId ORDER BY p.turnOrder")
 	List<Player> findPlayersOrderByTurn(@Param("gameId") Integer gameId);
 	
 	List<Game> findAll();

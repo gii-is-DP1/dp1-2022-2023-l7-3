@@ -286,15 +286,9 @@
 		 </monopoly:popup>
 	 </c:if>
 	 
-	 <c:if test="${Turn.action == 'BUILD'}">
-		 <monopoly:popup popUpId="wantToBuildPopUp" gameId="${Game.id}">
-		 	<monopoly:wantToBuild/>
-		 </monopoly:popup>
-	 </c:if>
-	 
-	 <c:if test="${Turn.action == 'BUILD'}">
-		 <monopoly:popup popUpId="buildBuildingsPopUp" gameId="${Game.id}" popUpPostFormAction="build">
-		 	<monopoly:buildBuildings/>
+	 <c:if test="${isPlaying && Turn.isActionEvaluated}">
+		 <monopoly:popup popUpId="buildBuildings" gameId="${Game.id}" popUpPostFormAction="build">
+		 	<monopoly:buildBuildings2/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -443,6 +437,17 @@
 					let showActionButton = document.getElementById('showActionButton');
 					
 					if(showActionButton != null) {
+						showActionButton.disabled = "";
+					}
+				}
+				
+				if("${isPlaying && Turn.isActionEvaluated}" == "true") {
+					showPopUp("buildBuildings");
+					
+					let showActionButton = document.getElementById('showActionButton');
+					
+					if(showActionButton != null) {
+						showActionButton.setAttribute('onclick',"showPopUp('buildBuildings')");
 						showActionButton.disabled = "";
 					}
 				}

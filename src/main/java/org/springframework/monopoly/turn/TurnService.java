@@ -55,9 +55,7 @@ public class TurnService {
 		propertyService.setActionProperty(turn);
 		
 		// Llamada al metodo del resto de las tiles
-		if(turn.getAction() == null) {
-			tileService.setActionTile(turn);
-		}
+		tileService.setActionTile(turn);
 		
 		saveTurn(turn);
 		
