@@ -26,7 +26,7 @@
             </thead>
             <tbody>
             <c:forEach items="${streets}" var="street">
-            	<form:form object="streetForm" action="/blankGame/build">
+            	<form:form object="streetForm" action="/game/${Game.id}/build">
             		<input type="hidden" name=streetId class="tableCell" value="${street.id}">
                 	<tr>
                     	<td>

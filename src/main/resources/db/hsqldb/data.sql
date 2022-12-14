@@ -191,3 +191,19 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, game) VALUES (35, 'Estación del Norte', 200, 25, 100, false, '/resources/images/26.png', 2);
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, game) VALUES (25, 'Estación del Mediodía', 200, 25, 100, false, '/resources/images/27.png', 2);
 
+INSERT INTO community_box(id, game) VALUES (2, 2);
+INSERT INTO community_box(id, game) VALUES (17, 2);
+INSERT INTO community_box(id, game) VALUES (33, 2);
+
+INSERT INTO luck(id, game) VALUES(7, 2);
+INSERT INTO luck(id, game) VALUES(22, 2);
+INSERT INTO luck(id, game) VALUES(36, 2);
+
+INSERT INTO taxes(id, price, game) VALUES(4, 200, 2);
+INSERT INTO taxes(id, price, game) VALUES(38, 100, 2);
+
+INSERT INTO generics(id, generic_type, game) VALUES(0, 'START', 2);
+INSERT INTO generics(id, generic_type, game) VALUES(10, 'JAIL', 2);
+INSERT INTO generics(id, generic_type, game) VALUES(20, 'PARKING', 2);
+INSERT INTO generics(id, generic_type, game) VALUES(30, 'GOTOJAIL', 2);
+
