@@ -26,6 +26,7 @@ import org.springframework.monopoly.property.AuctionRepository;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.CompanyService;
+import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.StationService;
@@ -99,6 +100,7 @@ public class GameService {
 		return gameRepository.save(game);
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<Game> findGame(Integer id) {
 		return gameRepository.findById(id);
 	}	
@@ -109,7 +111,9 @@ public class GameService {
 		List<Integer> userIds = createGameForm.getUsers();
 		List<User> users = new ArrayList<User>();
 		for(Integer i:userIds) {
-			users.add(userService.findUser(i).get());
+			User u = userService.findUser(i).orElse(null);
+			if(u != null)
+				users.add(u);
 		}
 		
 		if(users.size() < 2 || users.size() > 6) {
@@ -120,7 +124,7 @@ public class GameService {
 	}
 		
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Game setUpNewGamePlayers(List<Integer> userIds, Game game) throws DataAccessException, InvalidNumberOfPLayersException {
+	public Game setUpNewGamePlayers(List<Integer> userIds, Game game) throws DataAccessException {
 		List<User> users = new ArrayList<User>();
 		for(Integer i:userIds) {
 			users.add(userService.findUser(i).get());
@@ -154,7 +158,7 @@ public class GameService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Game setProperties(Game game) throws DataAccessException, InvalidNumberOfPLayersException {
+	public Game setProperties(Game game) throws DataAccessException {
 		Set<Company> blankCompanies = companyService.getBlankCompanies();
 		Set<Company> savedCompanies = new HashSet<Company>();
 		for(Company c:blankCompanies) {
@@ -297,6 +301,17 @@ public class GameService {
 			} else {
 				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
 				turn = lastTurn;
+				
+				if(isPlaying && turn.getIsActionEvaluated()) {
+					List<Color> colors= propertyService.findPlayerColors(gameId, turn.getPlayer().getId());
+					
+					List<Property> streets= new ArrayList<>();
+					for (Color color: colors) {
+						propertyService.findStreetByColor(color, gameId).forEach(x -> streets.add(x));;
+					}
+					
+					model.addAttribute("streets", streets);
+				}
 			} 
 			
 		} else {
