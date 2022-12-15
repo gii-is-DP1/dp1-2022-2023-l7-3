@@ -41,6 +41,9 @@
 	                		<input type="checkbox" name="hotel" class="tableCell" style= "margin-top: 15px;" placeholder="${street.haveHotel}">  
                    		</td>
                    		</c:if>
+                   		<c:if test="${street.haveHotel==true}">
+                   			<td class= "tableCell"></td>
+                   		</c:if>
                     	<td class="tableCell">
                     		<button type="submit" class="buildButtons"><span class="glyphicon glyphicon-ok"></span></button>
                     	</td>
