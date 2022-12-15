@@ -94,10 +94,10 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 /* FINISHED GAME */
 INSERT INTO game (id, date, duration, num_casas) VALUES (1, TO_DATE('11/10/2022', 'DD/MM/YYYY'), 107, 0);
 
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 0, 1, 1, 1);
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 1, 0, 1, 2);
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (2,  420, 'RED', 2, 0, 2, 0, 0, 1, 3);
-INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, game_id, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 3, 0, 0, 1, 4);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (0,  12000, 'BLUE', 27, 0, 0, 0, 1, 0, 1, 1);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (1,  69, 'GREEN', 10, 0, 1, 1, 0, 0, 1, 2);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (2,  420, 'RED', 2, 0, 2, 0, 0, 0, 1, 3);
+INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 3, 0, 0, 0, 1, 4);
 
 INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (0, 9, 1, 0);
 INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (1, 5, 1, 1);
@@ -152,7 +152,7 @@ INSERT INTO generics(id, generic_type, game) VALUES(30, 'GOTOJAIL', 1);
 
 
 /* Game being played now */
-INSERT INTO game (id, date, num_casas) VALUES (2, TO_DATE('12/11/2022', 'DD/MM/YYYY'), 16);
+INSERT INTO game (id, date, num_casas, version) VALUES (2, TO_DATE('12/11/2022', 'DD/MM/YYYY'), 16, 0);
 
 INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (4,  23000, 'BLUE', 27, 0, 0, 2, 2, 1, false);
 INSERT INTO player (id, money, piece, tile, has_exit_gate, is_jailed, turn_order, game_id, user_id, is_bankrupcy) VALUES (5,  577, 'GREEN', 10, 0, 1, 0, 2, 2, false);
@@ -168,9 +168,9 @@ INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, b
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game) VALUES (11, 'Glorieta de Bilbao', 140, 10, 70, false, '/resources/images/05.png', 'PINK', 100, 0, false, 50, 150, 450, 625, 750, 2);
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (13, 'Calle Alberto Aguilera', 140, 10, 70, false, '/resources/images/06.png', 'PINK', 100, 2, false, 50, 150, 450, 625, 750, 2, 4);
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (14, 'Calle Fuencarral', 160, 12, 80, false, '/resources/images/07.png', 'PINK', 100, 1, false, 60, 180, 500, 700, 900, 2, 4);
-INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (16, 'Avenida Felipe II', 180, 14, 90, false, '/resources/images/08.png', 'ORANGE', 100, 0, false, 70, 200, 550, 750, 950, 2, 5);
-INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (18, 'Calle Velázquez', 180, 14, 90, false, '/resources/images/09.png', 'ORANGE', 100, 2, false, 70, 200, 550, 750, 950, 2, 5);
-INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (19, 'Calle Serrano', 200, 16, 100, false, '/resources/images/10.png', 'ORANGE', 100, 1, false, 80, 220, 600, 800, 1000, 2, 5);
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (16, 'Avenida Felipe II', 180, 14, 90, false, '/resources/images/08.png', 'ORANGE', 100, 0, true, 70, 200, 550, 750, 950, 2, 5);
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (18, 'Calle Velázquez', 180, 14, 90, false, '/resources/images/09.png', 'ORANGE', 100, 0, true, 70, 200, 550, 750, 950, 2, 5);
+INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (19, 'Calle Serrano', 200, 16, 100, false, '/resources/images/10.png', 'ORANGE', 100, 4, false, 80, 220, 600, 800, 1000, 2, 5);
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (21, 'Avenida de América', 220, 18, 110, false, '/resources/images/11.png', 'RED', 150, 0, false, 90, 250, 700, 875, 1050, 2, 5);
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (23, 'Calle María de Molina', 220, 18, 110, false, '/resources/images/12.png', 'RED', 150, 2, false, 90, 250, 700, 875, 1050, 2, 5);
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game, owner) VALUES (24, 'Calle Cea Bermúdez', 240, 20, 120, false, '/resources/images/13.png', 'RED', 150, 1, false, 100, 300, 750, 925, 1100, 2, 5);
@@ -190,4 +190,20 @@ INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, 
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, game, owner) VALUES (5, 'Estación de Goya', 200, 25, 100, false, '/resources/images/25.png', 2, 5);
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, game) VALUES (35, 'Estación del Norte', 200, 25, 100, false, '/resources/images/26.png', 2);
 INSERT INTO stations (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, game) VALUES (25, 'Estación del Mediodía', 200, 25, 100, false, '/resources/images/27.png', 2);
+
+INSERT INTO community_box(id, game) VALUES (2, 2);
+INSERT INTO community_box(id, game) VALUES (17, 2);
+INSERT INTO community_box(id, game) VALUES (33, 2);
+
+INSERT INTO luck(id, game) VALUES(7, 2);
+INSERT INTO luck(id, game) VALUES(22, 2);
+INSERT INTO luck(id, game) VALUES(36, 2);
+
+INSERT INTO taxes(id, price, game) VALUES(4, 200, 2);
+INSERT INTO taxes(id, price, game) VALUES(38, 100, 2);
+
+INSERT INTO generics(id, generic_type, game) VALUES(0, 'START', 2);
+INSERT INTO generics(id, generic_type, game) VALUES(10, 'JAIL', 2);
+INSERT INTO generics(id, generic_type, game) VALUES(20, 'PARKING', 2);
+INSERT INTO generics(id, generic_type, game) VALUES(30, 'GOTOJAIL', 2);
 

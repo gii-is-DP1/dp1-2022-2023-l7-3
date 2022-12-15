@@ -22,9 +22,11 @@ import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
+import org.springframework.monopoly.property.AuctionRepository;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Company;
 import org.springframework.monopoly.property.CompanyService;
+import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.property.Station;
 import org.springframework.monopoly.property.StationService;
@@ -66,12 +68,14 @@ public class GameService {
 	private TurnService turnService;
 	private PropertyService propertyService;
 	private CardService cardService;
+	private AuctionRepository auctionRepository;
 	
 	@Autowired
 	public GameService(GameRepository gameRepository, StreetService streetService,
 			CompanyService companyService, StationService stationService, UserService userService,
 			PlayerService playerService, CommunityBoxService cbService, LuckService luckService, TaxesService taxService,
-			GenericService genericService, TurnService turnService, PropertyService propertyService, CardService cardService) {
+			GenericService genericService, TurnService turnService, PropertyService propertyService, CardService cardService,
+			AuctionRepository auctionRepository) {
 		this.gameRepository = gameRepository;
 		this.streetService = streetService;
 		this.stationService = stationService;
@@ -85,6 +89,7 @@ public class GameService {
 		this.turnService = turnService;
 		this.propertyService = propertyService;
 		this.cardService = cardService;
+		this.auctionRepository = auctionRepository;
 	}
 	
 	@Transactional
@@ -95,6 +100,7 @@ public class GameService {
 		return gameRepository.save(game);
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<Game> findGame(Integer id) {
 		return gameRepository.findById(id);
 	}	
@@ -105,7 +111,9 @@ public class GameService {
 		List<Integer> userIds = createGameForm.getUsers();
 		List<User> users = new ArrayList<User>();
 		for(Integer i:userIds) {
-			users.add(userService.findUser(i).get());
+			User u = userService.findUser(i).orElse(null);
+			if(u != null)
+				users.add(u);
 		}
 		
 		if(users.size() < 2 || users.size() > 6) {
@@ -116,7 +124,7 @@ public class GameService {
 	}
 		
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Game setUpNewGamePlayers(List<Integer> userIds, Game game) throws DataAccessException, InvalidNumberOfPLayersException {
+	public Game setUpNewGamePlayers(List<Integer> userIds, Game game) throws DataAccessException {
 		List<User> users = new ArrayList<User>();
 		for(Integer i:userIds) {
 			users.add(userService.findUser(i).get());
@@ -150,7 +158,7 @@ public class GameService {
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public Game setProperties(Game game) throws DataAccessException, InvalidNumberOfPLayersException {
+	public Game setProperties(Game game) throws DataAccessException {
 		Set<Company> blankCompanies = companyService.getBlankCompanies();
 		Set<Company> savedCompanies = new HashSet<Company>();
 		for(Company c:blankCompanies) {
@@ -246,7 +254,7 @@ public class GameService {
 		return gameRepository.findLastId();
 	}
 
-	@Transactional(readOnly = true)
+	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public Model setupGameModel(Model model, Integer gameId, Authentication auth) throws Exception {
 		Optional<Game> gameOptional = findGame(gameId);
 		if(gameOptional.isEmpty()) {
@@ -272,23 +280,42 @@ public class GameService {
 		
 		// Calculating next turn result
 		if(lastTurn != null) {
-			nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			if(lastTurn.getIsFinished() && turn.getIsDoubles()) {
+				nextPlayer = turn.getPlayer();
+			} else {
+				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
+			}
+			
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
+				game.setVersion(game.getVersion() + 1);
+				game = saveGame(game);
+				
 				turn.setPlayer(nextPlayer);
 				turn.setInitial_tile(nextPlayer.getTile());
 				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
 				turnService.calculateTurn(turn);
-				isPlaying = nextPlayer.getUser().equals(requestUser);
+				isPlaying = true;
 			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
-				isPlaying = nextPlayer.getUser().equals(requestUser);
+				isPlaying = false;
 				turn = lastTurn;
 			} else {
 				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
 				turn = lastTurn;
+				
+				if(isPlaying && turn.getIsActionEvaluated()) {
+					List<Color> colors= propertyService.findPlayerColors(gameId, turn.getPlayer().getId());
+					
+					List<Property> streets= new ArrayList<>();
+					for (Color color: colors) {
+						propertyService.findStreetByColor(color, gameId).forEach(x -> streets.add(x));;
+					}
+					
+					model.addAttribute("streets", streets);
+				}
 			} 
 			
 		} else {
-			// Esto se podría pasar al metodo de crear partida
+			// This could go into the new game method
 			nextPlayer = players.get(0);
 			isPlaying = nextPlayer.getUser().equals(requestUser);
 			turn.setPlayer(nextPlayer);
@@ -313,8 +340,12 @@ public class GameService {
 			if(card != null) {
 				model.addAttribute("drawCardSource", card.getBadgeImage());
 			} 
-		} else if(turn.getAction().equals(Action.AUCTION)) {
-			Auction auction = new Auction(0, players.stream().map(p -> p.getId()).collect(Collectors.toList()), 0, 0, turn.getFinalTile(), gameId);
+		} else if(turn.getAction().equals(Action.AUCTION) && !turn.getIsAuctionOnGoing()) {
+			turn.setIsAuctionOnGoing(true);
+			turnService.saveTurn(turn);
+			
+			Auction auction = new Auction(0, players.stream().map(p -> p.getId()).collect(Collectors.toList()), 10, 0, turn.getFinalTile(), gameId);
+			auction = auctionRepository.save(auction);
 			model.addAttribute("auction", auction);
 		}
 		
@@ -371,6 +402,15 @@ public class GameService {
 			
 			turnService.saveTurn(turn);
 		}
+	}
+	
+	@Transactional(readOnly = true)
+	public Auction getLastAuction(Integer gameId) {
+		List<Auction> auctions = gameRepository.findLastAuction(gameId);
+		Comparator<Auction> c = Comparator.comparing(a -> a.getId());
+		Collections.sort(auctions, c.reversed());
+	
+		return auctions.get(0);
 	}
 		
 }

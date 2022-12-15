@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.monopoly.player.Player;
+import org.springframework.monopoly.property.Auction;
 
 
 public interface GameRepository extends CrudRepository<Game, Integer> {
@@ -15,10 +16,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 	@Query("SELECT g FROM Game g WHERE g.id = :idparam")
 	Game findGameById(@Param("idparam")Integer id);
 
-	@Query(nativeQuery = true,
-			value = "SELECT * FROM "
-			+ "(SELECT players from game where id = :gameId) "
-			+ "ORDER BY turn_number")
+	@Query("SELECT p FROM Player p WHERE p.game.id =:gameId ORDER BY p.turnOrder")
 	List<Player> findPlayersOrderByTurn(@Param("gameId") Integer gameId);
 	
 	List<Game> findAll();
@@ -30,4 +28,7 @@ public interface GameRepository extends CrudRepository<Game, Integer> {
 	@Query(nativeQuery = true,
            value = "SELECT TOP 1 g.id FROM Game g ORDER BY g.id DESC")
 	Integer findLastId();
+	
+	@Query("SELECT a FROM Auction a WHERE a.gameId = :gameId")
+	List<Auction> findLastAuction(@Param("gameId") Integer gameId);
 }

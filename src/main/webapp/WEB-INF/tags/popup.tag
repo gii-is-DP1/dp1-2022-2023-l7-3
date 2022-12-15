@@ -3,14 +3,14 @@
 
 <%@ attribute name="popUpId" required="true" rtexprvalue="true" description="Id of the popup"%>
 <%@ attribute name="popUpPostFormAction" rtexprvalue="true" description="Action of the form sent by the popup"%>
-<%@ attribute name="gameId" required="true" rtexprvalue="true" description="Current game id"%>
+<%@ attribute name="gameId" rtexprvalue="true" description="Current game id"%>
 <%-- <%@ attribute name="formModelAttribute" rtexprvalue="true" description="Model attribute of the form sent"%> --%>
 
 <div class="popUpOverlay1" id="${popUpId}">
 	<div class="gamePopUp1" id="gamePopUp1">
 	
 		<c:choose>
-			<c:when test="${popUpId != 'wantToBuild' && popUpId != 'auction'}">
+			<c:when test="${popUpId != 'newGame' && popUpId != 'buildBuildings' && popUpId != 'auctionBuilding'}">
 				<form:form id="popUpForm" modelAttribute="Boolean" action="/game/${gameId}/${popUpPostFormAction}">
 					<div class="popUpFormDiv">
 						<input id="popUpFormInput" hidden="true" name="decisionResult"></input>

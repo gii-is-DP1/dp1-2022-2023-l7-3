@@ -36,19 +36,7 @@ public class CardService {
 		player.setMoney(player.getMoney() - card.getQuantity());
 		playerRepository.save(player);
 	}
-	
-	@Transactional
-	public void payPlayers(Card card, Player playerPay, List<Player> playersReceive) {
 		
-		playerPay.setMoney(playerPay.getMoney() - card.getQuantity()*playersReceive.size());
-		
-		for (Player p: playersReceive) {
-			p.setMoney(p.getMoney() + card.getQuantity());
-			playerRepository.save(p);
-		}
-		playerRepository.save(playerPay);
-	}
-	
 	@Transactional
 	public void charge(Card card, Player playerPay) {
 		playerPay.setMoney(playerPay.getMoney() + card.getQuantity());
@@ -90,8 +78,8 @@ public class CardService {
 	public void repair(Player player) {
 		Long numHotels = player.getStreets().stream().filter(street -> street.getHaveHotel()).count();
 		Integer numHouses = player.getStreets().stream().mapToInt(street -> street.getHouseNum()).sum();
-		Integer hotelMoney = numHotels.intValue() * 25;
-		Integer houseMoney = numHouses * 100; 
+		Integer hotelMoney = numHotels.intValue() * 100;
+		Integer houseMoney = numHouses * 25; 
 		
 		player.setMoney(player.getMoney() - hotelMoney - houseMoney); 
 		playerRepository.save(player);

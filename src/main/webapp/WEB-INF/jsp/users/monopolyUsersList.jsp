@@ -48,8 +48,8 @@
             	<a href="/users/${monopolyUser.id}">
                 <button id="EditButton">Edit <span class="glyphicon glyphicon-pencil"></span></button>
             	</a>
-            	<c:if test="${monopolyUser.id!=0}">
-            	<a href="/monopolyUsers/delete/${monopolyUser.id }" >
+            	<c:if test="${monopolyUser.is_admin.equals('user')}">
+            	<a href="/monopolyUsers/delete/${monopolyUser.id}" >
                 <button id="DeleteButton">Delete <span class="glyphicon glyphicon-trash"></span></button>
             	</a>
             	</c:if>

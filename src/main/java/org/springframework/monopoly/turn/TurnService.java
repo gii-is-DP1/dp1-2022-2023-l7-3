@@ -55,9 +55,7 @@ public class TurnService {
 		propertyService.setActionProperty(turn);
 		
 		// Llamada al metodo del resto de las tiles
-		if(turn.getAction() == null) {
-			tileService.setActionTile(turn);
-		}
+		tileService.setActionTile(turn);
 		
 		saveTurn(turn);
 		
@@ -74,9 +72,6 @@ public class TurnService {
 		case PAY:
 			propertyService.calculateActionProperty(turn);
 			break;
-		case MORTGAGE:
-			propertyService.calculateActionProperty(turn);
-			break;
 		default:
 			break;
 		}
@@ -84,6 +79,7 @@ public class TurnService {
 		// Call to the method handling the rest of the tiles
 		tileService.calculateActionTile(turn, null);
 		
+		// Careful here, might set evaluated when nothing happened/ it didnt work
 		turn.setIsActionEvaluated(true);
 		saveTurn(turn);
 	}

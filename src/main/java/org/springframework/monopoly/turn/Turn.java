@@ -1,6 +1,5 @@
 package org.springframework.monopoly.turn;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -27,10 +26,13 @@ public class Turn extends BaseEntity {
 
 	@Column(name = "action")
 	@Enumerated(EnumType.STRING)
-	private Action action;
+	private Action action = Action.NOTHING_HAPPENS;
 	
 	@Column(name = "is_action_evaluated")
 	private Boolean isActionEvaluated = false;
+	
+	@Column(name = "is_auction_ongoing")
+	private Boolean isAuctionOnGoing = false;
 	
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
@@ -41,7 +43,7 @@ public class Turn extends BaseEntity {
 	private Integer roll;
 	
 	@Column(name = "is_doubles")
-	private Boolean isDoubles;
+	private Boolean isDoubles = false;
 	
 	@Column(name = "is_finished")
 	private Boolean isFinished = false;

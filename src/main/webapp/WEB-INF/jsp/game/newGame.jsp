@@ -23,7 +23,7 @@
 <%-- 					<input type="hidden" name="players[0].user" value="${player[0].user}"/> --%>
 					<div class="player" id="player1">
 						<img class="playerImg" src="/resources/images/Verde.png" />
-						<p class="playerName">${players[0].username}</p>
+						<p class="playerName"><c:out value = "${players[0].username}"/></p>
 
 					</div>
 					
@@ -37,7 +37,7 @@
 									<spring:param name="playerNum" value="1" />
 								</spring:url> --%>
 
-								<a onClick="removePlayer(1)" href="JavaScript:void(0)" class="playerName">${players[1].username}</a>
+								<a onClick="removePlayer(1)" href="JavaScript:void(0)" class="playerName"><c:out value="${players[1].username}"/></a>
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png" />
@@ -59,7 +59,7 @@
 									<spring:param name="playerNum" value="2" />
 								</spring:url> --%>
 
-								<a onClick="removePlayer(2)" href="JavaScript:void(0)" class="playerName">${players[2].username}</a>
+								<a onClick="removePlayer(2)" href="JavaScript:void(0)" class="playerName"><c:out value="${players[2].username}"/></a>
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png" />
@@ -81,7 +81,7 @@
 									<spring:param name="playerNum" value="3" />
 								</spring:url> --%>
 
-								<a onClick="removePlayer(3)" href="JavaScript:void(0)" class="playerName">${players[3].username}</a>
+								<a onClick="removePlayer(3)" href="JavaScript:void(0)" class="playerName"><c:out value="${players[3].username}"/></a>
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png" />
@@ -103,7 +103,7 @@
 									<spring:param name="playerNum" value="4" />
 								</spring:url> --%>
 
-								<a onClick="removePlayer(4)" href="JavaScript:void(0)" class="playerName">${players[4].username}</a>
+								<a onClick="removePlayer(4)" href="JavaScript:void(0)" class="playerName"><c:out value="${players[4].username}"/></a>
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png" />
@@ -125,7 +125,7 @@
 									<spring:param name="playerNum" value="5" />
 								</spring:url> --%>
 
-								<a onClick="removePlayer(5)" href="JavaScript:void(0)" class="playerName">${players[5].username}</a>
+								<a onClick="removePlayer(5)" href="JavaScript:void(0)" class="playerName"><c:out value="${players[5].username}"/></a>
 							</c:when>
 							<c:otherwise>
 								<img class="playerImg" src="/resources/images/Add.png" />
@@ -142,17 +142,23 @@
 					<div class="addPlayerPopUp1" id="addPlayerPopUpId">
 						<c:forEach items="${users}" var="user" varStatus="status">
 							<div class="userToAdd">
-								<a onClick="addNewPlayer(${user.id})" href="JavaScript:void(0)" class="playerName">${user.username}</a>
+								<a onClick="addNewPlayer(${user.id})" href="JavaScript:void(0)" class="playerName"><c:out value="${user.username}"/></a>
 							</div>
 						</c:forEach>
+						
+						<button class="mainButtonStyle" type="button" onclick="hidePopUp()"> Close </button>
 					</div>
-				</div>
+				</div> 
 			</form:form>
 
 		</div>
-
+		
+		<div style = "display: flex; justify-content: center;">
+			<span style = "font-size: 20px"><strong><c:out value = "${error}"/></strong></span>
+		</div>
+		
 		<div class="bottomButtons">
-			<input onClick="JavaScript:document.getElementById(&quot;GameForm&quot;).submit()" type="submit" value="Create game">
+			<input onClick="JavaScript:document.getElementById('GameForm').submit()" type="submit" value="Create game">
 		</div>
 	</div>
 
@@ -166,9 +172,7 @@
 		form.action = url;
 		form.submit();
 	}
-</script>
 
-<script>
 	function removePlayer(index) {
 		var url = "/newGame/creating/remove/" + index;
 		
@@ -183,8 +187,13 @@
 		var overlay = document.getElementById("popUpOverlayId");
 		overlay.style.visibility = "visible";
 		overlay.style.opacity = 1;
+	}
+	
+	function hidePopUp() {
+		let overlay = document.getElementById("popUpOverlayId");
 		
-		return false;
+		overlay.style.visibility = "hidden";
+		overlay.style.opacity = 0;
 	}
 </script>
 

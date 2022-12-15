@@ -22,7 +22,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.monopoly.property.Color;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,7 +70,7 @@ public class PlayerService {
 		return playerRepository.save(player);		
 	}	
 	
-	@Transactional
+	@Transactional(readOnly = true)
 	public List<PieceColors> getAllPieceTypes() {
 		PieceColors[] pieceColors = PieceColors.values();
 		List<PieceColors> colors = Arrays.asList(pieceColors);
@@ -90,6 +89,10 @@ public class PlayerService {
 		playerRepository.updatePlayerRelation(id);
 	}
 	
+	@Transactional(readOnly = true)
+	public List<Player> getGameOrderedPlayers(Integer gameId) {
+		return playerRepository.findAllGameOrderedPlayers(gameId);
+	}
 	
 	
 }
