@@ -32,6 +32,8 @@ import org.springframework.data.repository.query.Param;
  */
 public interface PlayerRepository extends CrudRepository<Player, Integer> {
 	Collection<Player> findAll();
+
+	
 	Player findPlayerById(Integer id);
 
 	@Query("SELECT p FROM Player p WHERE p.id = :idparam AND p.game.id = :idgame")

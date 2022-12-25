@@ -44,7 +44,7 @@
                    		</td>
                    		</c:if>
                    		<c:if test="${street.haveHotel==true}">
-                   			<td class= "tableCell"></td>
+                   			<td class= "tableCell" style= "padding-top: 2vh;">Already has a hotel</td>
                    		</c:if>
                     	<td class="tableCell">
                     		<button type="submit" class="buildButtons"><span class="glyphicon glyphicon-ok"></span></button>
