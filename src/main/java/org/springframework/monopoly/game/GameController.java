@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 
 @Controller
 public class GameController {
@@ -108,7 +107,7 @@ public class GameController {
 		model.put("streets", streets );
 		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getMoney());
 		propertyService.buildProperty(gameId, idPlayer, streetForm);
-		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getMoney());
+		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getId());
 
 		return BLANK_GAME;
 		

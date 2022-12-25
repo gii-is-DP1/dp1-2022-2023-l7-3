@@ -224,33 +224,32 @@ public class PropertyService {
 	
 	public void buildProperty(Integer gameId, Integer playerId, StreetForm sf){
 		Street street = (Street) getProperty(sf.getStreetId(), gameId);
-		Boolean b= true;
+		Player player = playerRepository.findPlayerById(playerId);
+		if(player.getMoney()- getBuildingPrice(sf, street)>=0) player.setMoney(player.getMoney() - getBuildingPrice(sf, street));
+		playerRepository.save(player);
+	}
+
+	private Integer getBuildingPrice (StreetForm sf, Street street) {
 		Integer price = 0;
-		for (Street s: streetRepository.findStreetByColor(street.getColor(), gameId)) {
-			if(sf.getHouse() != null) {
-				if(Math.abs(sf.getHouse()- s.getHouseNum())>1) b=false;
-			} else if(sf.getHotel()!=null){
-				if(sf.getHotel()) {
-					if(s.getHouseNum()<4) b=false;
-				}
-			} else if(sf.getHotel()==null && sf.getHouse()==null) b=false;
-		}
-		if (b) {
-			Street oldStreet= street;
-			if(sf.getHouse()!=null) {
+
+		if(sf.getHouse()!=null) {
+			Boolean b= streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream()
+			.allMatch(x -> Math.abs(sf.getHouse()-x.getHouseNum())<=1);
+			if(true) {
+				price +=(sf.getHouse()-street.getHouseNum())*street.getBuildingPrice();
 				street.setHouseNum(sf.getHouse());
-				price += (street.getHouseNum()-oldStreet.getHouseNum()) * street.getBuildingPrice();
-			}
-			if(sf.getHotel()!=null) {
-				street.setHaveHotel(sf.getHotel());
-				if(sf.getHotel()) price += street.getBuildingPrice();
-			}
-			saveProperty(street);
-			Player player= playerRepository.findPlayerById(playerId, gameId);
-			if(player.getMoney()-price>=0)	{
-				player.setMoney(player.getMoney()-price);
-				playerRepository.save(player);
 			}
 		}
+		
+		if(sf.getHotel()!=null) {
+			Boolean b2= streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream()
+			.allMatch(x -> x.getHouseNum()>=4);
+			if (b2) {
+				price += street.getBuildingPrice();
+				street.setHaveHotel(true);
+			}	
+		}
+		saveProperty(street);
+		return price;
 	}
 }
