@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+
 @Controller
 public class GameController {
 	
@@ -68,7 +70,7 @@ public class GameController {
 		this.auctionRepository = auctionRepository;
 	}
 
-	//PROVISIONAL
+	//PopUp Samples
 	@GetMapping(value = "/blankGame")
 	public String blankGame(Map<String, Object> model, Authentication authentication) {
 		Integer idProperty = 12;
@@ -92,29 +94,22 @@ public class GameController {
 		return BLANK_GAME;
 	} 
 	
+	//Build sample
 	@PostMapping(value="/blankGame/build")
 	public String build(StreetForm streetForm,Map<String,Object>model, Authentication authentication) {
-		Integer idGame = 2;
+		int gameId = 2;
 		Integer idPlayer = 5;
 
-		List<Color> colors= propertyService.findPlayerColors(idGame, idPlayer);
+		List<Color> colors= propertyService.findPlayerColors(gameId, idPlayer);
 		List<Street> streets= new ArrayList<>();
 		for (Color c: colors) {
-			propertyService.findStreetByColor(c, idGame).forEach(x -> streets.add(x));;
+			propertyService.findStreetByColor(c, gameId).forEach(x -> streets.add(x));;
 		}
 		model.put("streets", streets );
-		Street street = (Street) propertyService.getProperty(streetForm.getStreetId(), idGame);
-		if(streetForm.getHouse()!=null) {
-			street.setHouseNum(streetForm.getHouse());
-		}
-		
-		if(streetForm.getHotel()!=null) {
-			street.setHaveHotel(streetForm.getHotel());
-		}
-		propertyService.saveProperty(street);
-		
-		
-		
+		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getMoney());
+		propertyService.buildProperty(gameId, idPlayer, streetForm);
+		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getMoney());
+
 		return BLANK_GAME;
 		
 	}
@@ -151,16 +146,7 @@ public class GameController {
 		}
 		model.addAttribute("streets", streets );
 		
-		Street street = (Street) propertyService.getProperty(streetForm.getStreetId(), gameId);
-		if(streetForm.getHouse() != null) {
-			street.setHouseNum(streetForm.getHouse());
-		}
-		
-		if(streetForm.getHotel()!=null) {
-			street.setHaveHotel(streetForm.getHotel());
-		}
-		
-		propertyService.saveProperty(street);
+		propertyService.buildProperty(gameId, idPlayer, streetForm);
 		
 		model = gameService.setupGameModel(model, gameId, auth);
 		
