@@ -89,10 +89,5 @@ public class PlayerService {
 		playerRepository.updatePlayerRelation(id);
 	}
 	
-	@Transactional(readOnly = true)
-	public List<Player> getGameOrderedPlayers(Integer gameId) {
-		return playerRepository.findAllGameOrderedPlayers(gameId);
-	}
-	
 	
 }

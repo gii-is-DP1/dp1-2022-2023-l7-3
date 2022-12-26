@@ -178,7 +178,7 @@ public class GameController {
 			Auction oldAuction = gameService.getLastAuction(gameId);
 			Object property = propertyService.getProperty(oldAuction.getPropertyId(), gameId);
 			
-			List<Player> playersOrdered = playerService.getGameOrderedPlayers(gameId);
+			List<Player> playersOrdered = gameService.getPlayersOrderedByTurn(gameId);
 			List<Player> playersOut = new ArrayList<Player>();
 			playersOrdered.forEach(p -> {
 				if(!oldAuction.getRemainingPlayers().contains(p.getId())) {
@@ -329,7 +329,7 @@ public class GameController {
 			model.addAttribute("users", users);
 			model.addAttribute("players", players);
 			
-			// Solution to errorss
+			// Solution to errors
 			model.addAttribute("error", "The number of players must be between 2 and 6");
 			 
 			return VIEWS_NEW_GAME;
