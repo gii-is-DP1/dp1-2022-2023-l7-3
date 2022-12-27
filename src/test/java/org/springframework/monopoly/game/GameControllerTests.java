@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +25,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.configuration.SecurityConfiguration;
+import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
+import org.springframework.monopoly.property.Auction;
 import org.springframework.monopoly.property.AuctionRepository;
 import org.springframework.monopoly.property.PropertyService;
 import org.springframework.monopoly.tile.CommunityBoxService;
@@ -162,6 +166,32 @@ public class GameControllerTests {
 		mockMvc.perform(get("/game/2"))
    					.andExpect(status().is3xxRedirection());
 	}
+	
+//	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
+//	@Test
+//	void testProcessAuctionFormSuccess() throws Exception { // No falla, hace un redirect a la misma url
+//		
+//		List<Integer> ls = new ArrayList<Integer>();
+//		ls.add(0); // Id of user admin
+//		ls.add(1); // Another id
+//		
+//		mockMvc.perform(post("/game/2/auction").with(csrf()).param("player_index", "0").param("current_bid", "100").param("remainingPlayers", ls.toString())
+//				.param("player_bid", "10").param("property_id", "12").param("game_id", "2"))
+//				.andExpect(status().is2xxSuccessful()); 
+//	}
+//	
+//	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
+//	@Test
+//	void testProcessEndAuction() throws Exception { // Falla, subasta acaba y va a mainGame
+//		
+//		List<Integer> ls = new ArrayList<Integer>();
+//		ls.add(0); // Id of user admin
+//		
+//		mockMvc.perform(post("/game/2/auction").with(csrf()).param("player_index", "0").param("current_bid", "100").param("remainingPlayers", ls.toString())
+//				.param("player_bid", "10").param("property_id", "12").param("game_id", "2"))
+//				.andExpect(status().isOk())
+//				.andExpect(view().name("game/gameMain"));
+//	}
 	
 	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
 	@Test
