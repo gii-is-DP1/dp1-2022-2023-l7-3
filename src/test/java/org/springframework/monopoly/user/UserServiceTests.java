@@ -103,8 +103,8 @@ public class UserServiceTests {
 //		user.setPassword("testPassword");
 //		this.userService.saveUser(user);
 //
-//		user = this.userService.findUserByName("deleteUser");
-//		Integer id = user.getId();
+//		User userToDelete = this.userService.findUserByName("deleteUser").get();
+//		Integer id = userToDelete.getId();
 //		
 //		Optional<User> createdUser = userService.findUser(id); // Will exist
 //		assertThat(createdUser.isPresent()).isEqualTo(true);
