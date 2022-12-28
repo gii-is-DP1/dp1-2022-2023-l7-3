@@ -7,7 +7,7 @@
 <link href="${gameCss}" rel="stylesheet"/>
 
 	<h1 class="propertyTxt2">Do you want to bid <c:out value = "${player.user.username}"></c:out> ?</h1>
-	<h1 class="propertyTxt2">Current Bid: <c:out value = "${auction.currentBid}"></c:out> M </h1>
+	<h1 class="propertyTxt2">Current Bid: <c:out value = "${auction.currentBid}"></c:out> <img style='height: 24px' src='/resources/images/Monodolar.png'/> </h1>
 
 	
 	<div  class="propertyImg">

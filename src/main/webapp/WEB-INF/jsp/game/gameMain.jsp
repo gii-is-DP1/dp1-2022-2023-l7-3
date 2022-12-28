@@ -287,6 +287,12 @@
 	 </c:if>
 	 
 	 <c:if test="${isPlaying && Turn.isActionEvaluated}">
+		 <monopoly:popup popUpId="wantToBuild">
+		 	<monopoly:wantToBuild2/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${isPlaying && Turn.isActionEvaluated}">
 		 <monopoly:popup popUpId="buildBuildings" gameId="${Game.id}" popUpPostFormAction="build">
 		 	<monopoly:buildBuildings2/>
 		 </monopoly:popup>
@@ -335,7 +341,7 @@
 	 			result("buyPopUp");
 	 			break;
 	 		case "BUILD":
-	 			result("wantToBuildPopUp");
+	 			result("wantToBuild");
 	 			break;
 	 		case "AUCTION":
 	 			result("auctionBuilding");

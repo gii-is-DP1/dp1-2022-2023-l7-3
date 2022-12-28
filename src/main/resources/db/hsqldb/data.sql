@@ -99,9 +99,9 @@ INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed
 INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (2,  420, 'RED', 2, 0, 2, 0, 0, 0, 1, 3);
 INSERT INTO player (id, money, piece, tile, turn_order, has_exit_gate, is_jailed, is_winner, is_bankrupcy, game_id, user_id) VALUES (3,  0, 'YELLOW', 31, 0, 3, 0, 0, 0, 1, 4);
 
-INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (0, 9, 1, 0);
-INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (1, 5, 1, 1);
-INSERT INTO turns(turn_number, roll, game_id, player_id) VALUES (2, 7, 1, 2);
+INSERT INTO turns(id, turn_number, roll, game_id, player_id) VALUES (0, 0, 9, 1, 0);
+INSERT INTO turns(id, turn_number, roll, game_id, player_id) VALUES (1, 1, 5, 1, 1);
+INSERT INTO turns(id, turn_number, roll, game_id, player_id) VALUES (2, 2, 7, 1, 2);
 
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game) VALUES (1, 'Ronda de Valencia', 60, 2, 30, false, '/resources/images/00.png', 'BROWN', 50, 0, false, 10, 30, 90, 160, 250, 1);
 INSERT INTO streets (id, name, price, rental_price, mortage_price, is_mortage, badge_Image, color, building_price, house_num, have_hotel, rental_1_house, rental_2_house, rental_3_house, rental_4_house, rental_hotel, game) VALUES (3, 'Plaza Lavapiés', 60, 4, 30, false, '/resources/images/01.png', 'BROWN', 50, 0, false, 20, 60, 180, 320, 450, 1);
