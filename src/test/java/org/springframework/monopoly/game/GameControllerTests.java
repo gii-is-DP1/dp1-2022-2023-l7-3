@@ -1,6 +1,7 @@
 package org.springframework.monopoly.game;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -12,7 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +25,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.configuration.SecurityConfiguration;
-import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
 import org.springframework.monopoly.property.AuctionRepository;
@@ -167,31 +166,34 @@ public class GameControllerTests {
    					.andExpect(status().is3xxRedirection());
 	}
 	
-//	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
-//	@Test
-//	void testProcessAuctionFormSuccess() throws Exception { // No falla, hace un redirect a la misma url
-//		
-//		List<Integer> ls = new ArrayList<Integer>();
-//		ls.add(0); // Id of user admin
-//		ls.add(1); // Another id
-//		
-//		mockMvc.perform(post("/game/2/auction").with(csrf()).param("player_index", "0").param("current_bid", "100").param("remainingPlayers", ls.toString())
-//				.param("player_bid", "10").param("property_id", "12").param("game_id", "2"))
-//				.andExpect(status().is2xxSuccessful()); 
-//	}
-//	
-//	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
-//	@Test
-//	void testProcessEndAuction() throws Exception { // Falla, subasta acaba y va a mainGame
-//		
-//		List<Integer> ls = new ArrayList<Integer>();
-//		ls.add(0); // Id of user admin
-//		
-//		mockMvc.perform(post("/game/2/auction").with(csrf()).param("player_index", "0").param("current_bid", "100").param("remainingPlayers", ls.toString())
-//				.param("player_bid", "10").param("property_id", "12").param("game_id", "2"))
-//				.andExpect(status().isOk())
-//				.andExpect(view().name("game/gameMain"));
-//	}
+	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
+	@Test
+	void testProcessAuctionFormSuccess() throws Exception { 
+		
+		Auction testAuction = new Auction(0, List.of(0,1), 100, 10, 12, 2);
+		given(this.gameService.saveAuction(any())).willReturn(testAuction);
+		given(this.playerService.findPlayerById(anyInt())).willReturn(null);
+				
+		mockMvc.perform(post("/game/2/auction").with(csrf()).param("playerIndex", "0").param("currentBid", "100")
+				.param("remainingPlayers[0]", "0").param("remainingPlayers[1]", "1")
+				.param("playerBid", "10").param("propertyId", "12").param("gameId", "2"))
+				.andExpect(status().is3xxRedirection()); 
+	}
+	
+	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
+	@Test
+	void testProcessEndAuction() throws Exception { 
+		
+		Auction testAuction = new Auction(0, List.of(0), 100, 10, 12, 2);
+		given(this.gameService.saveAuction(any())).willReturn(testAuction);
+		given(this.playerService.findPlayerById(anyInt())).willReturn(null);
+			
+		mockMvc.perform(post("/game/2/auction").with(csrf()).param("playerIndex", "0").param("currentBid", "100")
+				.param("remainingPlayers[0]", "0")
+				.param("playerBid", "10").param("propertyId", "12").param("gameId", "2"))
+				.andExpect(status().isOk())
+				.andExpect(view().name("game/gameMain"));
+	}
 	
 	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
 	@Test
