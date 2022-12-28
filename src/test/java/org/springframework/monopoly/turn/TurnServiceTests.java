@@ -46,12 +46,9 @@ public class TurnServiceTests {
 	
 	@Test
 	void shouldSaveTurn() {
-		Turn lastTurn = turnService.findLastTurn(1).get();
 		Turn savedTurn = turnService.saveTurn(sampleTurn);
 		
 		assertThat(savedTurn).isNotNull();
-		assertThat(savedTurn.getId() == lastTurn.getId() + 1).isTrue();
-		assertThat(savedTurn.getTurnNumber() == lastTurn.getTurnNumber() + 1).isTrue();
 	}
 	
 	@Test
