@@ -271,7 +271,6 @@ public class GameService {
 		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 		Collections.sort(players, c);
 
-		//esto se va al turn service como nexturn no se que
 		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		Turn turn = new Turn();
 		turn.setGame(game);
@@ -279,13 +278,28 @@ public class GameService {
 		Boolean isPlaying = false;
 		
 		// Calculating next turn result
+		
+		// Is there already any turn in this game?
 		if(lastTurn != null) {
+			
+			// If we need a new turn and last was doubles, nextplayer is the same
 			if(lastTurn.getIsFinished() && turn.getIsDoubles()) {
 				nextPlayer = turn.getPlayer();
+				
+			/*
+			 * If the turn is not finished we sort of don't care about the next player
+			 * But if it was finished and last turn wasn't doubles, we need to set
+			 * the next player
+			 */
 			} else {
 				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
 			}
 			
+			/*
+			 * If last turn is finished and the next player is the one who made the request 
+			 * which is being attended right now, we need to get them a new turn
+			 * 
+			 */
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
 				game.setVersion(game.getVersion() + 1);
 				game = saveGame(game);
@@ -295,9 +309,21 @@ public class GameService {
 				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
 				turnService.calculateTurn(turn);
 				isPlaying = true;
+				
+			/*
+			 * If the last turn is finished but the player who made the request is not the
+			 * next one to play, we get them the last turn until the next player generates 
+			 * the next one
+			 */
 			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
 				isPlaying = false;
 				turn = lastTurn;
+				
+			/*
+			 * If the last turn isn't finished, we need to deliver that turn so it can be
+			 * finished. If the turn action is already evaluated and the player is correct,
+			 * we prompt them for construction
+			 */
 			} else {
 				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
 				turn = lastTurn;
@@ -313,9 +339,9 @@ public class GameService {
 					model.addAttribute("streets", streets);
 				}
 			} 
-			
+		
+		// We need to create the first turn of the game
 		} else {
-			// This could go into the new game method
 			nextPlayer = players.get(0);
 			isPlaying = nextPlayer.getUser().equals(requestUser);
 			turn.setPlayer(nextPlayer);
@@ -331,7 +357,9 @@ public class GameService {
 		model.addAttribute("Version", game.getVersion());
 		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
 		
-		 
+		 /*
+		  * Adding needed things to the model based on what the turn action is
+		  */
 		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
 		if(turn.getAction().equals(Action.PAY_TAX)) {
 			model.addAttribute("taxes", taxService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
@@ -360,7 +388,7 @@ public class GameService {
 
 		model.addAttribute("Properties", properties);
 		    
-		// Complete street colors
+		// Complete street colors of every player
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
 			colors.add(streetService.findPlayerColors(p));
@@ -411,6 +439,10 @@ public class GameService {
 		Collections.sort(auctions, c.reversed());
 	
 		return auctions.get(0);
+	}
+
+	public Auction saveAuction(Auction auction) {
+		return auctionRepository.save(auction);
 	}
 		
 }

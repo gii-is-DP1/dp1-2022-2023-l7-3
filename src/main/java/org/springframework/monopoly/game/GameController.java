@@ -54,19 +54,17 @@ public class GameController {
 	private TurnService turnService;
 	private PropertyService propertyService;
 	private TileService tileService;
-	private AuctionRepository auctionRepository;
 	
 	@Autowired
 	public GameController(GameService gameService, PlayerService playerService, UserService userService, TurnService turnService, 
 			PropertyService propertyService, TaxesService taxesService, TileService tileService,
-			CardService cardService, AuctionRepository auctionRepository) {
+			CardService cardService) {
 		this.gameService = gameService;
 		this.playerService = playerService;
 		this.userService = userService;
 		this.turnService = turnService;
 		this.propertyService = propertyService;
 		this.tileService = tileService;
-		this.auctionRepository = auctionRepository;
 	}
 
 	//PopUp Samples
@@ -204,7 +202,7 @@ public class GameController {
 	public String auctionPostFinal(@PathVariable("gameId") int gameId, Auction auction, Model model, Authentication authentication) throws Exception {
 		Object property = propertyService.getProperty(auction.getPropertyId(), gameId);
 		Auction newAuction = propertyService.auctionPropertyById(auction);
-		newAuction = auctionRepository.save(newAuction);
+		newAuction = gameService.saveAuction(newAuction);
 		
 		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
 			propertyService.setAuctionWinner(newAuction);
@@ -218,6 +216,7 @@ public class GameController {
 			Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 			
 			if(lastTurn != null) {
+				lastTurn.setIsAuctionOnGoing(false);
 				turnService.evaluateTurnAction(lastTurn, false);
 			}  
 			
@@ -243,6 +242,7 @@ public class GameController {
 		
 		return GAME_MAIN;
 	}
+	
 	@PostMapping(value = "/exitGate")
 	public String getOutOfJail(ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
 		
@@ -250,6 +250,15 @@ public class GameController {
 		tileService.calculateActionTile(null, option);
 		
 		return GAMES_LISTING;
+	}
+	
+	@PostMapping(value = "/game/{gameId}/exitGate")
+	public String getOutOfJailFinal(@PathVariable("gameId") int gameId, ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
+		
+		Integer option = exitGateForm.getOption();
+		tileService.calculateActionTile(null, option);
+		
+		return "redirect:/game/" + gameId;
 	}
 
 	
@@ -329,7 +338,7 @@ public class GameController {
 			model.addAttribute("users", users);
 			model.addAttribute("players", players);
 			
-			// Solution to errors
+			// Workarround to errors
 			model.addAttribute("error", "The number of players must be between 2 and 6");
 			 
 			return VIEWS_NEW_GAME;
@@ -348,7 +357,7 @@ public class GameController {
 			}
 			return "redirect:/game/" + savedGame.getId();
 		}
-	}
+	} 
 	
 	@GetMapping(value = "/game/{gameId}")
 	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
