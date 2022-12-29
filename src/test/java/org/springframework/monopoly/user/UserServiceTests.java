@@ -93,25 +93,25 @@ public class UserServiceTests {
 		assertThat(page.hasContent()).isEqualTo(true);
 	}
 	
-//	@Test // Does not work correctly
-//	public void deleteUserSuccessful() {
-//		
-//		User user = new User(); 
-//		user.setEnabled(true);
-//		user.setUsername("deleteUser");
-//		user.setIs_admin("user");
-//		user.setPassword("testPassword");
-//		this.userService.saveUser(user);
-//
-//		User userToDelete = this.userService.findUserByName("deleteUser").get();
-//		Integer id = userToDelete.getId();
-//		
-//		Optional<User> createdUser = userService.findUser(id); // Will exist
-//		assertThat(createdUser.isPresent()).isEqualTo(true);
-//		this.userService.delete(id);
-//		Optional<User> deletedUser = userService.findUser(id); // Will not exist
-//		assertThat(deletedUser.isPresent()).isEqualTo(false);
-//	}
+	@Test // Does not work correctly
+	public void deleteUserSuccessful() {
+		
+		User user = new User(); 
+		user.setEnabled(true);
+		user.setUsername("deleteUser");
+		user.setIs_admin("user");
+		user.setPassword("testPassword");
+		this.userService.saveUser(user);
+
+		User userToDelete = this.userService.findUserByName("deleteUser").get();
+		Integer id = userToDelete.getId();
+		
+		Optional<User> createdUser = userService.findUser(id); // Will exist
+		assertThat(createdUser.isPresent()).isEqualTo(true);
+		this.userService.delete(id);
+		Optional<User> deletedUser = userService.findUser(id); // Will not exist
+		assertThat(deletedUser.isPresent()).isEqualTo(false);
+	}
 	 
 	@Test
 	public void deleteUserNotExists() {

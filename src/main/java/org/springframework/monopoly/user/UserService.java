@@ -70,10 +70,13 @@ public class UserService {
 	public Optional<User> findUserByName(String name) {
 		return monopolyUserRepository.findByUsername(name);
 	}
+	
 	@Transactional
 	public void delete(Integer id) throws DataAccessException{
 		pService.updatePlayerRelations(id);
-		monopolyUserRepository.deleteByUserId(id);
+		Optional<User> user = findUser(id);
+		if(user.isPresent())
+			monopolyUserRepository.delete(user.get());
 		
 	}
 	
