@@ -26,8 +26,12 @@
 		<monopoly:auctionBuilding/>
 	</div>
 
-	<div class="gamePopUp" id="mergeBuilding">
-		<monopoly:mergeBuilding/>
+	<div class="gamePopUp" id="wantToMortgagePopUp">
+		<monopoly:wantToMortgage/>
+	</div>
+	
+	<div class="gamePopUp" id="mortgagePopUp">
+		<monopoly:mortgage/>
 	</div>
 	
 	<div class="gamePopUp" id="exitJail">
@@ -39,7 +43,7 @@
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;wantToBuildPopUp&quot)">Sample construir</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;haveToPay&quot)">Sample tener que pagar</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;auctionBuilding&quot)">Sample subasta</button>
-		<button class="popUpSampleButton" onclick="showPopUp(&quot;mergeBuilding&quot)">Sample hipoteca</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;wantToMortgagePopUp&quot)">Sample hipoteca</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;exitJail&quot)">Sample salir carcel</button>
 	</a>
 </monopoly:layout>

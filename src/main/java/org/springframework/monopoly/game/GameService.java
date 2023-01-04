@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.monopoly.card.Card;
 import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
+import org.springframework.monopoly.exceptions.PlayerNeedsToMortgage;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
@@ -268,6 +269,7 @@ public class GameService {
 		}
 		
 		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		players = players.stream().filter(p -> !p.getIs_bankrupcy()).collect(Collectors.toList());
 		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 		Collections.sort(players, c);
 
@@ -363,11 +365,14 @@ public class GameService {
 		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
 		if(turn.getAction().equals(Action.PAY_TAX)) {
 			model.addAttribute("taxes", taxService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
+			
 		} else if(turn.getAction().equals(Action.DRAW_CARD)) {
+			
 			Card card = cardService.findCardById(turn.getActionCardId()).orElse(null);
 			if(card != null) {
 				model.addAttribute("drawCardSource", card.getBadgeImage());
 			} 
+			
 		} else if(turn.getAction().equals(Action.AUCTION) && !turn.getIsAuctionOnGoing()) {
 			turn.setIsAuctionOnGoing(true);
 			turnService.saveTurn(turn);
@@ -375,6 +380,32 @@ public class GameService {
 			Auction auction = new Auction(0, players.stream().map(p -> p.getId()).collect(Collectors.toList()), 10, 0, turn.getFinalTile(), gameId);
 			auction = auctionRepository.save(auction);
 			model.addAttribute("auction", auction);
+			
+		} else if(turn.getAction().equals(Action.MORTGAGE)) {
+			Boolean hasToMortgage = !propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile());
+			model.addAttribute("hasToMortgage", hasToMortgage);
+			model.addAttribute("needToPay", propertyService.getRentalPrice((Property) propertyService.getProperty(turn.getFinalTile(), gameId)));
+			
+			if(hasToMortgage) {
+				Integer playerNumOfProperties = 0;
+				playerNumOfProperties += turn.getPlayer().getStreets().size();
+				playerNumOfProperties += turn.getPlayer().getStations().size(); 
+				playerNumOfProperties += turn.getPlayer().getCompanies().size(); 
+				
+				if(playerNumOfProperties == 0) {
+					Player bankruptPlayer = turn.getPlayer();
+					bankruptPlayer.setIs_bankrupcy(true);
+					playerService.savePlayer(bankruptPlayer);
+					
+					model.addAttribute("bankruptPlayer", bankruptPlayer);
+				}
+			}
+		}
+		
+		// If the attribute hasToMortgage isn't true, it is not added to the model,
+		// but we need it to be present always anyways
+		if(model.getAttribute("hasToMortgage") == null) {
+			model.addAttribute("hasToMortgage", false);
 		}
 		
 		// To show the end turn button and popups if there is any
@@ -387,13 +418,22 @@ public class GameService {
 		} 
 
 		model.addAttribute("Properties", properties);
+		
+		// Current player properties for mortgage
+		if(isPlaying) {
+			model.addAttribute("playerStreets", turn.getPlayer().getStreets());
+			model.addAttribute("playerStations", turn.getPlayer().getStations());
+			model.addAttribute("playerCompanies", turn.getPlayer().getCompanies());
+		}
 		    
 		// Complete street colors of every player
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
 			colors.add(streetService.findPlayerColors(p));
 		}
+		
  		model.addAttribute("Colors", colors);
+ 		
 		return model;
 	}
 	
@@ -408,27 +448,41 @@ public class GameService {
 		
 		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
 			
-			if(!turn.getIsActionEvaluated()) {
-				turnService.evaluateTurnAction(turn, false);
-			}
-			
-			turn.setIsFinished(true);
-			
-			if(turn.getAction().equals(Action.DRAW_CARD)) {
-				Card c = cardService.findCardById(turn.getActionCardId()).get();
-				if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+			// If the player has not mortgaged a building yet, we cant finish the turn because he can't pay
+			if(!(turn.getAction().equals(Action.MORTGAGE) && 
+					!propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile()))) {
+				if(!turn.getIsActionEvaluated()) {
+					turnService.evaluateTurnAction(turn, false);
+				}
+				
+				turn.setIsFinished(true);
+				
+				if(turn.getAction().equals(Action.DRAW_CARD)) {
+					Card c = cardService.findCardById(turn.getActionCardId()).get();
+					if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+						turn.getPlayer().setTile(turn.getFinalTile());
+						playerService.savePlayer(turn.getPlayer());
+					}
+				} else {
 					turn.getPlayer().setTile(turn.getFinalTile());
 					playerService.savePlayer(turn.getPlayer());
 				}
-			} else {
-				turn.getPlayer().setTile(turn.getFinalTile());
-				playerService.savePlayer(turn.getPlayer());
+				
+				game.setVersion(game.getVersion() + 1);
+				saveGame(game);
+				
+				turnService.saveTurn(turn);
 			}
-			
+		}
+	}  
+	
+	@Transactional
+	public void addToGameVersion(Integer gameId) throws DataAccessException, InvalidNumberOfPLayersException {
+		Game game = findGame(gameId).orElse(null);
+		
+		if(game != null) {
 			game.setVersion(game.getVersion() + 1);
 			saveGame(game);
-			
-			turnService.saveTurn(turn);
 		}
 	}
 	
@@ -441,6 +495,7 @@ public class GameService {
 		return auctions.get(0);
 	}
 
+	@Transactional
 	public Auction saveAuction(Auction auction) {
 		return auctionRepository.save(auction);
 	}

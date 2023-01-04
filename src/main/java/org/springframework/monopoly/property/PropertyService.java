@@ -3,10 +3,11 @@ package org.springframework.monopoly.property;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.monopoly.exceptions.CantAfordMortgageException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
@@ -161,27 +162,77 @@ public class PropertyService {
 		return n * RollGenerator.getRoll().getFirst();
 	}
 	
-
-	public void mortgageProperty(Turn turn, Property property) {
-		Integer buildingsMoney = 0;
-		if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(property.getName())) {
-			if(streetRepository.findStreetById(property.getId(),turn.getGame().getId()) != null) {
-				Street street = (Street)streetRepository.findStreetById(property.getId(),turn.getGame().getId());	
-				if(playerRepository.findAllPropertyNamesByPlayer(turn.getGame().getId(), turn.getPlayer().getId()).contains(street.getName())) {
-					if(street.getHaveHotel()) {
-						buildingsMoney += street.getBuildingPrice() / 2;
-					}else if(street.getHouseNum() > 0) {
-						buildingsMoney += street.getBuildingPrice() / 2 * street.getHouseNum();
-					}
-					turn.getPlayer().setMoney(turn.getPlayer().getMoney() + street.getMortagePrice() + buildingsMoney);
+	@Transactional
+	public void mortgageProperty(Player player, Integer gameId, Integer propertyId) {
+		Property property = (Property) getProperty(propertyId, gameId);
+		
+		if(playerRepository.findAllPropertyNamesByPlayer(gameId, player.getId()).contains(property.getName())) {
+			
+			if(property instanceof Street) {
+				Street street = (Street) property;
+				Integer buildingsMoney = 0;
+				
+				if(street.getHaveHotel()) {
+					buildingsMoney += street.getBuildingPrice() / 2;
+					
+					street.setHaveHotel(false);
+					street.setHouseNum(4);
+					
+				} else if(street.getHouseNum() > 0) {
+					buildingsMoney += street.getBuildingPrice() / 2;
+					
+					street.setHouseNum(street.getHouseNum() - 1);
+					
+				} else {
 					street.setIsMortage(true);
-					street.setPrice(street.getMortagePrice());
+					buildingsMoney += street.getMortagePrice();
 				}
-			}else {
-				turn.getPlayer().setMoney(turn.getPlayer().getMoney() + property.getMortagePrice());
-				property.setIsMortage(true);
-				property.setPrice(property.getMortagePrice());
+				
+				player.setMoney(player.getMoney() + buildingsMoney);
+				
+				streetRepository.save(street);
+				playerRepository.save(player);
+				
+			} else if(property instanceof Company) {
+				Company company = (Company) property;
+				
+				player.setMoney(player.getMoney() + company.getMortagePrice());
+				company.setIsMortage(true);
+				
+				companyRepository.save(company);
+				playerRepository.save(player);
+				
+			} else if(property instanceof Station) {
+				Station station = (Station) property;
+				
+				player.setMoney(player.getMoney() + station.getMortagePrice());
+				station.setIsMortage(true);
+				
+				stationRepository.save(station);
+				playerRepository.save(player);
 			}
+		}
+	}
+	
+	@Transactional(readOnly = true)
+	public Boolean canPlayerPayProperty(Player player, Integer propertyId) {
+		Property property = (Property) getProperty(propertyId, player.getGame().getId());
+		return player.getMoney() >= getRentalPrice(property);
+	}
+	
+	@Transactional(rollbackFor = CantAfordMortgageException.class)
+	public void cancelMortgage(Player player, Integer gameId, Integer propertyId) throws CantAfordMortgageException {
+		Property property = (Property) getProperty(propertyId, gameId);
+		Integer mortgagePrice = (int) (property.getMortagePrice() * 1.1);
+		
+		if(player.getMoney() < mortgagePrice) {
+			throw new CantAfordMortgageException("This player can't afford to cancel this mortgage");
+		} else {
+			property.setIsMortage(false);
+			player.setMoney(player.getMoney() - mortgagePrice);
+			
+			playerRepository.save(player);
+			saveProperty(property);
 		}
 	}
 			
