@@ -12,11 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.monopoly.card.CardService;
+import org.springframework.monopoly.exceptions.CantAfordMortgageException;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
-import org.springframework.monopoly.property.AuctionRepository;
 import org.springframework.monopoly.property.Color;
 import org.springframework.monopoly.property.Property;
 import org.springframework.monopoly.property.PropertyService;
@@ -33,7 +33,9 @@ import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -231,16 +233,86 @@ public class GameController {
 		
 	}
 	
-	@PostMapping(value= "/game/{gameId}mortgage")
-	public String mortgageProperty(@PathVariable("gameId") int gameId,int turnId, int propertyId, Model model, Authentication authentication) {
-		Property property = (Property) propertyService.getProperty(propertyId, gameId);
-		Turn turn = turnService.findTurn(turnId).get();
-		propertyService.mortgageProperty(turn, property);
+	@PostMapping(value= "/game/{gameId}/mortgage")
+	public String mortgageProperty(@PathVariable("gameId") int gameId, @ModelAttribute("MortgagePropertyForm") MortgagePropertyForm propertyForm, BindingResult bindingResult, Model model, Authentication authentication) throws Exception {
+		Integer propertyId = propertyForm.getPropertyId();
 		
-		model.addAttribute(property);
+		Optional<Turn> optionalTurn = turnService.findLastTurn(gameId);
 		
+		User requestUser = userService.findUserByName(authentication.getName()).orElse(null);
 		
-		return GAME_MAIN;
+		if(propertyId < 0) {
+			bindingResult.rejectValue("propertyId", "NoPropertySelected", "You didn't select any property");
+			
+			gameService.setupGameModel(model, gameId, authentication);
+			return GAME_MAIN;
+		}
+		
+		if(optionalTurn.isPresent()) {
+			Turn turn = optionalTurn.get();
+			
+			if(!turn.getIsFinished() && turn.getPlayer().getUser().equals(requestUser)) {
+				
+				Property property = (Property) propertyService.getProperty(propertyId, gameId);
+				
+				if(!property.getOwner().equals(turn.getPlayer())) {
+					bindingResult.rejectValue("propertyId", "PropertyNotOwned", "You don't own that property");
+				} else if(property.getIsMortage()) {
+					bindingResult.rejectValue("propertyId", "PropertyAlreadyMortgaged", "This property is already mortgaged!");
+				} else {
+					propertyService.mortgageProperty(turn.getPlayer(), gameId, propertyId);
+					gameService.addToGameVersion(gameId);
+				}
+				
+				gameService.setupGameModel(model, gameId, authentication);
+				return GAME_MAIN;
+			}
+		}
+		
+		return "redirect:/game/" + gameId;
+	}
+	
+	@PostMapping(value= "/game/{gameId}/cancelMortgage")
+	public String cancelMortgageProperty(@PathVariable("gameId") int gameId, @ModelAttribute("MortgagePropertyForm") MortgagePropertyForm propertyForm, BindingResult bindingResult, Model model, Authentication authentication) throws Exception {
+		Integer propertyId = propertyForm.getPropertyId();
+		
+		Optional<Turn> optionalTurn = turnService.findLastTurn(gameId);
+		
+		User requestUser = userService.findUserByName(authentication.getName()).orElse(null);
+		
+		if(propertyId < 0) {
+			bindingResult.rejectValue("propertyId", "NoPropertySelected", "You didn't select any property");
+			
+			gameService.setupGameModel(model, gameId, authentication);
+			return GAME_MAIN;
+		}
+		
+		if(optionalTurn.isPresent()) {
+			Turn turn = optionalTurn.get();
+			
+			if(!turn.getIsFinished() && turn.getPlayer().getUser().equals(requestUser)) {
+				
+				Property property = (Property) propertyService.getProperty(propertyId, gameId);
+				
+				if(!property.getOwner().equals(turn.getPlayer())) {
+					bindingResult.rejectValue("propertyId", "PropertyNotOwned", "You don't own that property!");
+				} else if(!property.getIsMortage()) {
+					bindingResult.rejectValue("propertyId", "PropertyNotMortgaged", "That property isn't mortgaged!");
+				} else {
+					try {
+						propertyService.cancelMortgage(turn.getPlayer(), gameId, propertyId);
+						gameService.addToGameVersion(gameId);
+					} catch(CantAfordMortgageException e) {
+						bindingResult.rejectValue("propertyId", "CantAfordCancelMortgage", "You can't afford to cancel that mortgage!");
+					}
+				}
+				
+				gameService.setupGameModel(model, gameId, authentication);
+				return GAME_MAIN;
+			}
+		}
+		
+		return "redirect:/game/" + gameId;
 	}
 	
 	@PostMapping(value = "/exitGate")
@@ -376,6 +448,12 @@ public class GameController {
 		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		
 		if(lastTurn != null) {
+			// If the player has not mortgaged a building yet, we cant finish the turn because he can't pay
+			if(lastTurn.getAction().equals(Action.MORTGAGE) && 
+					!propertyService.canPlayerPayProperty(lastTurn.getPlayer(), lastTurn.getFinalTile())) {
+				return "redirect:/game/" + gameId;
+			}
+			
 			if(lastTurn.getAction().equals(Action.BUY) && !decisionResult) {
 				lastTurn.setAction(Action.AUCTION);
 				turnService.saveTurn(lastTurn);
@@ -389,7 +467,7 @@ public class GameController {
 		}  
 		
 		return "redirect:/game/" + gameId;
-	} 
+	}  
 	
 	@GetMapping(value = "/game/{gameId}/endTurn")
 	public String endTurn(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {

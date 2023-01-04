@@ -80,6 +80,7 @@ public class TurnService {
 		// Call to the method handling properties
 		switch(turn.getAction()) {
 		case BUY:
+		case MORTGAGE:
 			propertyService.calculateActionProperty(turn);
 			break;
 		case PAY:

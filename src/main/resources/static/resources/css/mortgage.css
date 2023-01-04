@@ -1,0 +1,8 @@
+
+.mgTableCell {
+	justify-content: center;
+}
+
+.mgTableBody {
+	overflow-y: auto;
+}

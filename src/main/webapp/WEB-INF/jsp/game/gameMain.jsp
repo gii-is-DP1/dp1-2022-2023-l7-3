@@ -143,7 +143,10 @@
 						<button id="endTurnButton" class="mainButtonStyle" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
 					</a>
 				</c:if>
-				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action </button>
+				<c:if test="${isPlaying}">
+					<button id="showMortgageButton" class="mainButtonStyle" type="button" onclick="showPopUp('mortgage')" disabled="disabled"> Show mortgage menu </button>
+				</c:if>
+				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action <br/> Show building menu </button>
 			</div>
 			
 		</div>
@@ -274,6 +277,7 @@
 		 
 	</div>
 	
+	
 	 <c:if test="${Turn.action == 'PAY'}">
 		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:haveToPay/>
@@ -283,6 +287,12 @@
 	 <c:if test="${Turn.action == 'BUY'}">
 		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:buyBuildings/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${isPlaying}">
+		 <monopoly:popup popUpId="mortgage">
+		 	<monopoly:mortgage/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -301,12 +311,6 @@
 	 <c:if test="${Turn.action == 'AUCTION'}">
 		 <monopoly:popup popUpId="auctionBuilding" gameId="${Game.id}" popUpPostFormAction="auction">
 		 	<monopoly:auctionBuilding2/>
-		 </monopoly:popup>
-	 </c:if>
-	 
-	 <c:if test="${Turn.action == 'MORTGAGE'}">
-		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
-		 	<monopoly:mergeBuilding/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -336,26 +340,33 @@
 	 			setCardZoomListener();
 	 			result("haveToPay");
 	 			break;
+	 			
 	 		case "BUY":
 	 			setCardZoomListener();
 	 			result("buyPopUp");
 	 			break;
+	 			
 	 		case "BUILD":
 	 			result("wantToBuild");
 	 			break;
+	 			
 	 		case "AUCTION":
 	 			result("auctionBuilding");
 	 			break;
+	 			
 	 		// Tile actions
 	 		case "PAY_TAX":
 	 			setBoardText("You landed on a taxes tile so you pay ${taxes.price} " + monodolarEmote + " .");
 	 			break;
+	 			
 	 		case "DRAW_CARD":
 	 			setCardZoomListener();
 	 			result("drawCard");
 	 			break;
+	 			
 	 		case "NOTHING_HAPPENS":
 	 			break;
+	 			
 	 		default:
 	 			console.error("Could not parse turn action: " + action);
 	 		}
@@ -425,8 +436,19 @@
 					ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
 					
 					if(i == movingPiece) {
-						setMovement(piece);
-						moves--;
+						if('${Turn.isActionEvaluated}' == 'true') {
+							for(let j = moves; j > 0; j--) {
+								setMovement(piece);
+								moves--;
+							}
+							
+							ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+							moves--;
+							
+						} else {
+								setMovement(piece);
+								moves--;
+						}
 					}
 				}
 				
@@ -436,6 +458,10 @@
 					}, velocity);
 				}
 			} else {
+				if("${hasToMortgage}" == "true") {
+	 				setBoardText("You landed on a property of another player and have to pay ${needToPay}  <img style='height: 24px' src='/resources/images/Monodolar.png'/>  , but you don't have enough money, so you have to mortgage one of your properties.");
+				}
+	 				
 				if((('${Turn.action}' == 'AUCTION' || '${Turn.action}' == 'DRAW_CARD') && '${Turn.isActionEvaluated}' == 'false') || 
 						('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
 					parsePopUp(true);
@@ -448,13 +474,19 @@
 				}
 				
 				if("${isPlaying && Turn.isActionEvaluated}" == "true") {
-					showPopUp("buildBuildings");
+					// showPopUp("buildBuildings");
 					
 					let showActionButton = document.getElementById('showActionButton');
-					
 					if(showActionButton != null) {
 						showActionButton.setAttribute('onclick',"showPopUp('buildBuildings')");
 						showActionButton.disabled = "";
+					}
+				}
+				
+				if("${isPlaying}" == "true") {
+					let showMortgageButton = document.getElementById('showMortgageButton');
+					if(showMortgageButton != null) {
+						showMortgageButton.disabled = "";
 					}
 				}
 				
@@ -464,7 +496,7 @@
 					endTurnButton.disabled = "";
 				}
 				
-				ajaxStartScanningForChanges();
+				// ajaxStartScanningForChanges();
 			}
 			
 		}
