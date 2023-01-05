@@ -3,17 +3,18 @@ package org.springframework.monopoly.property;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.exceptions.CantAfordMortgageException;
+import org.springframework.monopoly.game.Game;
+import org.springframework.monopoly.game.GameRepository;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
 import org.springframework.monopoly.util.RollGenerator;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PropertyService {
@@ -22,13 +23,16 @@ public class PropertyService {
 	private CompanyRepository companyRepository;
 	private StationRepository stationRepository;
 	private PlayerRepository playerRepository;
+	private GameRepository gameRepository;
 	
 	@Autowired
-	public PropertyService( StreetRepository streetRepository, CompanyRepository companyRepository, StationRepository stationRepository , PlayerRepository playerRepository) {
+	public PropertyService( StreetRepository streetRepository, CompanyRepository companyRepository,
+			StationRepository stationRepository , PlayerRepository playerRepository, GameRepository gameRepository) {
 		this.streetRepository = streetRepository;
 		this.companyRepository = companyRepository;
 		this.stationRepository = stationRepository;
 		this.playerRepository = playerRepository;
+		this.gameRepository = gameRepository;
 	}	
 	
 	@Transactional
@@ -171,17 +175,22 @@ public class PropertyService {
 			if(property instanceof Street) {
 				Street street = (Street) property;
 				Integer buildingsMoney = 0;
+				Game game = gameRepository.findById(gameId).get();
 				
 				if(street.getHaveHotel()) {
 					buildingsMoney += street.getBuildingPrice() / 2;
 					
 					street.setHaveHotel(false);
 					street.setHouseNum(4);
+					game.setNumCasas(game.getNumCasas() + 1);
+					gameRepository.save(game);
 					
 				} else if(street.getHouseNum() > 0) {
 					buildingsMoney += street.getBuildingPrice() / 2;
 					
 					street.setHouseNum(street.getHouseNum() - 1);
+					game.setNumCasas(game.getNumCasas() + 1);
+					gameRepository.save(game);
 					
 				} else {
 					street.setIsMortage(true);
