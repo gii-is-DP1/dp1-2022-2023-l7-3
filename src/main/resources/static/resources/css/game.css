@@ -524,3 +524,18 @@ input[type=number]::-webkit-outer-spin-button {
 	scale: 50%;
 }
 
+.buildError{
+	margin: auto;
+	background-color: #d43b3de3;
+	height: 25vh;
+	width: 50vw;
+	text-align: center;
+	position: relative;
+	border-radius: 10px;
+	color: white;
+	
+}
+
+.errorText{
+	font-size: 17px;
+}
