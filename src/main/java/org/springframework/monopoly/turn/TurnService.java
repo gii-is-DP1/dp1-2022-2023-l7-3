@@ -1,6 +1,7 @@
 package org.springframework.monopoly.turn;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,7 @@ public class TurnService {
 	public void calculateTurn(Turn turn) {
 		
 		Pair<Integer, Boolean> roll = RollGenerator.getRoll();
+		List<Turn> lastTurns = turnRepository.findLastJailedTurns(turn.getGame().getId(), turn.getPlayer().getId());
 		
 		if(turn.getPlayer().getIsJailed()) {
 			turn.setRoll(0);
@@ -53,13 +55,30 @@ public class TurnService {
 			
 		} else {
 			turn.setRoll(roll.getFirst());
-			turn.setIsDoubles(roll.getSecond());
+			turn.setIsDoubles(true);
 			
-			// Llamada al metodo de property
-			propertyService.setActionProperty(turn);
+			if(lastTurns.size() > 1 && lastTurns.get(0).getIsDoubles() && lastTurns.get(1).getIsDoubles() && turn.getIsDoubles()) {
+				turn.getPlayer().setIsJailed(true);
+				turn.getPlayer().setTile(10);
+				turn.setRoll(0);
+				turn.setAction(Action.GOTOJAIL);
+				
+			} else {
+				if(turn.getInitial_tile() < 40 && turn.getInitial_tile() + turn.getRoll() >= 40) {
+					if(turn.getInitial_tile() + turn.getRoll() == 40)
+						turn.getPlayer().setMoney(turn.getPlayer().getMoney() + 400);
+					else
+						turn.getPlayer().setMoney(turn.getPlayer().getMoney() + 200);
+				}
+				
+				// Llamada al metodo de property
+				propertyService.setActionProperty(turn);
+				
+				// Llamada al metodo del resto de las tiles
+				tileService.setActionTile(turn);
+			}
 			
-			// Llamada al metodo del resto de las tiles
-			tileService.setActionTile(turn);
+			
 		}
 		
 		saveTurn(turn);

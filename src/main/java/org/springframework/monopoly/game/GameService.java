@@ -46,6 +46,7 @@ import org.springframework.monopoly.tile.Taxes;
 import org.springframework.monopoly.tile.TaxesService;
 import org.springframework.monopoly.turn.Action;
 import org.springframework.monopoly.turn.Turn;
+import org.springframework.monopoly.turn.TurnRepository;
 import org.springframework.monopoly.turn.TurnService;
 import org.springframework.monopoly.user.User;
 import org.springframework.monopoly.user.UserService;
@@ -313,8 +314,8 @@ public class GameService {
 		if(lastTurn != null) {
 			
 			// If we need a new turn and last was doubles, nextplayer is the same
-			if(lastTurn.getIsFinished() && turn.getIsDoubles()) {
-				nextPlayer = turn.getPlayer();
+			if(lastTurn.getIsFinished() && lastTurn.getIsDoubles()) {
+				nextPlayer = lastTurn.getPlayer();
 				
 			/*
 			 * If the turn is not finished we sort of don't care about the next player
@@ -467,7 +468,7 @@ public class GameService {
  		
  		model.addAttribute("Game", game);
 		model.addAttribute("Turn", turn);
-		model.addAttribute("Players", players); 
+		model.addAttribute("Players", players);
 		model.addAttribute("Version", game.getVersion());
 		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
  		

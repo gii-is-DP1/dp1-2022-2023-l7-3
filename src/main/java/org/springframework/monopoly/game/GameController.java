@@ -186,8 +186,9 @@ public class GameController {
 	@GetMapping(value = "/game/{gameId}/auction")
 	public String auctionGetFinal(@PathVariable("gameId") int gameId, Model model, Authentication authentication) throws Exception {
 		Optional<Turn> turn = turnService.findLastTurn(gameId);
+		User requestUser = userService.findUserByName(authentication.getName()).orElse(null);
 		
-		if(turn.isPresent() && turn.get().getIsAuctionOnGoing()) {
+		if(requestUser != null && turn.isPresent() && turn.get().getIsAuctionOnGoing()) {
 			Auction oldAuction = gameService.getLastAuction(gameId);
 			Object property = propertyService.getProperty(oldAuction.getPropertyId(), gameId);
 			
@@ -201,9 +202,11 @@ public class GameController {
 			playersOrdered.removeAll(playersOut);
 			oldAuction.setRemainingPlayers(playersOrdered.stream().map(p -> p.getId()).collect(Collectors.toList()));
 			
+			Player player = playerService.findPlayerById(oldAuction.getRemainingPlayers().get(oldAuction.getPlayerIndex()));
 			model.addAttribute("property", property);
 			model.addAttribute("auction", oldAuction);
-			model.addAttribute("player", playerService.findPlayerById(oldAuction.getRemainingPlayers().get(oldAuction.getPlayerIndex())));
+			model.addAttribute("player", player);
+			model.addAttribute("isActingOnAuction", player.getUser().equals(requestUser));
 			
 			model = gameService.setupGameModel(model, gameId, authentication);
 			

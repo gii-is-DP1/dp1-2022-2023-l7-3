@@ -5,7 +5,12 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-<h1 class="propertyTxt">Do you want to build?</h1>
+<div style="display:block; width: 100%;">
+	<div style="display:flex;flex-direction: row;margin: auto;">
+		<h1 class="propertyTxt">Do you want to build?</h1>
+		<button type="button" onclick="hidePopUp('wantToBuild')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
+	</div>
+</div>
 
 <img  class="propertyImg" alt="Card image" src="/resources/images/monopolyConstructor.png">
 
