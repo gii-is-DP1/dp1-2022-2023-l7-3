@@ -225,19 +225,26 @@ public class PropertyService {
 	public void buildProperty(Integer gameId, Integer playerId, StreetForm sf){
 		Street street = (Street) getProperty(sf.getStreetId(), gameId);
 		Player player = playerRepository.findPlayerById(playerId);
-		if(player.getMoney()- getBuildingPrice(sf, street)>=0) player.setMoney(player.getMoney() - getBuildingPrice(sf, street));
-		playerRepository.save(player);
+		if(player.getMoney()- getBuildingPrice(sf, gameId)>=0) { 
+			player.setMoney(player.getMoney() - getBuildingPrice(sf, gameId));
+			playerRepository.save(player);
+			if(getBuildingPrice(sf, gameId)>0) {
+				if(sf.getHouse()!=null) street.setHouseNum(sf.getHouse());
+				if(sf.getHotel()!=null) street.setHaveHotel(true);
+			}
+			saveProperty(street);
+		}
+		
 	}
 
-	private Integer getBuildingPrice (StreetForm sf, Street street) {
+	public Integer getBuildingPrice (StreetForm sf, Integer gameId) {
+		Street street = (Street) getProperty(sf.getStreetId(), gameId);
 		Integer price = 0;
-
 		if(sf.getHouse()!=null) {
 			Boolean b= streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream()
 			.allMatch(x -> Math.abs(sf.getHouse()-x.getHouseNum())<=1);
-			if(true) {
-				price +=(sf.getHouse()-street.getHouseNum())*street.getBuildingPrice();
-				street.setHouseNum(sf.getHouse());
+			if(b) {
+				price +=(sf.getHouse()-street.getHouseNum())*street.getBuildingPrice();	
 			}
 		}
 		
@@ -246,10 +253,31 @@ public class PropertyService {
 			.allMatch(x -> x.getHouseNum()>=4);
 			if (b2) {
 				price += street.getBuildingPrice();
-				street.setHaveHotel(true);
 			}	
 		}
-		saveProperty(street);
+		
 		return price;
+	}
+	
+	public Boolean getErrors(StreetForm sf, List<Street> streets, Integer gameId) {
+		Boolean error=true;
+		Street street = (Street) getProperty(sf.getStreetId(), gameId);
+		if(sf.getHouse()!=null) {
+			if(sf.getHouse()>=0 && sf.getHouse()<=4) {
+				Boolean b= streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream()
+						.allMatch(x -> Math.abs(sf.getHouse()-x.getHouseNum())<=1);
+				if(b) {
+					error=false;
+				}
+			}	
+		}
+		if(sf.getHotel()!=null) {
+			Boolean b2= streetRepository.findStreetByColor(street.getColor(), street.getGame().getId()).stream()
+			.allMatch(x -> x.getHouseNum()>=4);
+			if (b2) {
+				error=false;
+			}	
+		}
+		return error;
 	}
 }

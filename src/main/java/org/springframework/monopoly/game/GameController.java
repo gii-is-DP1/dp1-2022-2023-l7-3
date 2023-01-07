@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,7 @@ import org.springframework.monopoly.user.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -93,20 +96,25 @@ public class GameController {
 	
 	//Build sample
 	@PostMapping(value="/blankGame/build")
-	public String build(StreetForm streetForm,Map<String,Object>model, Authentication authentication) {
+	public String build(StreetForm streetForm,  Map<String,Object>model, Authentication authentication) {
 		int gameId = 2;
 		Integer idPlayer = 5;
-
+		
 		List<Color> colors= propertyService.findPlayerColors(gameId, idPlayer);
 		List<Street> streets= new ArrayList<>();
 		for (Color c: colors) {
 			propertyService.findStreetByColor(c, gameId).forEach(x -> streets.add(x));;
 		}
 		model.put("streets", streets );
-		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getMoney());
+		Player player = playerService.findPlayerById(idPlayer);
+		if(propertyService.getErrors(streetForm, streets, gameId)||propertyService.getBuildingPrice(streetForm,gameId)>player.getMoney()) {
+			
+			model.put("message",1);
+			return BLANK_GAME;
+		}
+		
+		
 		propertyService.buildProperty(gameId, idPlayer, streetForm);
-		System.out.println("#############################################################\n"+ playerService.findPlayerById(idPlayer).getId());
-
 		return BLANK_GAME;
 		
 	}
@@ -142,6 +150,12 @@ public class GameController {
 			propertyService.findStreetByColor(c, gameId).forEach(x -> streets.add(x));;
 		}
 		model.addAttribute("streets", streets );
+		
+		Player player = playerService.findPlayerById(idPlayer);
+		if(propertyService.getErrors(streetForm, streets, gameId)||propertyService.getBuildingPrice(streetForm,gameId)>player.getMoney()) {
+			model.addAttribute("message",1);
+			return GAME_MAIN;
+		}
 		
 		propertyService.buildProperty(gameId, idPlayer, streetForm);
 		
