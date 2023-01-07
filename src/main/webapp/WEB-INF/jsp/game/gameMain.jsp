@@ -143,20 +143,20 @@
 		
 		<div class="secondColumn">
 			<div class="boardTextDiv">
-				<p> It's <c:out value = "${CurrentPlayer}" />'s turn. <c:if test="${Turn.isDoubles}">It was doubles!</c:if></p>
-				<p id="boardText"></p>
+				<p class="normalText"> It's <c:out value = "${CurrentPlayer}" />'s turn. <c:if test="${Turn.isDoubles}">It was doubles!</c:if></p>
+				<p class="normalText" id="boardText"></p>
 			</div>
 			<canvas id="Board" width="600" height="600"></canvas>
 			<div class="boardButtons">
 				<c:if test="${isPlaying}">
-					<a href="/game/${Game.id}/endTurn">
-						<button id="endTurnButton" class="mainButtonStyle" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
+					<a href="/game/${Game.id}/endTurn" class="endTurnContainer">
+						<button id="endTurnButton" class="boardActionButtons" type="button" onclick="JavaScript:void(0)" disabled="disabled">End turn</button>
 					</a>
 				</c:if>
 				<c:if test="${isPlaying}">
-					<button id="showMortgageButton" class="mainButtonStyle" type="button" onclick="showPopUp('mortgage')" disabled="disabled"> Show mortgage menu </button>
+					<button id="showMortgageButton" class="boardActionButtons" type="button" onclick="showPopUp('mortgage')" disabled="disabled">Show mortgage menu</button>
 				</c:if>
-				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action <br/> Show building menu </button>
+				<button id="showActionButton" class="boardActionButtons" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action<br/>Show building menu </button>
 			</div>
 			
 		</div>
@@ -330,6 +330,12 @@
 		 </monopoly:popup>
 	 </c:if>
 	 
+	 <c:if test="${Turn.action == 'FREE'}">
+		 <monopoly:popup popUpId="free">
+		 	<monopoly:exitJail2/>
+		 </monopoly:popup>
+	 </c:if>
+	 
 	 <!-- Popup showing related scripts -->
 	 <script>
 	 	function parsePopUp(showOrHide = true, inputAction) {
@@ -372,6 +378,10 @@
 	 		case "DRAW_CARD":
 	 			setCardZoomListener();
 	 			result("drawCard");
+	 			break;
+	 			
+	 		case "FREE":
+	 			result("free");
 	 			break;
 	 			
 	 		case "NOTHING_HAPPENS":
@@ -469,7 +479,7 @@
 				}
 			} else {
 				if("${hasToMortgage}" == "true") {
-	 				setBoardText("You landed on a property of another player and have to pay ${needToPay}  <img style='height: 24px' src='/resources/images/Monodolar.png'/>  , but you don't have enough money, so you have to mortgage one of your properties.");
+	 				setBoardText("You have to pay ${needToPay}  <img style='height: 24px' src='/resources/images/Monodolar.png'/> , but you don't have enough money, so you have to mortgage one of your properties.");
 				}
 	 				
 				if((('${Turn.action}' == 'AUCTION' || '${Turn.action}' == 'DRAW_CARD') && '${Turn.isActionEvaluated}' == 'false') || 
@@ -484,7 +494,7 @@
 				}
 				
 				if("${isPlaying && Turn.isActionEvaluated}" == "true") {
-					// showPopUp("buildBuildings");
+					showPopUp("wantToBuild");
 					
 					let showActionButton = document.getElementById('showActionButton');
 					if(showActionButton != null) {
@@ -675,6 +685,13 @@
 	</script>
 </c:forEach>
 
+	<!-- Bankrupt player sign -->
+<c:if test="${bankruptPlayer != null}">
+	<script defer>
+		setBoardText("The player ${bankruptPlayer.user.username} has gone bankrupt and is out of the game");
+	</script>
+</c:if>
+
 	<!-- Card images zoom setter and controller -->
 	<script>
 		let cardImg = null;
@@ -688,7 +705,7 @@
 				cardImg.style.cursor = "zoom-in";
 			
 			} else { // Add zoom
-				gamePopUpDiv.setAttribute("style", "padding-top: 15%; top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
+				gamePopUpDiv.setAttribute("style", "top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
 				
 				cardImg.style.position = "relative";
 				cardImg.style.height = "95vh";

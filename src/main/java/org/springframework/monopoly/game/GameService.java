@@ -1,12 +1,16 @@
 package org.springframework.monopoly.game;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,7 +22,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.monopoly.card.Card;
 import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
-import org.springframework.monopoly.exceptions.PlayerNeedsToMortgage;
 import org.springframework.monopoly.player.PieceColors;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
@@ -51,6 +54,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+
+import ch.qos.logback.core.util.Duration;
 
 @Service
 public class GameService {
@@ -272,6 +277,29 @@ public class GameService {
 		players = players.stream().filter(p -> !p.getIs_bankrupcy()).collect(Collectors.toList());
 		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 		Collections.sort(players, c);
+		
+		// If there is only 1 player left game has to be finished
+		if(players.size() < 2) {
+			
+			if(game.getDuration() == null) {
+				Player winnerPlayer = players.get(0);
+				game.getPlayers().stream().filter(p -> p.equals(winnerPlayer)).forEach(p -> p.setIsWinner(true));
+				
+				Timestamp firstDate = game.getDate();
+				Timestamp secondDate = Timestamp.valueOf(LocalDateTime.now());
+
+			    long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+			    long diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+				
+			    game.setDuration(Long.valueOf(diff).intValue());
+			    saveGame(game);
+			}
+		    
+			model.addAttribute("player", players.get(0));
+			model.addAttribute("gameId", gameId);
+			model.addAttribute("finished", true);
+			return model;
+		}
 
 		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		Turn turn = new Turn();
@@ -303,8 +331,7 @@ public class GameService {
 			 * 
 			 */
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
-				game.setVersion(game.getVersion() + 1);
-				game = saveGame(game);
+				addToGameVersion(gameId);
 				
 				turn.setPlayer(nextPlayer);
 				turn.setInitial_tile(nextPlayer.getTile());
@@ -353,11 +380,12 @@ public class GameService {
 			
 		}
 		
-		model.addAttribute("Game", game);
-		model.addAttribute("Turn", turn);
-		model.addAttribute("Players", players); 
-		model.addAttribute("Version", game.getVersion());
-		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
+		/* 
+		 * We need this attributes to be in the model, even if they are not modified
+		 * by the next code here and therefore, not used.
+		 */ 
+		model.addAttribute("bankruptPlayer", null);
+		model.addAttribute("hasToMortgage", false);
 		
 		 /*
 		  * Adding needed things to the model based on what the turn action is
@@ -381,31 +409,34 @@ public class GameService {
 			auction = auctionRepository.save(auction);
 			model.addAttribute("auction", auction);
 			
+		} else if(turn.getAction().equals(Action.FREE)) {
+			if(turn.getPlayer().getIsJailed()) {
+				model.addAttribute("hasExitGate", turn.getPlayer().getHasExitGate());
+			} else {
+				turn.setAction(Action.NOTHING_HAPPENS);
+			}
+			
+			
 		} else if(turn.getAction().equals(Action.MORTGAGE)) {
 			Boolean hasToMortgage = !propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile());
 			model.addAttribute("hasToMortgage", hasToMortgage);
 			model.addAttribute("needToPay", propertyService.getRentalPrice((Property) propertyService.getProperty(turn.getFinalTile(), gameId)));
 			
 			if(hasToMortgage) {
-				Integer playerNumOfProperties = 0;
-				playerNumOfProperties += turn.getPlayer().getStreets().size();
-				playerNumOfProperties += turn.getPlayer().getStations().size(); 
-				playerNumOfProperties += turn.getPlayer().getCompanies().size(); 
-				
-				if(playerNumOfProperties == 0) {
-					Player bankruptPlayer = turn.getPlayer();
-					bankruptPlayer.setIs_bankrupcy(true);
-					playerService.savePlayer(bankruptPlayer);
-					
-					model.addAttribute("bankruptPlayer", bankruptPlayer);
-				}
+				testIfBankrupt(turn.getPlayer(), model);
 			}
 		}
 		
-		// If the attribute hasToMortgage isn't true, it is not added to the model,
-		// but we need it to be present always anyways
-		if(model.getAttribute("hasToMortgage") == null) {
-			model.addAttribute("hasToMortgage", false);
+		/*
+		 * If the current player has negative money, because of taxes or cards,
+		 * but still has properties owned, he needs to mortgage some.
+		 * If he doesn't have properties, bankruptcy awaits.
+		 */
+		if(turn.getPlayer().getMoney() < 0) {
+			model.addAttribute("hasToMortgage", true);
+			model.addAttribute("needToPay", turn.getPlayer().getMoney() * -1);
+			
+			testIfBankrupt(turn.getPlayer(), model);
 		}
 		
 		// To show the end turn button and popups if there is any
@@ -434,7 +465,44 @@ public class GameService {
 		
  		model.addAttribute("Colors", colors);
  		
+ 		model.addAttribute("Game", game);
+		model.addAttribute("Turn", turn);
+		model.addAttribute("Players", players); 
+		model.addAttribute("Version", game.getVersion());
+		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
+ 		
 		return model;
+	}
+	
+	@Transactional
+	public void testIfBankrupt(Player player, Model model) {
+		Integer playerNumOfProperties = 0;
+		playerNumOfProperties += player.getStreets().stream().filter(s -> !s.getIsMortage()).collect(Collectors.toList()).size();
+		playerNumOfProperties += player.getStations().stream().filter(st -> !st.getIsMortage()).collect(Collectors.toList()).size(); 
+		playerNumOfProperties += player.getCompanies().stream().filter(co -> !co.getIsMortage()).collect(Collectors.toList()).size(); 
+		
+		if(playerNumOfProperties == 0) {
+			player.setIs_bankrupcy(true);
+			
+			player.getStreets().stream().forEach(s -> {
+				s.setOwner(null);
+				streetService.saveStreet(s);
+			});
+			
+			player.getStations().stream().forEach(st -> {
+				st.setOwner(null);
+				stationService.saveStation(st);
+			});
+			
+			player.getCompanies().stream().forEach(co -> {
+				co.setOwner(null);
+				companyService.saveCompany(co);
+			});
+			
+			playerService.savePlayer(player);
+			
+			model.addAttribute("bankruptPlayer", player);
+		}
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW)

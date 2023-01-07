@@ -5,6 +5,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -74,7 +75,7 @@ public class GameServiceTests {
 		
 		Game g1 = new Game();
 		g1.setId(700);
-		g1.setDate(Date.valueOf("2022-11-14"));
+		g1.setDate(Timestamp.valueOf("2022-11-14 00:00:00"));
 		g1.setDuration(60);
 		g1.setNumCasas(0);
 		Set<Player> pg1 = new HashSet<>();
@@ -82,7 +83,7 @@ public class GameServiceTests {
 		
 		Game g2 = new Game();
 		g2.setId(701);
-		g2.setDate(Date.valueOf("2022-11-14"));
+		g2.setDate(Timestamp.valueOf("2022-11-14 00:00:00"));
 		g2.setDuration(61);
 		g2.setNumCasas(0);
 		Set<Player> pg2 = new HashSet<>();
@@ -98,7 +99,7 @@ public class GameServiceTests {
 		Optional<Game> game1 = this.gameService.findGame(1);
 		assertThat(game1.isPresent());
 		Game game = game1.get();
-		assertThat(game.getDate().toLocalDate()).isEqualTo(LocalDate.of(2022,10,11));
+		assertThat(game.getDate()).isEqualTo(Timestamp.valueOf("2022-10-11 00:00:00"));
 		assertThat(game.getDuration()).isEqualTo(107);
 		assertThat(game.getNumCasas()).isEqualTo(0);
 	}
@@ -116,7 +117,7 @@ public class GameServiceTests {
 		Integer lastId = gameRepository.findAll().size()-1;
 		
 		Game game = new Game();
-		game.setDate(Date.valueOf("2022-11-14"));
+		game.setDate(Timestamp.valueOf("2022-11-14 00:00:00"));
 		game.setDuration(60);
 		game.setNumCasas(0);
 		
