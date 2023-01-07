@@ -156,10 +156,9 @@ public class GameController {
 		Player player = playerService.findPlayerById(idPlayer);
 		if(propertyService.getErrors(streetForm, streets, gameId)||propertyService.getBuildingPrice(streetForm,gameId)>player.getMoney()) {
 			model.addAttribute("message",1);
-			return GAME_MAIN;
+		} else {
+			propertyService.buildProperty(gameId, idPlayer, streetForm);
 		}
-		
-		propertyService.buildProperty(gameId, idPlayer, streetForm);
 		
 		model = gameService.setupGameModel(model, gameId, auth);
 		
@@ -347,6 +346,7 @@ public class GameController {
 			Turn turn = optionalTurn.get();
 			
 			if(turn.getPlayer().getUser().equals(requestUser)) {
+				turn.setIsActionEvaluated(true);
 				Integer option = exitGateForm.getOption();
 				tileService.calculateActionTile(turn, option);
 			}
