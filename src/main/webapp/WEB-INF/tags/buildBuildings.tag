@@ -23,9 +23,12 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach items="${streets}" var="street">
-            	<form:form object="streetForm" action="/blankGame/build">
-            		<input type="hidden" name=streetId class="tableCell" value="${street.id}">
+            
+            <c:forEach  items="${streets}" var="street">
+            	<form:form object="streetForm" id="StreetForm" action="/blankGame/build">
+            		<input type="hidden" name=streetId id = "streetId" class="tableCell" value="${street.id}">
+            		<input type="hidden" name=color id = "color" class="tableCell" value="${street.color}">
+            		<input type="hidden" name=streetsBlocked id = "streetsBlocked" class="tableCell" value="${street.id}">
                 	<tr>
                     	<td>
                         	<div  class="color2${street.color}">   </div>                    
@@ -34,22 +37,24 @@
                         	<div class="tableCell">${street.name}</div>  
                     	</td>
                     	<td>
-	                		<input type="number" name="house" class="tableCell2" placeholder="${street.houseNum}">  
+	                		<input type="number" name="house" id="house" class="tableCell2" placeholder="${street.houseNum}">  
                    		</td>
                    		<c:if test="${street.haveHotel==false}">
                     	<td class="tableCell">
-	                		<input type="checkbox" name="hotel" class="tableCell" style= "margin-top: 15px;" placeholder="${street.haveHotel}">  
+	                		<input type="checkbox" name="hotel" id="hotel" class="tableCell" style= "margin-top: 15px;" placeholder="${street.haveHotel}">  
                    		</td>
                    		</c:if>
                    		<c:if test="${street.haveHotel==true}">
                    			<td class= "tableCell" style= "padding-top: 2vh;">Already has a hotel</td>
-                   		</c:if>
+                   		</c:if>	                
                     	<td class="tableCell">
-                    		<button type="submit" class="buildButtons"><span class="glyphicon glyphicon-ok"></span></button>
+                    		<button type = "submit"  class="buildButtons"><span class="glyphicon glyphicon-ok"></span></button>
                     	</td>
+             
                 	</tr>
                 </form:form>
             </c:forEach>
             </tbody>
         </table>       
     </div>
+    

@@ -4,6 +4,16 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <monopoly:layout screenTittle="Playing on game ${Game.id}">
+	
+	<c:if test="${message==1}">
+	<div class= "buildError">
+	 <H4>An error has arisen with the construction of your buildings, the possible errors are:</H4>
+	 <br>   -You don't have enough money
+	 <br>   -You have to maintain an equal number of houses between properties of the same color
+	 <br>   -Your number of houses must be between 0 and 4
+	 <br>   -You must have 4 houses to build an Hotel
+	</div>
+	</c:if>
 
 	<div class="mainGameDiv">
 		 
@@ -133,17 +143,20 @@
 		
 		<div class="secondColumn">
 			<div class="boardTextDiv">
-				<p> It's <c:out value = "${CurrentPlayer}" />'s turn. <c:if test="${Turn.isDoubles}">It was doubles!</c:if></p>
-				<p id="boardText"></p>
+				<p class="normalText"> It's <c:out value = "${CurrentPlayer}" />'s turn. <c:if test="${Turn.isDoubles}">It was doubles!</c:if></p>
+				<p class="normalText" id="boardText"></p>
 			</div>
 			<canvas id="Board" width="600" height="600"></canvas>
 			<div class="boardButtons">
 				<c:if test="${isPlaying}">
-					<a href="/game/${Game.id}/endTurn">
-						<button id="endTurnButton" class="mainButtonStyle" type="button" onclick="JavaScript:void(0)" disabled="disabled"> End turn</button>
+					<a href="/game/${Game.id}/endTurn" class="endTurnContainer">
+						<button id="endTurnButton" class="boardActionButtons" type="button" onclick="JavaScript:void(0)" disabled="disabled">End turn</button>
 					</a>
 				</c:if>
-				<button id="showActionButton" class="mainButtonStyle" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action </button>
+				<c:if test="${isPlaying}">
+					<button id="showMortgageButton" class="boardActionButtons" type="button" onclick="showPopUp('mortgage')" disabled="disabled">Show mortgage menu</button>
+				</c:if>
+				<button id="showActionButton" class="boardActionButtons" type="button" onclick="parsePopUp(true, '<c:out value = "${Turn.action}" />')" disabled="disabled"> Show turn action<br/>Show building menu </button>
 			</div>
 			
 		</div>
@@ -274,6 +287,7 @@
 		 
 	</div>
 	
+	
 	 <c:if test="${Turn.action == 'PAY'}">
 		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:haveToPay/>
@@ -283,6 +297,18 @@
 	 <c:if test="${Turn.action == 'BUY'}">
 		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:buyBuildings/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${isPlaying}">
+		 <monopoly:popup popUpId="mortgage">
+		 	<monopoly:mortgage/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${isPlaying && Turn.isActionEvaluated}">
+		 <monopoly:popup popUpId="wantToBuild">
+		 	<monopoly:wantToBuild2/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -298,15 +324,15 @@
 		 </monopoly:popup>
 	 </c:if>
 	 
-	 <c:if test="${Turn.action == 'MORTGAGE'}">
-		 <monopoly:popup popUpId="mergeBuilding" gameId="${Game.id}" popUpPostFormAction="mergeBuilding">
-		 	<monopoly:mergeBuilding/>
-		 </monopoly:popup>
-	 </c:if>
-	 
 	 <c:if test="${Turn.action == 'DRAW_CARD'}">
 		 <monopoly:popup popUpId="drawCard" gameId="${Game.id}" popUpPostFormAction="tileAction">
 		 	<monopoly:showCard/>
+		 </monopoly:popup>
+	 </c:if>
+	 
+	 <c:if test="${Turn.action == 'FREE'}">
+		 <monopoly:popup popUpId="free">
+		 	<monopoly:exitJail2/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -330,26 +356,37 @@
 	 			setCardZoomListener();
 	 			result("haveToPay");
 	 			break;
+	 			
 	 		case "BUY":
 	 			setCardZoomListener();
 	 			result("buyPopUp");
 	 			break;
+	 			
 	 		case "BUILD":
-	 			result("wantToBuildPopUp");
+	 			result("wantToBuild");
 	 			break;
+	 			
 	 		case "AUCTION":
 	 			result("auctionBuilding");
 	 			break;
+	 			
 	 		// Tile actions
 	 		case "PAY_TAX":
 	 			setBoardText("You landed on a taxes tile so you pay ${taxes.price} " + monodolarEmote + " .");
 	 			break;
+	 			
 	 		case "DRAW_CARD":
 	 			setCardZoomListener();
 	 			result("drawCard");
 	 			break;
+	 			
+	 		case "FREE":
+	 			result("free");
+	 			break;
+	 			
 	 		case "NOTHING_HAPPENS":
 	 			break;
+	 			
 	 		default:
 	 			console.error("Could not parse turn action: " + action);
 	 		}
@@ -419,8 +456,19 @@
 					ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
 					
 					if(i == movingPiece) {
-						setMovement(piece);
-						moves--;
+						if('${Turn.isActionEvaluated}' == 'true') {
+							for(let j = moves; j > 0; j--) {
+								setMovement(piece);
+								moves--;
+							}
+							
+							ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+							moves--;
+							
+						} else {
+								setMovement(piece);
+								moves--;
+						}
 					}
 				}
 				
@@ -430,6 +478,10 @@
 					}, velocity);
 				}
 			} else {
+				if("${hasToMortgage}" == "true") {
+	 				setBoardText("You have to pay ${needToPay}  <img style='height: 24px' src='/resources/images/Monodolar.png'/> , but you don't have enough money, so you have to mortgage one of your properties.");
+				}
+	 				
 				if((('${Turn.action}' == 'AUCTION' || '${Turn.action}' == 'DRAW_CARD') && '${Turn.isActionEvaluated}' == 'false') || 
 						('${isPlaying}' == 'true' && '${Turn.isActionEvaluated}' == 'false')) {
 					parsePopUp(true);
@@ -442,13 +494,19 @@
 				}
 				
 				if("${isPlaying && Turn.isActionEvaluated}" == "true") {
-					showPopUp("buildBuildings");
+					showPopUp("wantToBuild");
 					
 					let showActionButton = document.getElementById('showActionButton');
-					
 					if(showActionButton != null) {
 						showActionButton.setAttribute('onclick',"showPopUp('buildBuildings')");
 						showActionButton.disabled = "";
+					}
+				}
+				
+				if("${isPlaying}" == "true") {
+					let showMortgageButton = document.getElementById('showMortgageButton');
+					if(showMortgageButton != null) {
+						showMortgageButton.disabled = "";
 					}
 				}
 				
@@ -458,7 +516,7 @@
 					endTurnButton.disabled = "";
 				}
 				
-				ajaxStartScanningForChanges();
+				// ajaxStartScanningForChanges();
 			}
 			
 		}
@@ -627,6 +685,13 @@
 	</script>
 </c:forEach>
 
+	<!-- Bankrupt player sign -->
+<c:if test="${bankruptPlayer != null}">
+	<script defer>
+		setBoardText("The player ${bankruptPlayer.user.username} has gone bankrupt and is out of the game");
+	</script>
+</c:if>
+
 	<!-- Card images zoom setter and controller -->
 	<script>
 		let cardImg = null;
@@ -640,7 +705,7 @@
 				cardImg.style.cursor = "zoom-in";
 			
 			} else { // Add zoom
-				gamePopUpDiv.setAttribute("style", "padding-top: 15%; top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
+				gamePopUpDiv.setAttribute("style", "top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
 				
 				cardImg.style.position = "relative";
 				cardImg.style.height = "95vh";

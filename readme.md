@@ -1,7 +1,7 @@
 # Monopoly Application 
 
-En este proyecto se realiza un sistema para jugar al clásico juego de mesa ‘Monopoly’. 
-En este juego el objetivo es conseguir más dinero e influencia en el tablero que el resto de la mesa hasta el punto en el que el resto de los jugadores acaben en bancarrota, momento en el que dejarán de jugar, esto se hará por medio de la compra y venta de propiedades por turnos las cuales obligarán al resto a pagar al propietario por caer en las mismas. 
+In this project a system is made to play the classic board game 'Monopoly'. 
+In this game the objective is to get more money and influence on the board than the rest of the table until the point where the rest of the players go bankrupt, at which point they will stop playing, this will be done through the purchase and sale of properties in turns which will force the rest to pay the owner for falling into them.
 
 ## Vídeo para comprender el funcionamiento del juego
 Para ver el vídeo haga click <a href="https://youtu.be/rW9G2acyIFU">aquí</a>
@@ -27,16 +27,16 @@ Or you can run it from Maven directly using the Spring Boot Maven plugin. If you
 ./mvnw spring-boot:run
 ```
 
-## In case you find a bug/suggested improvement for Spring Petclinic
-Our issue tracker is available here: https://github.com/gii-is-DP1/spring-petclinic/issues
+## In case you find a bug/suggested improvement for Spring Monopoly
+Our issue tracker is available here: https://github.com/gii-is-DP1/dp1-2022-2023-l7-3/issues
 
 
 ## Database configuration
 
-In its default configuration, Petclinic uses an in-memory database (H2) which
+In its default configuration, Monopoly uses an in-memory database (H2) which
 gets populated at startup with data. 
 
-## Working with Petclinic in your IDE
+## Working with Monopoly in your IDE
 
 ### Prerequisites
 The following items should be installed in your system:
@@ -53,7 +53,7 @@ The following items should be installed in your system:
 
 1) On the command line
 ```
-git clone https://github.com/gii-is-DP1/spring-petclinic.git
+https://github.com/gii-is-DP1/dp1-2022-2023-l7-3.git
 ```
 2) Inside Eclipse or STS
 ```
@@ -64,14 +64,14 @@ Then either build on the command line `./mvnw generate-resources` or using the E
 
 3) Inside IntelliJ IDEA
 
-In the main menu, choose `File -> Open` and select the Petclinic [pom.xml](pom.xml). Click on the `Open` button.
+In the main menu, choose `File -> Open` and select the Monopoly [pom.xml](pom.xml). Click on the `Open` button.
 
 CSS files are generated from the Maven build. You can either build them on the command line `./mvnw generate-resources`
-or right click on the `spring-petclinic` project then `Maven -> Generates sources and Update Folders`.
+or right click on the `spring-monopoly` project then `Maven -> Generates sources and Update Folders`.
 
-A run configuration named `PetClinicApplication` should have been created for you if you're using a recent Ultimate
-version. Otherwise, run the application by right clicking on the `PetClinicApplication` main class and choosing
-`Run 'PetClinicApplication'`.
+A run configuration named `MonopolyApplication` should have been created for you if you're using a recent Ultimate
+version. Otherwise, run the application by right clicking on the `MonopolyApplication` main class and choosing
+`Run 'MonopolyApplication'`.
 
 4) Navigate to Petclinic
 
@@ -82,35 +82,16 @@ Visit [http://localhost:8080](http://localhost:8080) in your browser.
 
 |Spring Boot Configuration | Class or Java property files  |
 |--------------------------|---|
-|The Main Class | [PetClinicApplication](https://github.com/gii-is-DP1/spring-petclinic/blob/master/src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java) |
-|Properties Files | [application.properties](https://github.com/gii-is-DP1/spring-petclinic/blob/master/src/main/resources) |
-|Caching | [CacheConfiguration](https://github.com/gii-is-DP1/spring-petclinic/blob/master/src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java) |
-
-## Interesting Spring Petclinic branches and forks
-
-The Spring Petclinic master branch in the main [spring-projects](https://github.com/spring-projects/spring-petclinic)
-GitHub org is the "canonical" implementation, currently based on Spring Boot and Thymeleaf. There are
-[quite a few forks](https://spring-petclinic.github.io/docs/forks.html) in a special GitHub org
-[spring-petclinic](https://github.com/spring-petclinic). If you have a special interest in a different technology stack
-that could be used to implement the Pet Clinic then please join the community there.
+|The Main Class | [MonopolyApplication](https://github.com/gii-is-DP1/dp1-2022-2023-l7-3/blob/master/src/main/java/org/springframework/monopoly/MonopolyApplication.java) |
+|Properties Files | [application.properties](https://github.com/gii-is-DP1/dp1-2022-2023-l7-3/blob/master/src/main/resources) |
+|Caching | [CacheConfiguration](https://github.com/gii-is-DP1/dp1-2022-2023-l7-3/blob/master/src/main/java/org/springframework/samples/petclinic/system/CacheConfiguration.java) |
 
 # Contributing
 
-The [issue tracker](https://github.com/gii-is-DP1/spring-petclinic/issues) is the preferred channel for bug reports, features requests and submitting pull requests.
+The [issue tracker](https://github.com/gii-is-DP1/dp1-2022-2023-l7-3/issues) is the preferred channel for bug reports, features requests and submitting pull requests.
 
 For pull requests, editor preferences are available in the [editor config](.editorconfig) for easy use in common text editors. Read more and download plugins at <https://editorconfig.org>. If you have not previously done so, please fill out and submit the [Contributor License Agreement](https://cla.pivotal.io/sign/spring).
 
 # License
 
-The Spring PetClinic sample application is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).
-
-[spring-petclinic]: https://github.com/spring-projects/spring-petclinic
-[spring-framework-petclinic]: https://github.com/spring-petclinic/spring-framework-petclinic
-[spring-petclinic-angularjs]: https://github.com/spring-petclinic/spring-petclinic-angularjs 
-[javaconfig branch]: https://github.com/spring-petclinic/spring-framework-petclinic/tree/javaconfig
-[spring-petclinic-angular]: https://github.com/spring-petclinic/spring-petclinic-angular
-[spring-petclinic-microservices]: https://github.com/spring-petclinic/spring-petclinic-microservices
-[spring-petclinic-reactjs]: https://github.com/spring-petclinic/spring-petclinic-reactjs
-[spring-petclinic-graphql]: https://github.com/spring-petclinic/spring-petclinic-graphql
-[spring-petclinic-kotlin]: https://github.com/spring-petclinic/spring-petclinic-kotlin
-[spring-petclinic-rest]: https://github.com/spring-petclinic/spring-petclinic-rest
+The Spring Monopoly sample application is released under version 2.0 of the [Apache License](https://www.apache.org/licenses/LICENSE-2.0).

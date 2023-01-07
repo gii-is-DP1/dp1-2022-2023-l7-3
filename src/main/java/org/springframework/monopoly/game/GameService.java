@@ -1,12 +1,16 @@
 package org.springframework.monopoly.game;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,6 +54,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+
+import ch.qos.logback.core.util.Duration;
 
 @Service
 public class GameService {
@@ -268,10 +274,33 @@ public class GameService {
 		}
 		
 		List<Player> players = new ArrayList<Player>(game.getPlayers());
+		players = players.stream().filter(p -> !p.getIs_bankrupcy()).collect(Collectors.toList());
 		Comparator<Player> c = Comparator.comparing(p -> p.getTurnOrder());
 		Collections.sort(players, c);
+		
+		// If there is only 1 player left game has to be finished
+		if(players.size() < 2) {
+			
+			if(game.getDuration() == null) {
+				Player winnerPlayer = players.get(0);
+				game.getPlayers().stream().filter(p -> p.equals(winnerPlayer)).forEach(p -> p.setIsWinner(true));
+				
+				Timestamp firstDate = game.getDate();
+				Timestamp secondDate = Timestamp.valueOf(LocalDateTime.now());
 
-		//esto se va al turn service como nexturn no se que
+			    long diffInMillies = Math.abs(secondDate.getTime() - firstDate.getTime());
+			    long diff = TimeUnit.MINUTES.convert(diffInMillies, TimeUnit.MILLISECONDS);
+				
+			    game.setDuration(Long.valueOf(diff).intValue());
+			    saveGame(game);
+			}
+		    
+			model.addAttribute("player", players.get(0));
+			model.addAttribute("gameId", gameId);
+			model.addAttribute("finished", true);
+			return model;
+		}
+
 		Turn lastTurn = turnService.findLastTurn(gameId).orElse(null);
 		Turn turn = new Turn();
 		turn.setGame(game);
@@ -279,25 +308,51 @@ public class GameService {
 		Boolean isPlaying = false;
 		
 		// Calculating next turn result
+		
+		// Is there already any turn in this game?
 		if(lastTurn != null) {
+			
+			// If we need a new turn and last was doubles, nextplayer is the same
 			if(lastTurn.getIsFinished() && turn.getIsDoubles()) {
 				nextPlayer = turn.getPlayer();
+				
+			/*
+			 * If the turn is not finished we sort of don't care about the next player
+			 * But if it was finished and last turn wasn't doubles, we need to set
+			 * the next player
+			 */
 			} else {
 				nextPlayer = players.get((players.indexOf(lastTurn.getPlayer()) + 1) % players.size());
 			}
 			
+			/*
+			 * If last turn is finished and the next player is the one who made the request 
+			 * which is being attended right now, we need to get them a new turn
+			 * 
+			 */
 			if(lastTurn.getIsFinished() && nextPlayer.getUser().equals(requestUser)) {
-				game.setVersion(game.getVersion() + 1);
-				game = saveGame(game);
+				addToGameVersion(gameId);
 				
 				turn.setPlayer(nextPlayer);
 				turn.setInitial_tile(nextPlayer.getTile());
 				turn.setTurnNumber(lastTurn.getTurnNumber() + 1);
 				turnService.calculateTurn(turn);
 				isPlaying = true;
+				
+			/*
+			 * If the last turn is finished but the player who made the request is not the
+			 * next one to play, we get them the last turn until the next player generates 
+			 * the next one
+			 */
 			} else if(lastTurn.getIsFinished() && !nextPlayer.getUser().equals(requestUser)) {
 				isPlaying = false;
 				turn = lastTurn;
+				
+			/*
+			 * If the last turn isn't finished, we need to deliver that turn so it can be
+			 * finished. If the turn action is already evaluated and the player is correct,
+			 * we prompt them for construction
+			 */
 			} else {
 				isPlaying = lastTurn.getPlayer().getUser().equals(requestUser);
 				turn = lastTurn;
@@ -313,9 +368,9 @@ public class GameService {
 					model.addAttribute("streets", streets);
 				}
 			} 
-			
+		
+		// We need to create the first turn of the game
 		} else {
-			// This could go into the new game method
 			nextPlayer = players.get(0);
 			isPlaying = nextPlayer.getUser().equals(requestUser);
 			turn.setPlayer(nextPlayer);
@@ -325,21 +380,27 @@ public class GameService {
 			
 		}
 		
-		model.addAttribute("Game", game);
-		model.addAttribute("Turn", turn);
-		model.addAttribute("Players", players); 
-		model.addAttribute("Version", game.getVersion());
-		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
+		/* 
+		 * We need this attributes to be in the model, even if they are not modified
+		 * by the next code here and therefore, not used.
+		 */ 
+		model.addAttribute("bankruptPlayer", null);
+		model.addAttribute("hasToMortgage", false);
 		
-		 
+		 /*
+		  * Adding needed things to the model based on what the turn action is
+		  */
 		model.addAttribute("property", propertyService.getProperty(turn.getFinalTile(), game.getId()));
 		if(turn.getAction().equals(Action.PAY_TAX)) {
 			model.addAttribute("taxes", taxService.findTaxesByGameId(gameId, turn.getFinalTile()).orElse(null));
+			
 		} else if(turn.getAction().equals(Action.DRAW_CARD)) {
+			
 			Card card = cardService.findCardById(turn.getActionCardId()).orElse(null);
 			if(card != null) {
 				model.addAttribute("drawCardSource", card.getBadgeImage());
 			} 
+			
 		} else if(turn.getAction().equals(Action.AUCTION) && !turn.getIsAuctionOnGoing()) {
 			turn.setIsAuctionOnGoing(true);
 			turnService.saveTurn(turn);
@@ -347,6 +408,35 @@ public class GameService {
 			Auction auction = new Auction(0, players.stream().map(p -> p.getId()).collect(Collectors.toList()), 10, 0, turn.getFinalTile(), gameId);
 			auction = auctionRepository.save(auction);
 			model.addAttribute("auction", auction);
+			
+		} else if(turn.getAction().equals(Action.FREE)) {
+			if(turn.getPlayer().getIsJailed()) {
+				model.addAttribute("hasExitGate", turn.getPlayer().getHasExitGate());
+			} else {
+				turn.setAction(Action.NOTHING_HAPPENS);
+			}
+			
+			
+		} else if(turn.getAction().equals(Action.MORTGAGE)) {
+			Boolean hasToMortgage = !propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile());
+			model.addAttribute("hasToMortgage", hasToMortgage);
+			model.addAttribute("needToPay", propertyService.getRentalPrice((Property) propertyService.getProperty(turn.getFinalTile(), gameId)));
+			
+			if(hasToMortgage) {
+				testIfBankrupt(turn.getPlayer(), model);
+			}
+		}
+		
+		/*
+		 * If the current player has negative money, because of taxes or cards,
+		 * but still has properties owned, he needs to mortgage some.
+		 * If he doesn't have properties, bankruptcy awaits.
+		 */
+		if(turn.getPlayer().getMoney() < 0) {
+			model.addAttribute("hasToMortgage", true);
+			model.addAttribute("needToPay", turn.getPlayer().getMoney() * -1);
+			
+			testIfBankrupt(turn.getPlayer(), model);
 		}
 		
 		// To show the end turn button and popups if there is any
@@ -359,14 +449,60 @@ public class GameService {
 		} 
 
 		model.addAttribute("Properties", properties);
+		
+		// Current player properties for mortgage
+		if(isPlaying) {
+			model.addAttribute("playerStreets", turn.getPlayer().getStreets());
+			model.addAttribute("playerStations", turn.getPlayer().getStations());
+			model.addAttribute("playerCompanies", turn.getPlayer().getCompanies());
+		}
 		    
-		// Complete street colors
+		// Complete street colors of every player
  		List<List<Color>> colors = new ArrayList<List<Color>>();
 		for(Player p:players) {
 			colors.add(streetService.findPlayerColors(p));
 		}
+		
  		model.addAttribute("Colors", colors);
+ 		
+ 		model.addAttribute("Game", game);
+		model.addAttribute("Turn", turn);
+		model.addAttribute("Players", players); 
+		model.addAttribute("Version", game.getVersion());
+		model.addAttribute("CurrentPlayer", turn.getPlayer().getUser().getUsername());
+ 		
 		return model;
+	}
+	
+	@Transactional
+	public void testIfBankrupt(Player player, Model model) {
+		Integer playerNumOfProperties = 0;
+		playerNumOfProperties += player.getStreets().stream().filter(s -> !s.getIsMortage()).collect(Collectors.toList()).size();
+		playerNumOfProperties += player.getStations().stream().filter(st -> !st.getIsMortage()).collect(Collectors.toList()).size(); 
+		playerNumOfProperties += player.getCompanies().stream().filter(co -> !co.getIsMortage()).collect(Collectors.toList()).size(); 
+		
+		if(playerNumOfProperties == 0) {
+			player.setIs_bankrupcy(true);
+			
+			player.getStreets().stream().forEach(s -> {
+				s.setOwner(null);
+				streetService.saveStreet(s);
+			});
+			
+			player.getStations().stream().forEach(st -> {
+				st.setOwner(null);
+				stationService.saveStation(st);
+			});
+			
+			player.getCompanies().stream().forEach(co -> {
+				co.setOwner(null);
+				companyService.saveCompany(co);
+			});
+			
+			playerService.savePlayer(player);
+			
+			model.addAttribute("bankruptPlayer", player);
+		}
 	}
 	
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -380,27 +516,41 @@ public class GameService {
 		
 		if(turn.getPlayer().getUser().equals(requestUser) && !turn.getIsFinished()) {
 			
-			if(!turn.getIsActionEvaluated()) {
-				turnService.evaluateTurnAction(turn, false);
-			}
-			
-			turn.setIsFinished(true);
-			
-			if(turn.getAction().equals(Action.DRAW_CARD)) {
-				Card c = cardService.findCardById(turn.getActionCardId()).get();
-				if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+			// If the player has not mortgaged a building yet, we cant finish the turn because he can't pay
+			if(!(turn.getAction().equals(Action.MORTGAGE) && 
+					!propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile()))) {
+				if(!turn.getIsActionEvaluated()) {
+					turnService.evaluateTurnAction(turn, false);
+				}
+				
+				turn.setIsFinished(true);
+				
+				if(turn.getAction().equals(Action.DRAW_CARD)) {
+					Card c = cardService.findCardById(turn.getActionCardId()).get();
+					if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+						turn.getPlayer().setTile(turn.getFinalTile());
+						playerService.savePlayer(turn.getPlayer());
+					}
+				} else {
 					turn.getPlayer().setTile(turn.getFinalTile());
 					playerService.savePlayer(turn.getPlayer());
 				}
-			} else {
-				turn.getPlayer().setTile(turn.getFinalTile());
-				playerService.savePlayer(turn.getPlayer());
+				
+				game.setVersion(game.getVersion() + 1);
+				saveGame(game);
+				
+				turnService.saveTurn(turn);
 			}
-			
+		}
+	}  
+	
+	@Transactional
+	public void addToGameVersion(Integer gameId) throws DataAccessException, InvalidNumberOfPLayersException {
+		Game game = findGame(gameId).orElse(null);
+		
+		if(game != null) {
 			game.setVersion(game.getVersion() + 1);
 			saveGame(game);
-			
-			turnService.saveTurn(turn);
 		}
 	}
 	
@@ -411,6 +561,11 @@ public class GameService {
 		Collections.sort(auctions, c.reversed());
 	
 		return auctions.get(0);
+	}
+
+	@Transactional
+	public Auction saveAuction(Auction auction) {
+		return auctionRepository.save(auction);
 	}
 		
 }

@@ -78,20 +78,8 @@ public class PlayerService {
 	}
 	
 	@Transactional
-	public void bankruptcy(Player player) { 
-//		if(player.getMoney() < 0 && player.getProperties().isEmpty()) {
-//			player.setIs_bankrupcy(true);
-//		}
-	}
-	
-	@Transactional
 	public void updatePlayerRelations(Integer id) { 
 		playerRepository.updatePlayerRelation(id);
-	}
-	
-	@Transactional(readOnly = true)
-	public List<Player> getGameOrderedPlayers(Integer gameId) {
-		return playerRepository.findAllGameOrderedPlayers(gameId);
 	}
 	
 	

@@ -5,7 +5,16 @@
 <link href="${gameCss}" rel="stylesheet"/>
 
 <monopoly:layout screenTittle="Blank Game">
-	
+	<c:if test="${message==1}">
+	<div class= "buildError">
+	 <H4>An error has arisen with the construction of your buildings, the possible errors are:</H4>
+	 <br>   -You don't have enough money
+	 <br>   -You have to maintain an equal number of houses between properties of the same color
+	 <br>   -Your number of houses must be between 0 and 4
+	 <br>   -You must have 4 houses to build an Hotel
+	</div>
+	</c:if>
+	 
 	<div class="gamePopUp" id="buyPopUp">
 		<monopoly:buyBuildings/>
 	</div>
@@ -26,8 +35,12 @@
 		<monopoly:auctionBuilding/>
 	</div>
 
-	<div class="gamePopUp" id="mergeBuilding">
-		<monopoly:mergeBuilding/>
+	<div class="gamePopUp" id="wantToMortgagePopUp">
+		<monopoly:wantToMortgage/>
+	</div>
+	
+	<div class="gamePopUp" id="mortgagePopUp">
+		<monopoly:mortgage/>
 	</div>
 	
 	<div class="gamePopUp" id="exitJail">
@@ -39,7 +52,7 @@
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;wantToBuildPopUp&quot)">Sample construir</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;haveToPay&quot)">Sample tener que pagar</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;auctionBuilding&quot)">Sample subasta</button>
-		<button class="popUpSampleButton" onclick="showPopUp(&quot;mergeBuilding&quot)">Sample hipoteca</button>
+		<button class="popUpSampleButton" onclick="showPopUp(&quot;wantToMortgagePopUp&quot)">Sample hipoteca</button>
 		<button class="popUpSampleButton" onclick="showPopUp(&quot;exitJail&quot)">Sample salir carcel</button>
 	</a>
 </monopoly:layout>

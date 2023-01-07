@@ -34,7 +34,6 @@ public class Turn extends BaseEntity {
 	@Column(name = "is_auction_ongoing")
 	private Boolean isAuctionOnGoing = false;
 	
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "turn_number")
 	private Integer turnNumber;
 	

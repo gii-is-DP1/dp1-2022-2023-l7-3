@@ -73,10 +73,11 @@
 	border-width: 5px;
 	min-height: 30px;
 	min-width: 60px;
+	width: 20%;
 }
 
 .exitGateIcon {
-	height: 20%;
+	width: 100%;
 }
 
 .playerAndMoney {
@@ -96,7 +97,7 @@
 }
 
 .playerAvatar {
-	height: 70%;
+	width: 100%;
 }
 
 
@@ -202,7 +203,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-evenly;
 }
 
 .piece {
@@ -215,17 +216,66 @@
 	padding-bottom: 20px;
 }
 
-#boardText {
-	font-size: 24px;
-}
-
 .boardButtons {
 	display: flex;
 	flex-direction: row;
-	justify-content: space-between;
+	justify-content: space-around;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 100%;
+}
+
+.endTurnContainer {
+	 width: 100%;
+	 display: flex;
+	 justify-content: center;
+}
+
+.boardActionButtons {
+	width: fit-content;
+	max-width: 100%;
+    background-color: #47525e;
+    color: white;
+    padding: 8px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: "Bree_Serif";
+    font-size: 16px;
 }
 
 .monodolarEmote {
 	height: 14px;
 }
 
+.normalText {
+	font-size: 12px;
+}
+
+.gameWinningDiv {
+	width: 100%;
+	height: 100%;
+	
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.gameWinningSpan {
+	height: 20%;
+	width: auto;
+	min-width: 40%;
+	padding: 20px;
+	margin-bottom: 10px;
+	
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	background-color: rgba(0, 0, 0, 0.1);
+	font-size: 24px;
+	
+	border-radius: 10px;
+}

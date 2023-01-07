@@ -45,17 +45,22 @@ public class TurnService {
 	public void calculateTurn(Turn turn) {
 		
 		Pair<Integer, Boolean> roll = RollGenerator.getRoll();
-		turn.setRoll(roll.getFirst());
-		turn.setIsDoubles(roll.getSecond());
 		
-		// TEMP
-//		turn.setRoll(7);
-		
-		// Llamada al metodo de property
-		propertyService.setActionProperty(turn);
-		
-		// Llamada al metodo del resto de las tiles
-		tileService.setActionTile(turn);
+		if(turn.getPlayer().getIsJailed()) {
+			turn.setRoll(0);
+			turn.setIsDoubles(false);
+			turn.setAction(Action.FREE);
+			
+		} else {
+			turn.setRoll(roll.getFirst());
+			turn.setIsDoubles(roll.getSecond());
+			
+			// Llamada al metodo de property
+			propertyService.setActionProperty(turn);
+			
+			// Llamada al metodo del resto de las tiles
+			tileService.setActionTile(turn);
+		}
 		
 		saveTurn(turn);
 		
@@ -63,12 +68,18 @@ public class TurnService {
 	
 	@Transactional
 	public void evaluateTurnAction(Turn turn, Boolean decisionResult) {
-		// Call to the method handling properties
+		evaluateTurnAction(turn, decisionResult, null);
+	}
+	
+	@Transactional
+	public void evaluateTurnAction(Turn turn, Boolean decisionResult, Integer getOutJailDecision) {
 		
+		Integer oldPlayerPosition = turn.getPlayer().getTile();
+		
+		// Call to the method handling properties
 		switch(turn.getAction()) {
 		case BUY:
-			propertyService.calculateActionProperty(turn);
-			break;
+		case MORTGAGE:
 		case PAY:
 			propertyService.calculateActionProperty(turn);
 			break;
@@ -77,11 +88,21 @@ public class TurnService {
 		}
 		
 		// Call to the method handling the rest of the tiles
-		tileService.calculateActionTile(turn, null);
+		tileService.calculateActionTile(turn, getOutJailDecision);
 		
-		// Careful here, might set evaluated when nothing happened/ it didnt work
-		turn.setIsActionEvaluated(true);
-		saveTurn(turn);
+		if(oldPlayerPosition.equals(turn.getPlayer().getTile()) && !turn.getAction().equals(Action.GOTOJAIL)) {
+			// Careful here, might set evaluated when nothing happened/ it didnt work
+			turn.setIsActionEvaluated(true);
+			saveTurn(turn);
+		} else {
+			/*
+			 * If we are here, it means that a card or something moved the player, who landed
+			 * on a tile which is not the jail, we need to get them the action of that tile.
+			 */
+			calculateTurn(turn);
+		}
+		
+		
 	}
 		
 }

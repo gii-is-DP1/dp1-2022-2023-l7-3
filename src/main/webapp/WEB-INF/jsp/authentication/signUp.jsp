@@ -12,9 +12,11 @@
 	            <h2 id="formHeader">Enter your details below</h2>
 	
 	            <form:form modelAttribute="User" id="form" name="newUser" onsubmit="return validateForm()">
+	            	<form:errors path="username"/>
 	                <label for="username" class="formLabel">Username</label>
 	                <input type="text" id="username" class="inputText" name="username" placeholder="Your username.." required>
 	
+					<form:errors path="password"/>
 	                <label for="password" class="formLabel">Password</label>
 	                <input type="password" id="password" class="inputText" name="password" placeholder="Your password.." required>
 	                <i class="far fa-eye" id="togglePassword"></i>

@@ -31,29 +31,29 @@ import lombok.Setter;
 public class Player extends BaseEntity {
 
 	@Column(name = "money")
-	protected Integer money;
+	protected Integer money = 1500;
 
 	@Column(name = "piece")
 	@Enumerated(EnumType.STRING)
 	protected PieceColors piece;
 
 	@Column(name = "tile")
-	protected Integer tile;
+	protected Integer tile = 0;
 
 	@Column(name = "has_exit_gate")
-	protected Boolean hasExitGate;
+	protected Boolean hasExitGate = false;
 
 	@Column(name = "is_jailed")
-	protected Boolean isJailed;
+	protected Boolean isJailed = false;
 
 	@Column(name = "is_winner")
-	protected Boolean isWinner;
+	protected Boolean isWinner = false;
 
 	@Column(name = "turn_order")
 	protected Integer turnOrder;
 	
 	@Column(name = "is_bankrupcy")
-	protected Boolean is_bankrupcy;
+	protected Boolean is_bankrupcy = false;
 	
 	@OneToMany(mappedBy = "player")
     protected Set<Turn> turns;

@@ -44,9 +44,9 @@ public abstract class Property extends Tile {
 	@NotNull
 	private String badgeImage;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "game", referencedColumnName = "id")
-	private Game game;
+//	@ManyToOne(cascade = CascadeType.ALL)
+//  @JoinColumn(name = "game", referencedColumnName = "id")
+//	private Game game;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner", referencedColumnName = "id")
