@@ -9,7 +9,7 @@
 	<div style="display:block; width: 100%;">
 		<div style="display:flex;flex-direction: row;margin: auto;">
 			<h1 class="propertyTxt">What do you want to build?</h1>
-			<button onclick="closePopUp(&quot;buildBuildingsPopUp&quot)" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
+			<button type="button" onclick="hidePopUp('buildBuildings')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
 		</div>
 	</div>
     <div class="tableButtoms">

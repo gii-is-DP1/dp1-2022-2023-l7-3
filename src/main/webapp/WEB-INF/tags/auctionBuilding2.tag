@@ -6,9 +6,13 @@
 <spring:url value="/resources/css/game.css" var="gameCss"/>
 <link href="${gameCss}" rel="stylesheet"/>
 
-	<h1 class="propertyTxt2">Do you want to bid <c:out value = "${player.user.username}"></c:out> ?</h1>
-	<h1 class="propertyTxt2">Current Bid: <c:out value = "${auction.currentBid}"></c:out> <img style='height: 24px' src='/resources/images/Monodolar.png'/> </h1>
-
+	<div style="display:block; width: 100%;">
+		<div style="display:flex;flex-direction: row;margin: auto;">
+			<h1 class="propertyTxt2">Do you want to bid <c:out value = "${player.user.username}"></c:out> ?</h1>
+			<h1 class="propertyTxt2">Current Bid: <c:out value = "${auction.currentBid}"></c:out> <img style='height: 24px' src='/resources/images/Monodolar.png'/> </h1>
+			<button type="button" onclick="hidePopUp('auctionBuilding')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
+		</div>
+	</div>
 	
 	<div  class="propertyImg">
 		<img  alt="Card image" src="${property.badgeImage}">
@@ -24,12 +28,14 @@
 		<input type="hidden" name="playerBid" value="${auction.playerBid}" id = "playerBid"/>
 		<input type="hidden" name="propertyId" value="${auction.propertyId}"/>
 		<input type="hidden" name="gameId" value="${auction.gameId}"/>
-		<div class="popUpButtons">
-			<button class="popUpDangerButton">Abandon</button>
-			<button class="popUpButton" type = "button" onclick="newBid(1)">1M</button>
-			<button class="popUpButton" type = "button" onclick="newBid(10)">10M</button>
-			<button class="popUpButton" type = "button" onclick="newBid(100)">100M</button>
-		</div>
+		<c:if test="${isActingOnAuction}">
+			<div class="popUpButtons">
+				<button class="popUpDangerButton">Abandon</button>
+				<button class="popUpButton" type = "button" onclick="newBid(1)">1M</button>
+				<button class="popUpButton" type = "button" onclick="newBid(10)">10M</button>
+				<button class="popUpButton" type = "button" onclick="newBid(100)">100M</button>
+			</div>
+		</c:if>
     </form:form>
 
 <script>

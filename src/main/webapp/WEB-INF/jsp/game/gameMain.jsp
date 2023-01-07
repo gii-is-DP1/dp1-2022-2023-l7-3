@@ -290,13 +290,13 @@
 	
 	 <c:if test="${Turn.action == 'PAY'}">
 		 <monopoly:popup popUpId="haveToPay" gameId="${Game.id}" popUpPostFormAction="tileAction">
-		 	<monopoly:haveToPay/>
+		 	<monopoly:haveToPay2/>
 		 </monopoly:popup>
 	 </c:if>
 
 	 <c:if test="${Turn.action == 'BUY'}">
 		 <monopoly:popup popUpId="buyPopUp" gameId="${Game.id}" popUpPostFormAction="tileAction">
-		 	<monopoly:buyBuildings/>
+		 	<monopoly:buyBuildings2/>
 		 </monopoly:popup>
 	 </c:if>
 	 
@@ -331,7 +331,7 @@
 	 </c:if>
 	 
 	 <c:if test="${Turn.action == 'FREE'}">
-		 <monopoly:popup popUpId="free">
+		 <monopoly:popup popUpId="exitJail">
 		 	<monopoly:exitJail2/>
 		 </monopoly:popup>
 	 </c:if>
@@ -381,7 +381,7 @@
 	 			break;
 	 			
 	 		case "FREE":
-	 			result("free");
+	 			result("exitJail");
 	 			break;
 	 			
 	 		case "NOTHING_HAPPENS":
@@ -667,7 +667,13 @@
 			pieceI.height = 30;
 			pieceI.onload = start;
 			if("${Players[status.index] == Turn.player}" == "true") {
-				coords = positionToCoords(parseInt("${Turn.initial_tile}"))
+				
+				if("${Turn.player.isJailed}" == "true"){
+					coords = positionToCoords(parseInt("${Players[status.index].tile}"))
+				} else {
+					coords = positionToCoords(parseInt("${Turn.initial_tile}"))
+				}
+				
 			} else {
 				coords = positionToCoords(parseInt("${Players[status.index].tile}"))
 			}
