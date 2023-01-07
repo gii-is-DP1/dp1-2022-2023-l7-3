@@ -7,8 +7,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.tile.Tile;
 
@@ -43,10 +41,6 @@ public abstract class Property extends Tile {
 	@Column(name = "badge_Image")
 	@NotNull
 	private String badgeImage;
-	
-//	@ManyToOne(cascade = CascadeType.ALL)
-//  @JoinColumn(name = "game", referencedColumnName = "id")
-//	private Game game;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "owner", referencedColumnName = "id")

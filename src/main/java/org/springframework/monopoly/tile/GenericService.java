@@ -57,7 +57,7 @@ public class GenericService {
 		
 		Player player = turn.getPlayer();
 		List<Turn> turnsJailed = turnRepository.findLastJailedTurns(turn.getGame().getId(), player.getId());
-	    Boolean lastTurnJailed = turnsJailed.stream().allMatch(t-> t.getPlayer().getIsJailed());
+	    Boolean lastTurnJailed = turnsJailed.stream().allMatch(t-> t.getAction().equals(Action.FREE));
 	    if(decision == 2) {
 		    decision = player.getHasExitGate() ? decision:0;
 	    }
