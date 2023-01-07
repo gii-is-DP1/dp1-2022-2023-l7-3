@@ -10,8 +10,8 @@
 	<div class="gamePopUp1" id="gamePopUp1">
 	
 		<c:choose>
-			<c:when test="${popUpId != 'mortgage' && popUpId != 'wantToBuild' && popUpId != 'newGame' &&
-							popUpId != 'buildBuildings' && popUpId != 'auctionBuilding'}">
+			<c:when test="${popUpId != 'free' && popUpId != 'mortgage' && popUpId != 'wantToBuild' && 
+							popUpId != 'newGame' && popUpId != 'buildBuildings' && popUpId != 'auctionBuilding'}">
 				<form:form id="popUpForm" modelAttribute="Boolean" action="/game/${gameId}/${popUpPostFormAction}">
 					<div class="popUpFormDiv">
 						<input id="popUpFormInput" hidden="true" name="decisionResult"></input>

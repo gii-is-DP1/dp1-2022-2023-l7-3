@@ -49,6 +49,7 @@ public class GameController {
 	private static final String GAME_MAIN = "game/gameMain";
 	private static final String BLANK_GAME = "game/blankGame"; //este es provisional para los tags
 	public static final String GAMES_LISTING="game/GameList";
+	private static final String END_GAME = "game/endGame";
 	
 	private GameService gameService;
 	private PlayerService playerService;
@@ -326,9 +327,19 @@ public class GameController {
 	
 	@PostMapping(value = "/game/{gameId}/exitGate")
 	public String getOutOfJailFinal(@PathVariable("gameId") int gameId, ExitGateForm exitGateForm, Map<String, Object> model, Authentication authentication) {
+		Optional<Turn> optionalTurn = turnService.findLastTurn(gameId);
+		User requestUser = userService.findUserByName(authentication.getName()).orElse(null);
 		
-		Integer option = exitGateForm.getOption();
-		tileService.calculateActionTile(null, option);
+		if(optionalTurn.isPresent()) {
+			Turn turn = optionalTurn.get();
+			
+			if(turn.getPlayer().getUser().equals(requestUser)) {
+				Integer option = exitGateForm.getOption();
+				tileService.calculateActionTile(turn, option);
+			}
+		}
+		
+		
 		
 		return "redirect:/game/" + gameId;
 	}
@@ -435,6 +446,10 @@ public class GameController {
 	public String loadGame(@PathVariable("gameId") int gameId, Authentication auth, Model model) throws Exception {
 		model = gameService.setupGameModel(model, gameId, auth);
 		 
+		if(model.containsAttribute("finished")) {
+			return END_GAME;
+		}
+		
 		Turn turn = (Turn) model.getAttribute("Turn");
 		if(turn != null && turn.getAction().equals(Action.AUCTION)) {
 			return "redirect:/game/" + gameId + "/auction";

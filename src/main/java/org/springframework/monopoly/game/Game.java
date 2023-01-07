@@ -1,7 +1,9 @@
 package org.springframework.monopoly.game;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,12 +30,12 @@ import lombok.Setter;
 public class Game extends BaseEntity {
 
 	public Game() {
-		this.date= Date.valueOf(LocalDate.now());
+		this.date= Timestamp.valueOf(LocalDateTime.now());
 		this.numCasas = 32;
 	}
 	
     @Column(name = "date")
-    protected Date date;
+    protected Timestamp date;
 
     @Column(name = "duration")
     protected Integer duration;

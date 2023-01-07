@@ -46,12 +46,13 @@ public class TurnService {
 		
 		Pair<Integer, Boolean> roll = RollGenerator.getRoll();
 		
+		roll = Pair.of(3, false);
+		
 		if(turn.getPlayer().getIsJailed()) {
-			// Temporal solution to being jailed
 			turn.setRoll(0);
 			turn.setIsDoubles(false);
-			
 			turn.setAction(Action.FREE);
+			
 		} else {
 			turn.setRoll(roll.getFirst());
 			turn.setIsDoubles(roll.getSecond());
@@ -81,8 +82,6 @@ public class TurnService {
 		switch(turn.getAction()) {
 		case BUY:
 		case MORTGAGE:
-			propertyService.calculateActionProperty(turn);
-			break;
 		case PAY:
 			propertyService.calculateActionProperty(turn);
 			break;
