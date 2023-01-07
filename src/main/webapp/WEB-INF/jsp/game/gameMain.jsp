@@ -705,7 +705,7 @@
 				cardImg.style.cursor = "zoom-in";
 			
 			} else { // Add zoom
-				gamePopUpDiv.setAttribute("style", "padding-top: 15%; top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
+				gamePopUpDiv.setAttribute("style", "top: 0px; bottom: 0px; max-height: 100vh; height: 100vh")
 				
 				cardImg.style.position = "relative";
 				cardImg.style.height = "95vh";
