@@ -130,5 +130,66 @@ public class PropertyServiceTests {
 		Property property = (Property)this.propertyService.getProperty(auction.getPropertyId(), auction.getGameId());
 		assertThat(property.getOwner()).isEqualTo(turn.getPlayer());
 	}
+
+	@Test
+	void shouldBuildProperty() {
+		turn.setInitial_tile(30);
+		turn.setRoll(7);
+		StreetForm sf = new StreetForm(37, 1, null);
+		this.propertyService.buildProperty(turn.getGame().getId(), turn.getPlayer().getId(), sf);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(377);
+		Street property = (Street)this.propertyService.getProperty(turn.getFinalTile(), 2);
+		assertThat(property.getHouseNum()).isEqualTo(1);
+	}
+
+	@Test
+	void shouldNotBuildProperty() {
+		turn.setInitial_tile(30);
+		turn.setRoll(7);
+		StreetForm sf = new StreetForm(37, 2, null);
+		this.propertyService.buildProperty(turn.getGame().getId(), turn.getPlayer().getId(), sf);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(577);
+		Street property = (Street)this.propertyService.getProperty(turn.getFinalTile(), 2);
+		assertThat(property.getHouseNum()).isEqualTo(0); //you cannot have 0 and 2 houses in same color so housenum = 0
+	}
+
+	@Test
+	void shouldNotBuildPropertyWithoutMoney() {
+		turn.setInitial_tile(30);
+		turn.setRoll(7);
+		turn.getPlayer().setMoney(3);
+		StreetForm sf = new StreetForm(37, 1, null);
+		this.propertyService.buildProperty(turn.getGame().getId(), turn.getPlayer().getId(), sf);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(3);
+		Street property = (Street)this.propertyService.getProperty(turn.getFinalTile(), 2);
+		assertThat(property.getHouseNum()).isEqualTo(0); //the player has no money so housenum = 0
+	}
 		
+	@Test
+	void shouldBuildHotel() {
+		turn.setInitial_tile(30);
+		turn.setRoll(7);
+		Street property = (Street)this.propertyService.getProperty(37, 2);
+		Street property2 = (Street)this.propertyService.getProperty(39, 2);
+		property.setHouseNum(4);
+		property2.setHouseNum(4);
+		StreetForm sf = new StreetForm(37, null, true);
+		this.propertyService.buildProperty(turn.getGame().getId(), turn.getPlayer().getId(), sf);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(377);
+		assertThat(property.getHaveHotel()).isEqualTo(true);
+	}
+
+	@Test
+	void shouldNotBuildHotel() {
+		turn.setInitial_tile(30);
+		turn.setRoll(7);
+		Street property = (Street)this.propertyService.getProperty(37, 2);
+		Street property2 = (Street)this.propertyService.getProperty(39, 2);
+		property.setHouseNum(4);
+		property2.setHouseNum(3);
+		StreetForm sf = new StreetForm(37, null, true);
+		this.propertyService.buildProperty(turn.getGame().getId(), turn.getPlayer().getId(), sf);
+		assertThat(turn.getPlayer().getMoney()).isEqualTo(577);
+		assertThat(property.getHaveHotel()).isEqualTo(false);
+	}
 }
