@@ -210,4 +210,11 @@ public class GameControllerTests {
 		mockMvc.perform(post("/game/2/tileAction").with(csrf()).param("decisionResult", "false"));
 		verify(turnService).evaluateTurnAction(any(), eq(false));
 	}
+	
+	@WithMockUser(username = "admin", password = "admin", authorities = {"admin"})
+	@Test
+	void testPostBuildingForm() throws Exception {
+		mockMvc.perform(post("/game/2/build").param("house", "1").with(csrf()))
+		.andExpect(status().is3xxRedirection());
+	}
 }

@@ -28,7 +28,7 @@
             	<form:form object="streetForm" id="StreetForm" action="/blankGame/build">
             		<input type="hidden" name=streetId id = "streetId" class="tableCell" value="${street.id}">
             		<input type="hidden" name=color id = "color" class="tableCell" value="${street.color}">
-            		<input type="hidden" name=streetsBlocked id = "streetsBlocked" class="tableCell" value="${street.id}">
+            		
                 	<tr>
                     	<td>
                         	<div  class="color2${street.color}">   </div>                    
