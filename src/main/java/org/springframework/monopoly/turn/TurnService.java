@@ -55,7 +55,7 @@ public class TurnService {
 			
 		} else {
 			turn.setRoll(roll.getFirst());
-			turn.setIsDoubles(true);
+			turn.setIsDoubles(roll.getSecond());
 			
 			if(lastTurns.size() > 1 && lastTurns.get(0).getIsDoubles() && lastTurns.get(1).getIsDoubles() && turn.getIsDoubles()) {
 				turn.getPlayer().setIsJailed(true);
