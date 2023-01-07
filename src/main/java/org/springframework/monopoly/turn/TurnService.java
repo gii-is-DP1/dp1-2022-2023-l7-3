@@ -46,8 +46,6 @@ public class TurnService {
 		
 		Pair<Integer, Boolean> roll = RollGenerator.getRoll();
 		
-		roll = Pair.of(3, false);
-		
 		if(turn.getPlayer().getIsJailed()) {
 			turn.setRoll(0);
 			turn.setIsDoubles(false);
