@@ -54,7 +54,7 @@ public class Turn extends BaseEntity {
 	private Integer initial_tile;
 	
 	public Integer getFinalTile() {
-		return getInitial_tile() + getRoll();
+		return (getInitial_tile() + getRoll()) % 40;
 	}
 	
 	@ManyToOne

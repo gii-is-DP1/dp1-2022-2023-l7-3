@@ -34,15 +34,6 @@
 				<jsp:doBody/>
 			</c:otherwise>
 		</c:choose>
-		<c:choose>
-			<c:when test="${popUpId == 'haveToPay' || (popUpId == 'drawCard' && isPlaying == true)}">
-				<button class="mainButtonStyle" type="button" onclick="setFormInput('true')"> Close </button>
-			</c:when>
-			
-			<c:otherwise>
-				<button class="mainButtonStyle" type="button" onclick="hidePopUp('${popUpId}')"> Close </button>
-			</c:otherwise>
-		</c:choose>
 		
 	</div>
 </div>
