@@ -5,7 +5,7 @@
 
 <div style="display:block; width: 100%;">
 	<div style="display:flex;flex-direction: row;margin: auto;">
-		<h1 class="propertyTxt">Oh no...! It's "${property.owner}'s" property, you have to pay... </h1>
+		<h1 class="propertyTxt">Oh no...! It's "${property.owner.user.username}'s" property, you have to pay... </h1>
 		<button type="button" onclick="setFormInput('true')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
 	</div>
 </div>
