@@ -8,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.exceptions.CantAfordMortgageException;
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.game.GameRepository;
+import org.springframework.monopoly.game.GameService;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerRepository;
 import org.springframework.monopoly.turn.Action;
@@ -289,8 +290,14 @@ public class PropertyService {
 			player.setMoney(player.getMoney() - getBuildingPrice(sf, gameId));
 			playerRepository.save(player);
 			if(getBuildingPrice(sf, gameId)>0) {
-				if(sf.getHouse()!=null) street.setHouseNum(sf.getHouse());
-				if(sf.getHotel()!=null) street.setHaveHotel(true);
+				if(sf.getHouse()!=null) {
+					street.setHouseNum(sf.getHouse());
+					Game game =gameRepository.findGameById(gameId);
+					game.setNumCasas(game.getNumCasas()-1);
+				} 
+				if(sf.getHotel()!=null) {
+					street.setHaveHotel(true);
+				}
 			}
 			saveProperty(street);
 		}
