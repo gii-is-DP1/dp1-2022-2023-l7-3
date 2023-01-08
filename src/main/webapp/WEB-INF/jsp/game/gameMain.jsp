@@ -653,7 +653,7 @@
 				  imgSrc = "/resources/images/PieceMockups/NaranjaPiece.png";
 				  break;
 			  case 4:
-				  imgSrc = "/resources/images/PieceMockups/AmarilloPiece.png";
+				  imgSrc = "/resources/images/PieceMockups/RojoPiece.png";
 				  break;
 			  case 5:
 				  imgSrc = "/resources/images/PieceMockups/CyanPiece.png";
