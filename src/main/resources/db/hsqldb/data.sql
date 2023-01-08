@@ -8,6 +8,13 @@ INSERT INTO users (id, username, password, enabled, is_admin) VALUES (2, 'Crypto
 INSERT INTO users (id, username, password, enabled) VALUES (3, 'TuAndreita98', 'andreita', 1);
 INSERT INTO users (id, username, password, enabled) VALUES (4, 'AnimeEnjoyer', 'anime', 1);
 
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (5, 'Miguel Angel', 'password', 1, 'admin'); 
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (6, 'Alvaro', 'password', 1, 'admin');
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (7, 'Maria', 'password', 1, 'admin');
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (8, 'Ursula', 'password', 1, 'admin');
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (9, 'Olegario', 'password', 1, 'admin');
+INSERT INTO users (id, username, password, enabled, is_admin) VALUES (10, 'Juan Carlos', 'password', 1, 'admin');
+
 /* COMMUNITY BOX, LUCK AND TILES */
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (1,'LUCK', 'CHARGE', 50,'/resources/images/Luck1.PNG');
 INSERT INTO cards(id, card_type, action, quantity, badge_image) VALUES (2,'LUCK', 'PAY_TAX', 150, '/resources/images/Luck2.PNG');
