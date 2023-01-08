@@ -102,10 +102,14 @@ body {
 
 #mainBody {
     width: 100%;
-    height: auto;
+    height: 100%;
     margin: 40px;
     background-color: transparent;
     max-width: -webkit-fill-available;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .mainButtonStyle {
@@ -121,3 +125,77 @@ body {
     font-size: 20px;
 }
 
+.headerLinks {
+	height: 100%;
+	width: auto;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	margin-left: 20px;
+}
+
+.headerLinkButtons {
+	width: fit-content;
+	height: 50px;
+	width: 120px;
+    background-color: #47525e;
+    color: white;
+    padding: 8px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: "Bree_Serif";
+    font-size: 16px;
+    margin: 0px 20px;
+}
+
+.monopolyMan {
+	width: 50%;
+	height: 60vh;
+	
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.playButton {
+	height: 100px;
+	width: 100%;
+    background-color: #47525e;
+    color: white;
+    padding: 8px;
+    margin: 4px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: "Bree_Serif";
+    font-size: 50px;
+    margin: 0px 20px;
+}
+
+.monopolyManImg {
+	width: 40%;
+}
+
+.usLogo {
+	width: 50%;
+	height: 20vh;
+	
+	display: flex;
+	justify-content: center;
+}
+
+.usLogoImg {
+	height: 100%;
+}
+
+.welcomeFooter {
+	width: 50%;
+	height: auto;
+	
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
