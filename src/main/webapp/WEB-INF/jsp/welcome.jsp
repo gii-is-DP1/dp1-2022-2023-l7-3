@@ -5,31 +5,31 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <!-- %@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %-->  
 
-<petclinic:layout screenTittle="${screenTittle}">
+<petclinic:layout2 screenTittle="${screenTittle}">
     <div id="mainBody">
-        <h2><fmt:message key="welcome"/></h2>
-        <div class="row">
-        <h2> Project: ${title}</h2>
-        <p>
-        	<h2>Group ${group}</h2>
-        </p>
-        <p>
+
+		<spring:url value="/resources/images/UnclePennybagsHoldingTittle.png" htmlEscape="true" var="monopolyImage"/>
+		<div class="monopolyMan">
+			<a href="/newGame" style="width: 80%;">
+				<button class="playButton"> Play </button>
+			</a>
+			<img class="monopolyManImg" src="${monopolyImage}"/>
+		</div>
+		
+		<spring:url value="/resources/images/welcome.png" htmlEscape="true" var="usLogo"/>
+		<div class="usLogo">
+			<img class="usLogoImg" src="${usLogo}"/>
+		</div>
+
+        <div class="welcomeFooter">
+	        <h2> Project: ${title}</h2>
+        	<h2> Group ${group}</h2>
+        	
         	<ul>
-		        <li><a href="/monopolyUsers/list">View Players</a></li>
-		        <li><a href="/games/list">View Games</a></li>
-		        <li><a href="/newGame">View new Game</a></li>
-		        <li><a href="/blankGame">BlankGame</a></li>
+		        <c:forEach items= "${authors}" var = "author"> 
+		        <li>${author}</li>
+		        </c:forEach>
 	        </ul>
-        </p>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <spring:url value="/resources/images/welcomeToMonopoly.png" htmlEscape="true" var="monopolyImage"/>
-                <spring:url value="/resources/images/welcome.png" htmlEscape="true" var="usLogo"/>
-                <img class="img-responsive" src="${monopolyImage}"/>
-                <img class="img-responsive" src="${usLogo}"/>
-            </div>
         </div>
     </div>
-</petclinic:layout>
+</petclinic:layout2>
