@@ -109,7 +109,7 @@ public class TurnService {
 		// Call to the method handling the rest of the tiles
 		tileService.calculateActionTile(turn, getOutJailDecision);
 		
-		if(oldPlayerPosition.equals(turn.getPlayer().getTile()) && !turn.getAction().equals(Action.GOTOJAIL)) {
+		if(oldPlayerPosition.equals(turn.getPlayer().getTile()) || turn.getAction().equals(Action.GOTOJAIL)) {
 			// Careful here, might set evaluated when nothing happened/ it didnt work
 			turn.setIsActionEvaluated(true);
 			saveTurn(turn);

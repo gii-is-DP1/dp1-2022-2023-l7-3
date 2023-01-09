@@ -6,9 +6,9 @@
 <link href="${gameCss}" rel="stylesheet"/>
 
 	<div style="display:block; width: 100%;">
-		<div style="display:flex;flex-direction: row;margin: auto;">
+		<button type="button" onclick="hidePopUp('buyPopUp')" class="cancelButton" style="position:absolute; right: 5px;"><span class="glyphicon glyphicon-remove"></span></button>
+		<div style="display:flex;flex-direction: column;margin: auto;">
 			<h1 class="propertyTxt">Do you want to buy this property for <c:out value = "${property.price}"></c:out> <img style="height: 22px" src="/resources/images/Monodolar.png"/> ?</h1>
-			<button type="button" onclick="hidePopUp('buyPopUp')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
 		</div>
 	</div>
 	

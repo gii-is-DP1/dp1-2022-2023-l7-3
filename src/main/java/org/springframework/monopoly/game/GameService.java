@@ -311,8 +311,10 @@ public class GameService {
 		// Is there already any turn in this game?
 		if(lastTurn != null) {
 			
-			// If we need a new turn and last was doubles, nextplayer is the same
-			if(lastTurn.getIsFinished() && lastTurn.getIsDoubles()) {
+			/* If we need a new turn and last was doubles, nextplayer is the same
+			 * Except if the player went to jail that turn
+			 */
+			if(lastTurn.getIsFinished() && lastTurn.getIsDoubles() && !lastTurn.getAction().equals(Action.GOTOJAIL)) {
 				nextPlayer = lastTurn.getPlayer();
 				
 			/*
@@ -518,27 +520,29 @@ public class GameService {
 			// If the player has not mortgaged a building yet, we cant finish the turn because he can't pay
 			if(!(turn.getAction().equals(Action.MORTGAGE) && 
 					!propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile()))) {
+				
 				if(!turn.getIsActionEvaluated()) {
 					turnService.evaluateTurnAction(turn, false);
-				}
-				
-				turn.setIsFinished(true);
-				
-				if(turn.getAction().equals(Action.DRAW_CARD)) {
-					Card c = cardService.findCardById(turn.getActionCardId()).get();
-					if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+				} else {
+					
+					turn.setIsFinished(true);
+					
+					if(turn.getAction().equals(Action.DRAW_CARD)) {
+						Card c = cardService.findCardById(turn.getActionCardId()).get();
+						if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+							turn.getPlayer().setTile(turn.getFinalTile());
+							playerService.savePlayer(turn.getPlayer());
+						}
+					} else {
 						turn.getPlayer().setTile(turn.getFinalTile());
 						playerService.savePlayer(turn.getPlayer());
 					}
-				} else {
-					turn.getPlayer().setTile(turn.getFinalTile());
-					playerService.savePlayer(turn.getPlayer());
+					
+					game.setVersion(game.getVersion() + 1);
+					saveGame(game);
+					
+					turnService.saveTurn(turn);
 				}
-				
-				game.setVersion(game.getVersion() + 1);
-				saveGame(game);
-				
-				turnService.saveTurn(turn);
 			}
 		}
 	}  

@@ -69,6 +69,11 @@ public class TileService {
 			case FREE: 
 				genericService.free(turn, decision);
 				break;
+			case GOTOJAIL:
+				turn.getPlayer().setTile(10);
+				turn.getPlayer().setIsJailed(true);
+				turn.setRoll(0);
+				break;
 			default:;
 		}
 	}
@@ -104,7 +109,7 @@ public class TileService {
 			case GOTOJAIL: 
 				cardService.gotoJail(player);
 				break;
-			case SAVE_FREE: 
+			case FREE: 
 				cardService.saveFree(player);
 				break;
 			default:;

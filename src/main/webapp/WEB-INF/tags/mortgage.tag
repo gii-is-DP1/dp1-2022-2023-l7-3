@@ -16,9 +16,9 @@
 </form:form>
 
 <div style="display:block; width: 100%;">
-	<div style="display:flex;flex-direction: row;margin: auto;">
+	<button type="button" onclick="hidePopUp('mortgage')" class="cancelButton" style="position:absolute; right: 5px;"><span class="glyphicon glyphicon-remove"></span></button>
+	<div style="display:flex;flex-direction: column;margin: auto;">
 		<h1 class="propertyTxt">Select something to mortgage it, it's buildings, or to cancel it's existing mortgage</h1>
-		<button type="button" onclick="hidePopUp('mortgage')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
 	</div>
 </div>
 
