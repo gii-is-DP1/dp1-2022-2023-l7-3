@@ -4,9 +4,9 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <div style="display:block; width: 100%;">
-	<div style="display:flex;flex-direction: row;margin: auto;">
+	<button type="button" onclick="hidePopUp('exitJail')" class="cancelButton" style="position:absolute; right: 5px;"><span class="glyphicon glyphicon-remove"></span></button>
+	<div style="display:flex;flex-direction: column;margin: auto;">
 		<h1 class="propertyTxt">Choose how to get out of jail</h1>
-		<button type="button" onclick="hidePopUp('exitJail')" class="cancelButton" ><span class="glyphicon glyphicon-remove"></span></button>
 	</div>
 </div>
 
