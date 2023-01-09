@@ -516,7 +516,7 @@
 					endTurnButton.disabled = "";
 				}
 				
-				// ajaxStartScanningForChanges();
+				ajaxStartScanningForChanges();
 			}
 			
 		}
