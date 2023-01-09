@@ -104,7 +104,7 @@ public class TileService {
 			case GOTOJAIL: 
 				cardService.gotoJail(player);
 				break;
-			case SAVE_FREE: 
+			case FREE: 
 				cardService.saveFree(player);
 				break;
 			default:;
