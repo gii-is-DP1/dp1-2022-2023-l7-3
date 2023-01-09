@@ -311,8 +311,10 @@ public class GameService {
 		// Is there already any turn in this game?
 		if(lastTurn != null) {
 			
-			// If we need a new turn and last was doubles, nextplayer is the same
-			if(lastTurn.getIsFinished() && lastTurn.getIsDoubles()) {
+			/* If we need a new turn and last was doubles, nextplayer is the same
+			 * Except if the player went to jail that turn
+			 */
+			if(lastTurn.getIsFinished() && lastTurn.getIsDoubles() && !lastTurn.getAction().equals(Action.GOTOJAIL)) {
 				nextPlayer = lastTurn.getPlayer();
 				
 			/*
