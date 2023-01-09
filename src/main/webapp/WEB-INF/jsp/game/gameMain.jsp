@@ -384,6 +384,10 @@
 	 			result("exitJail");
 	 			break;
 	 			
+	 		case "GOTOJAIL":
+	 			setBoardText("Oh no! You are going to jail!");
+	 			break;
+	 			
 	 		case "NOTHING_HAPPENS":
 	 			break;
 	 			
@@ -445,6 +449,15 @@
 			
 		}
 		
+		function redrawAll() {
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			ctx.drawImage(background, 0, 0);
+			for(let i = 0; i < pieces.length; i++) {
+				let piece = pieces[i];
+				ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+			}
+		}
+		
 		function movePiece() {
 			if(moves >= 0) {
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
@@ -462,7 +475,7 @@
 								moves--;
 							}
 							
-							ctx.drawImage(piece.img, piece.x - piece.offsetX, piece.y - piece.offsetY);
+							redrawAll();
 							moves--;
 							
 						} else {

@@ -518,27 +518,29 @@ public class GameService {
 			// If the player has not mortgaged a building yet, we cant finish the turn because he can't pay
 			if(!(turn.getAction().equals(Action.MORTGAGE) && 
 					!propertyService.canPlayerPayProperty(turn.getPlayer(), turn.getFinalTile()))) {
+				
 				if(!turn.getIsActionEvaluated()) {
 					turnService.evaluateTurnAction(turn, false);
-				}
-				
-				turn.setIsFinished(true);
-				
-				if(turn.getAction().equals(Action.DRAW_CARD)) {
-					Card c = cardService.findCardById(turn.getActionCardId()).get();
-					if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+				} else {
+					
+					turn.setIsFinished(true);
+					
+					if(turn.getAction().equals(Action.DRAW_CARD)) {
+						Card c = cardService.findCardById(turn.getActionCardId()).get();
+						if(!(c.getAction().equals(Action.MOVE) || c.getAction().equals(Action.MOVETO))) {
+							turn.getPlayer().setTile(turn.getFinalTile());
+							playerService.savePlayer(turn.getPlayer());
+						}
+					} else {
 						turn.getPlayer().setTile(turn.getFinalTile());
 						playerService.savePlayer(turn.getPlayer());
 					}
-				} else {
-					turn.getPlayer().setTile(turn.getFinalTile());
-					playerService.savePlayer(turn.getPlayer());
+					
+					game.setVersion(game.getVersion() + 1);
+					saveGame(game);
+					
+					turnService.saveTurn(turn);
 				}
-				
-				game.setVersion(game.getVersion() + 1);
-				saveGame(game);
-				
-				turnService.saveTurn(turn);
 			}
 		}
 	}  
