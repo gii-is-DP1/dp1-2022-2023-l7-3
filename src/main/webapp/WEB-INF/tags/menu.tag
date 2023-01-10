@@ -1,6 +1,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="sec"
 	uri="http://www.springframework.org/security/tags"%>
 <!--  >%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%-->
@@ -49,9 +49,17 @@
 		<a href="/Welcome">
 			<button id="BackButton">  Back  </button>
 		</a>
-
-		<a href="/users/byUsername/<sec:authentication property="principal.username"/>">
-			<img src="/resources/images/settings.png" id="Settings"/>
-		</a>
+		
+		<sec:authorize access="isAuthenticated()">
+			<a href="/users/byUsername/<sec:authentication property="principal.username"/>">
+				<img src="/resources/images/settings.png" id="Settings"/>
+			</a>
+		</sec:authorize>
+		
+		<sec:authorize access="!isAuthenticated()">
+			<a href="/">
+				<img src="/resources/images/settings.png" id="Settings"/>
+			</a>
+		</sec:authorize>
 	</div>
 </div>

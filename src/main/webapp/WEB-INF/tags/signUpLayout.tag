@@ -1,11 +1,11 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 
 <!doctype html>
 <html>
-<petclinic:htmlHeader/>
+<monopoly:htmlHeader/>
 
 <body>
 	<div id="Header">
@@ -25,7 +25,7 @@
 		<jsp:doBody/>
 	</div>
 
-<petclinic:footer/>
+<monopoly:footer/>
 
 </body>
 

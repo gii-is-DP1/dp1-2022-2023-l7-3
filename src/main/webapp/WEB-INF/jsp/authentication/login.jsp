@@ -1,11 +1,11 @@
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!doctype html>
 <html>
-<petclinic:htmlHeader/>
+<monopoly:htmlHeader/>
 
 <body>
 	<div id="Header">
@@ -47,7 +47,7 @@
 	    </div>
     </div>
 
-<petclinic:footer/>
+<monopoly:footer/>
 
 </body>
 

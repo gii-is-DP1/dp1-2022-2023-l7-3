@@ -34,14 +34,6 @@
 	<div class="gamePopUp" id="auctionBuilding">
 		<monopoly:auctionBuilding/>
 	</div>
-
-	<div class="gamePopUp" id="wantToMortgagePopUp">
-		<monopoly:wantToMortgage/>
-	</div>
-	
-	<div class="gamePopUp" id="mortgagePopUp">
-		<monopoly:mortgage/>
-	</div>
 	
 	<div class="gamePopUp" id="exitJail">
 		<monopoly:exitJail/>

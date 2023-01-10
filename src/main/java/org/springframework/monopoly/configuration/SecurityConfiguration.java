@@ -35,9 +35,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 		.antMatchers("/resources/**","/webjars/**","/h2-console/**").permitAll()
-		.antMatchers(HttpMethod.GET, "/","/oups").permitAll()
+		.antMatchers(HttpMethod.GET, "/","/oups", "/Welcome").permitAll()
 		.antMatchers("/users/new", "/login").permitAll()
-		.antMatchers("/cards/**").permitAll()
 		.antMatchers("/session/**").permitAll()
 		.antMatchers("/signup/**").permitAll()
 		.antMatchers("/admin/**").hasAnyAuthority("admin")

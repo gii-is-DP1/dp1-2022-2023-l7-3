@@ -1,10 +1,10 @@
 <%@ page session="false" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags" %>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<petclinic:layout screenTittle="Monopoly Users List">
+<monopoly:layout screenTittle="Monopoly Users List">
 	
 	<div class="playersListMainBody">
 		
@@ -59,4 +59,4 @@
 		
 	</div>
 
-</petclinic:layout>
+</monopoly:layout>
