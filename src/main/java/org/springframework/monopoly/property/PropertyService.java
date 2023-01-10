@@ -179,7 +179,6 @@ public class PropertyService {
 			if(property instanceof Street) {
 				Street street = (Street) property;
 				List<Street> colorProperties = findStreetByColor(street.getColor(), gameId);
-				Comparator<Street> c = Comparator.comparingInt(s -> s.getHouseNum() + (s.getHaveHotel() ? 1 : 0));
 				Integer maxNumHouses = colorProperties.stream()
 													  .map(s -> s.getHouseNum() + (s.getHaveHotel() ? 1 : 0))
 													  .max(Comparator.naturalOrder())
