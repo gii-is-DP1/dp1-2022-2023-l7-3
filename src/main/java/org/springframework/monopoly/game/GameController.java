@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.monopoly.card.CardService;
 import org.springframework.monopoly.exceptions.CantAfordMortgageException;
 import org.springframework.monopoly.exceptions.InvalidNumberOfPLayersException;
+import org.springframework.monopoly.exceptions.MortgageHousesNotUniform;
 import org.springframework.monopoly.player.Player;
 import org.springframework.monopoly.player.PlayerService;
 import org.springframework.monopoly.property.Auction;
@@ -274,8 +275,12 @@ public class GameController {
 				} else if(property.getIsMortage()) {
 					bindingResult.rejectValue("propertyId", "PropertyAlreadyMortgaged", "This property is already mortgaged!");
 				} else {
-					propertyService.mortgageProperty(turn.getPlayer(), gameId, propertyId);
-					gameService.addToGameVersion(gameId);
+					try {
+						propertyService.mortgageProperty(turn.getPlayer(), gameId, propertyId);
+						gameService.addToGameVersion(gameId);
+					} catch (MortgageHousesNotUniform e) {
+						bindingResult.rejectValue("propertyId", "HouseMortgageNotUniform", "You have to sell houses uniformly in each color group");
+					}
 				}
 				
 				gameService.setupGameModel(model, gameId, authentication);
