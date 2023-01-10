@@ -31,9 +31,15 @@
 		<c:if test="${isActingOnAuction}">
 			<div class="popUpButtons">
 				<button class="popUpDangerButton">Abandon</button>
-				<button class="popUpButton" type = "button" onclick="newBid(1)">1M</button>
-				<button class="popUpButton" type = "button" onclick="newBid(10)">10M</button>
-				<button class="popUpButton" type = "button" onclick="newBid(100)">100M</button>
+				<c:if test = "${player.money - auction.currentBid >= 1}">
+					<button class="popUpButton" type = "button" onclick="newBid(1)">1M</button>
+				</c:if>
+				<c:if test = "${player.money - auction.currentBid >= 10}">
+					<button class="popUpButton" type = "button" onclick="newBid(10)">10M</button>
+				</c:if>
+				<c:if test = "${player.money - auction.currentBid >= 100}">
+					<button class="popUpButton" type = "button" onclick="newBid(100)">100M</button>
+				</c:if>
 			</div>
 		</c:if>
     </form:form>
