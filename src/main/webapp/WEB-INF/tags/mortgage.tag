@@ -28,6 +28,7 @@
 			<th class="mgTableCell">Property</th>
 			<th class="mgTableCell">Type</th>
 			<th class="mgTableCell">Color</th>
+			<th class="mgTableCell">Houses</th>
 			<th class="mgTableCell">Mortgage price</th>
 			<th class="mgTableCell">Mortgage</th>
 			<th class="mgTableCell">Cancel mortgage</th>
@@ -40,6 +41,7 @@
 			<th> <c:out value="${street.name}"/> </th>
 			<th class="mgTableCell"> Street </th>
 			<th class="mgTableCell"> <div class="color<c:out value = "${street.color}" />"> </div> </th>
+			<th class="mgTableCell"> <c:out value = "${street.houseNum + (street.haveHotel ? 1 : 0)}" /> </th>
 			<c:choose>
 				<c:when test="${street.isMortage}">
 					<td class="mgTableCell"> <c:out value="${streetValue}"/> <img style='height: 24px' src='/resources/images/Monodolar.png'/></td>	
@@ -59,6 +61,7 @@
 			<th> <c:out value="${station.name}"/> </th>
 			<th class="mgTableCell"> Station </th>
 			<th class="mgTableCell"> </th>
+			<th class="mgTableCell"> </th>
 			<c:choose>
 				<c:when test="${station.isMortage}">
 					<td class="mgTableCell"> <c:out value="stationValue"/> <img style='height: 24px' src='/resources/images/Monodolar.png'/></td>	
@@ -77,6 +80,7 @@
 		<tr>
 			<th> <c:out value="${company.name}"/> </th>
 			<th class="mgTableCell"> Company </th>
+			<th class="mgTableCell"> </th>
 			<th class="mgTableCell"> </th>
 			<c:choose>
 				<c:when test="${company.isMortage}">

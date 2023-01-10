@@ -108,6 +108,17 @@ public class UserController {
 		return "redirect:/monopolyUsers/list";
 	}
 	
+	@GetMapping(value = "/users/byUsername/{username}")
+    public String getEditUserByUsername(@PathVariable(name = "username") String username, Model model) {
+		User user = monopolyUserService.findUserByName(username).orElse(null);
+		
+		if(user == null) {
+			return "redirect:/";
+		} else {
+			return "redirect:/users/" + user.getId();
+		}
+	}
+	
 	@GetMapping(value = "/users/{userId}")
     public String getEditUser(@PathVariable(name = "userId") Integer id, Model model) {
         User user = monopolyUserService.findUser(id).get();

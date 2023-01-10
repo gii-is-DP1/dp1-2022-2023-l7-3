@@ -5,7 +5,7 @@
 <%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags" %>
 <!-- %@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %-->  
 
-<petclinic:layout2 screenTittle="${screenTittle}">
+<petclinic:layout screenTittle="${screenTittle}">
     <div id="mainBody">
 
 		<spring:url value="/resources/images/UnclePennybagsHoldingTittle.png" htmlEscape="true" var="monopolyImage"/>
@@ -32,4 +32,4 @@
 	        </ul>
         </div>
     </div>
-</petclinic:layout2>
+</petclinic:layout>

@@ -1,11 +1,14 @@
 package org.springframework.monopoly.property;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.monopoly.exceptions.CantAfordMortgageException;
+import org.springframework.monopoly.exceptions.MortgageHousesNotUniform;
 import org.springframework.monopoly.game.Game;
 import org.springframework.monopoly.game.GameRepository;
 import org.springframework.monopoly.game.GameService;
@@ -167,14 +170,29 @@ public class PropertyService {
 		return n * RollGenerator.getRoll().getFirst();
 	}
 	
-	@Transactional
-	public void mortgageProperty(Player player, Integer gameId, Integer propertyId) {
+	@Transactional(rollbackFor = MortgageHousesNotUniform.class)
+	public void mortgageProperty(Player player, Integer gameId, Integer propertyId) throws MortgageHousesNotUniform {
 		Property property = (Property) getProperty(propertyId, gameId);
 		
 		if(playerRepository.findAllPropertyNamesByPlayer(gameId, player.getId()).contains(property.getName())) {
 			
 			if(property instanceof Street) {
 				Street street = (Street) property;
+				List<Street> colorProperties = findStreetByColor(street.getColor(), gameId);
+				Comparator<Street> c = Comparator.comparingInt(s -> s.getHouseNum() + (s.getHaveHotel() ? 1 : 0));
+				Integer maxNumHouses = colorProperties.stream()
+													  .map(s -> s.getHouseNum() + (s.getHaveHotel() ? 1 : 0))
+													  .max(Comparator.naturalOrder())
+													  .get();
+				
+				List<Street> streetsWithMaxNumHouses = colorProperties.stream()
+																	  .filter(s -> (s.getHouseNum() + (s.getHaveHotel() ? 1 : 0)) == maxNumHouses)
+																	  .collect(Collectors.toList());
+				
+				if(!streetsWithMaxNumHouses.contains(street)) {
+					throw new MortgageHousesNotUniform();
+				}
+				
 				Integer buildingsMoney = 0;
 				Game game = gameRepository.findById(gameId).get();
 				
@@ -292,8 +310,9 @@ public class PropertyService {
 			if(getBuildingPrice(sf, gameId)>0) {
 				if(sf.getHouse()!=null) {
 					street.setHouseNum(sf.getHouse());
-					Game game =gameRepository.findGameById(gameId);
+					Game game = gameRepository.findGameById(gameId);
 					game.setNumCasas(game.getNumCasas()-1);
+					gameRepository.save(game);
 				} 
 				if(sf.getHotel()!=null) {
 					street.setHaveHotel(true);
