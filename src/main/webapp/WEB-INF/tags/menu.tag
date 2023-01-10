@@ -49,9 +49,17 @@
 		<a href="/Welcome">
 			<button id="BackButton">  Back  </button>
 		</a>
-
-		<a href="/users/byUsername/<sec:authentication property="principal.username"/>">
-			<img src="/resources/images/settings.png" id="Settings"/>
-		</a>
+		
+		<sec:authorize access="isAuthenticated()">
+			<a href="/users/byUsername/<sec:authentication property="principal.username"/>">
+				<img src="/resources/images/settings.png" id="Settings"/>
+			</a>
+		</sec:authorize>
+		
+		<sec:authorize access="!isAuthenticated()">
+			<a href="/">
+				<img src="/resources/images/settings.png" id="Settings"/>
+			</a>
+		</sec:authorize>
 	</div>
 </div>
