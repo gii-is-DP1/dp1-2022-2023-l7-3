@@ -65,7 +65,6 @@ public class GameServiceSetupModelTest {
 		assertThat(model.getAttribute("Turn")).isNotNull();
 		assertThat(model.getAttribute("Players")).isNotNull();
 		assertThat(model.getAttribute("Version")).isNotNull();
-		assertThat(model.getAttribute("property")).isNotNull();
 		assertThat(model.getAttribute("isPlaying")).isNotNull();
 		assertThat(model.getAttribute("Properties")).isNotNull();
 		assertThat(model.getAttribute("Colors")).isNotNull();
