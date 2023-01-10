@@ -13,6 +13,26 @@
 		<p id="ScreenTittle">${screenTittle}</p>
 	</div>
 	
+	<div class="headerLinks">
+		<sec:authorize url="/monopolyUsers/list">
+			<a href="/monopolyUsers/list">
+				<button type="button" class="headerLinkButtons"> Users </button>
+			</a>
+		</sec:authorize>
+		
+		<sec:authorize url="/games/list">
+			<a href="/games/list">
+				<button type="button" class="headerLinkButtons"> Games </button>
+			</a>
+		</sec:authorize>
+		
+		<sec:authorize url="/blankGame">
+			<a href="/blankGame">
+				<button type="button" class="headerLinkButtons"> Game action samples </button>
+			</a>
+		</sec:authorize>
+	</div>
+	
 	<div id="HeaderButtons">
 		<sec:authorize access="!isAuthenticated()">
 			<a href="/signup">
@@ -25,14 +45,13 @@
 				<button id="SignInOutButton">Logout</button>
 			</a>
 		</sec:authorize>
-		
 
-		<a href="">
+		<a href="/Welcome">
 			<button id="BackButton">  Back  </button>
 		</a>
 
-		<a href="">
-			<img href="" src="/resources/images/settings.png" id="Settings"/>
+		<a href="/users/byUsername/<sec:authentication property="principal.username"/>">
+			<img src="/resources/images/settings.png" id="Settings"/>
 		</a>
 	</div>
 </div>
