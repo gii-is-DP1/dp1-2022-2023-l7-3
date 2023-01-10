@@ -1,10 +1,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="petclinic" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="monopoly" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<petclinic:layout screenTittle="My profile">
+<monopoly:layout screenTittle="My profile">
 
 	<div class="mainEditProfileDiv">
 		<div class="editProfileData">
@@ -103,4 +103,4 @@
 							this.classList.toggle('fa-eye-slash');
 						});
 	</script>
-</petclinic:layout>
+</monopoly:layout>
