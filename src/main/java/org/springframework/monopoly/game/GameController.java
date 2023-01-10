@@ -220,6 +220,7 @@ public class GameController {
 		Object property = propertyService.getProperty(auction.getPropertyId(), gameId);
 		Auction newAuction = propertyService.auctionPropertyById(auction);
 		newAuction = gameService.saveAuction(newAuction);
+		gameService.addToGameVersion(gameId);
 		
 		if(newAuction == null || newAuction.getRemainingPlayers().size() == 1) {
 			propertyService.setAuctionWinner(newAuction);
