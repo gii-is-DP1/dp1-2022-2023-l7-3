@@ -46,7 +46,7 @@
 			</a>
 		</sec:authorize>
 
-		<a href="/Welcome">
+		<a href="/welcome">
 			<button id="BackButton">  Back  </button>
 		</a>
 		
